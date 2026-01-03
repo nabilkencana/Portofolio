@@ -12,7 +12,18 @@ const Projects = () => {
       </motion.div>
 
       {/* PROJECT GRID */}
-      <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }} className="relative w-full h-auto">
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+        className="
+    relative
+    w-full
+    overflow-hidden
+    isolate
+  "
+      >
         <ChromaGrid items={projectData} radius={320} damping={0.5} fadeOut={0.7} />
       </motion.div>
     </section>

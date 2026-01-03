@@ -122,7 +122,7 @@ const ChromaGrid = ({ items, className = "", radius = 300, damping = 0.45, fadeO
       ref={rootRef}
       onPointerMove={handleMove}
       onPointerLeave={handleLeave}
-      className={`relative w-full h-full flex flex-wrap justify-center items-start gap-3 ${className}`}
+      className={`relative w-[250px] md:w-full h-full flex flex-wrap justify-center items-start gap-3 mx-auto ${className}`}
       style={{
         "--r": `${radius}px`,
         "--x": "50%",
@@ -148,7 +148,7 @@ const ChromaGrid = ({ items, className = "", radius = 300, damping = 0.45, fadeO
             }}
           />
           <div className="relative z-10 flex-1 p-3 box-border">
-            <img src={c.image} alt={c.title} loading="lazy" className="w-full h-full object-cover  " />
+            <img src={c.image} alt={c.title} loading="lazy" className="w-[80%] h-[80%]  md:w-full md:h-full object-cover mx-auto " />
           </div>
           <footer className="relative z-10 p-3 text-white font-sans grid grid-cols-1 gap-x-3 gap-y-1">
             <h3 className="m-0 text-[1.05rem] font-semibold">{c.title}</h3>

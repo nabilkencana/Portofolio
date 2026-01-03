@@ -404,25 +404,20 @@ const GlobalSpotlight = ({ gridRef, disableAnimations = false, enabled = true, s
 };
 
 const BentoCardGrid = ({ children, gridRef }) => (
-  <div className="bento-section grid gap-2 p-3 max-w-[54rem] select-none relative" style={{ fontSize: "clamp(1rem, 0.9rem + 0.5vw, 1.5rem)" }} ref={gridRef}>
+  <div
+    className="
+  bento-section
+  gap-3
+  p-2 sm:p-3
+  w-full
+  mx-auto
+"
+    style={{ fontSize: "clamp(1rem, 0.9rem + 0.5vw, 1.5rem)" }}
+    ref={gridRef}
+  >
     {children}
   </div>
 );
-
-const useMobileDetection = () => {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth <= MOBILE_BREAKPOINT);
-
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
-  return isMobile;
-};
 
 const MagicBento = ({
   textAutoHide = true,
@@ -439,7 +434,8 @@ const MagicBento = ({
   data = [],
 }) => {
   const gridRef = useRef(null);
-  const isMobile = useMobileDetection();
+
+  const isMobile = window.innerWidth < 768;
   const shouldDisableAnimations = disableAnimations || isMobile;
 
   return (
@@ -542,26 +538,13 @@ const MagicBento = ({
             text-overflow: ellipsis;
           }
           
-          @media (max-width: 599px) {
-            .card-responsive {
-              grid-template-columns: 1fr;
-              width: 90%;
-              margin: 0 auto;
-              padding: 0.5rem;
-            }
-            
-            .card-responsive .card {
-              width: 100%;
-              min-height: 180px;
-            }
-          }
-        `}
+          `}
       </style>
 
       {enableSpotlight && <GlobalSpotlight gridRef={gridRef} disableAnimations={shouldDisableAnimations} enabled={enableSpotlight} spotlightRadius={spotlightRadius} glowColor={glowColor} />}
 
       <BentoCardGrid gridRef={gridRef}>
-        <motion.div className="card-responsive grid gap-2" variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }}>
+        <motion.div className="card-responsive grid  gap-2" variants={isMobile ? undefined : containerVariants} initial={isMobile ? false : "hidden"} whileInView={isMobile ? undefined : "visible"}>
           {data.map((card, index) => {
             const baseClassName = `card
             flex flex-col justify-between

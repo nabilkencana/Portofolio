@@ -169,7 +169,7 @@ const About = ({ isReady }) => {
             <div className="h-[500px] 2xl:h-[620px]">
               {showLanyard && (
                 <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, ease: "easeOut" }}>
-                  <Lanyard position={[0, 0, 18]}  />
+                  <Lanyard position={[0, 0, 18]} />
                 </motion.div>
               )}
             </div>

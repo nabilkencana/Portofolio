@@ -80,11 +80,14 @@ const Contact = () => {
                   className="
                   w-10 h-10 rounded-xl
                   flex items-center justify-center
-                  
-                  transition
-                  "
+                  shrink-0
+                  transition-transform duration-300 ease-out
+                  group-hover:scale-110
+                  group-hover:rotate-6
+                  group-hover:-translate-y-0.5
+                "
                 >
-                  <img src={item.icon} alt="" />
+                  <img src={item.icon} alt={item.name} className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 object-contain" />
                 </div>
 
                 {/* Text */}

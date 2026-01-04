@@ -142,8 +142,8 @@ const Chat = () => {
                       const isMe = msg.uid === user.uid;
 
                       return (
-                        <div key={msg.id} className={`flex gap-2 ${isMe ? "self-end flex-row-reverse" : "self-start"}`}>
-                          {msg.photo && <img src={msg.photo} alt={msg.name} className="w-7 h-7 rounded-full" />}
+                        <div key={msg.id} className={`flex gap-2 ${isMe ? "self-end flex-row-reverse items-end" : "self-start "}`}>
+                          {msg.photo && <img src={msg.photo} alt={msg.name} className="w-7 h-7 rounded-full " />}
 
                           <div
                             className={`

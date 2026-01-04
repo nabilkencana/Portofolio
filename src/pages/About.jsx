@@ -1,10 +1,10 @@
 import TextType from "../components/text/TextType";
-import Lanyard from "../components/Lanyard";
+import Lanyard from "../components/ui/Lanyard";
 import logo_teknokrat from "../assets/cards/logo_teknokrat.png";
 import logo_me from "../assets/cards/logo_me.png";
 import google_maps from "../assets/cards/google_maps.png";
-import BlurText from "../components/blur_text/BlurText";
-import SplitText from "../components/split_text/SplitText";
+import BlurText from "../components/ui/BlurText";
+import SplitText from "../components/ui/SplitText";
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 

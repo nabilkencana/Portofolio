@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../lib/firebase";
 import { loginWithGoogle, loginWithGithub } from "../lib/auth";
@@ -17,6 +17,7 @@ const Chat = () => {
   const [user, setUser] = useState(null);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const messagesEndRef = useRef(null);
 
   const handleSend = async () => {
     if (!message.trim() || !user) return;
@@ -54,6 +55,12 @@ const Chat = () => {
 
     return () => unsub();
   }, []);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }, [messages]);
 
   return (
     <section className="relative px-4 h-full">
@@ -122,8 +129,8 @@ const Chat = () => {
               <>
                 {/* CHAT WINDOW */}
                 <div
-                  className="bg-zinc-950 border border-zinc-800 rounded-2xl p-4
-              h-[60vh] sm:h-[65vh] overflow-y-auto flex flex-col gap-4 mb-4"
+                  className="bg-zinc-950 border border-red-500 rounded-2xl p-4
+              h-[60vh] sm:h-[43vh] overflow-y-auto flex flex-col gap-4 mb-4"
                 >
                   {messages.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full text-zinc-500">
@@ -151,6 +158,7 @@ const Chat = () => {
                       );
                     })
                   )}
+                  <div ref={messagesEndRef} />
                 </div>
 
                 {/* INPUT */}

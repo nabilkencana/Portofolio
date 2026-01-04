@@ -1,4 +1,4 @@
-import ChromaGrid from "../components/chroma_grid/ChromaGrid";
+import ChromaGrid from "../components/ui/ChromaGrid";
 import { projectData } from "../data/projectData ";
 import { motion } from "motion/react";
 

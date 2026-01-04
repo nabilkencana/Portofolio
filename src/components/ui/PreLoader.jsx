@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import CountUp from "../count_up/CountUp";
+import CountUp from "./CountUp";
 
 const Preloader = ({ onFinish }) => {
   const [step, setStep] = useState("count1");

@@ -11,7 +11,7 @@ import { db } from "../lib/firebase";
 
 import google from "../assets/cards/google.svg";
 import github from "../assets/cards/github.png";
-import Orb from "../components/orb/Orb";
+import Orb from "../components/ui/Orb";
 
 const Chat = () => {
   const [user, setUser] = useState(null);
@@ -129,7 +129,7 @@ const Chat = () => {
               <>
                 {/* CHAT WINDOW */}
                 <div
-                  className="bg-zinc-950 border border-red-500 rounded-2xl p-4
+                  className="bg-zinc-950 border border-zinc-800 rounded-2xl p-4
               h-[60vh] sm:h-[43vh] overflow-y-auto flex flex-col gap-4 mb-4"
                 >
                   {messages.length === 0 ? (
@@ -142,7 +142,7 @@ const Chat = () => {
                       const isMe = msg.uid === user.uid;
 
                       return (
-                        <div key={msg.id} className={`flex gap-2 ${isMe ? "self-end flex-row-reverse items-end" : "self-start "}`}>
+                        <div key={msg.id} className={`flex gap-2 ${isMe ? "self-end flex-row-reverse items-end" : "self-start items-end "}`}>
                           {msg.photo && <img src={msg.photo} alt={msg.name} className="w-7 h-7 rounded-full " />}
 
                           <div
@@ -173,8 +173,8 @@ const Chat = () => {
                   <button
                     onClick={handleSend}
                     type="button"
-                    className="rounded-xl bg-zinc-800 px-5 font-semibold
-                hover:opacity-90 transition"
+                    className="cursor-pointer rounded-xl bg-zinc-800 px-5 font-semibold
+                hover:opacity-90 transition hover:-translate-y-1"
                   >
                     Send
                   </button>

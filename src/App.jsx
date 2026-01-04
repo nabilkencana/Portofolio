@@ -9,7 +9,7 @@ import Gallery from "./pages/Gallery";
 import Achievements from "./pages/Achievements";
 import Chat from "./pages/Chat";
 import Aurora from "./components/ui/Aurora";
-import Preloader from "./components/preloader/PreLoader";
+import Preloader from "./components/ui/PreLoader";
 
 const App = () => {
   // page
@@ -81,12 +81,12 @@ const App = () => {
       case "chat":
         return <Chat />;
       default:
-        return <About isReady={isReady} />;
+        return  <About isReady={isReady} />;
     }
   };
 
   return (
-    <div className={`relative min-h-screen bg-zinc-950 overflow-hidden {${loading ? "opacity-0" : "opacity-100"}`}>
+    <div className={`select-none relative min-h-screen bg-zinc-950 overflow-hidden {${loading ? "opacity-0" : "opacity-100"}`}>
       {/* BACKGROUND */}
       <Aurora style={{ border: "2px solid black" }} />
 

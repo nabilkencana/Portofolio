@@ -1,4 +1,4 @@
-import MagicBento from "../components/magic_bento/MagicBento";
+import MagicBento from "../components/ui/MagicBento";
 import skillsData from "../data/cardData";
 import { motion } from "motion/react";
 

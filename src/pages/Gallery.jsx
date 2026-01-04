@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { galleryData } from "../data/galleryData";
-import InfiniteMenu from "../components/infinite_menu/InfiniteMenu";
+import InfiniteMenu from "../components/ui/InfiniteMenu";
 
 const Gallery = ({ activeColor }) => {
   const [ready, setReady] = useState(false);

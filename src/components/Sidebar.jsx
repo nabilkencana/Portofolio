@@ -1,4 +1,5 @@
 import avatar2 from "../assets/avatar2.png";
+
 const colorMap = {
   emerald: "bg-emerald-500 !text-black",
   sky: "bg-sky-500 !text-white",
@@ -61,8 +62,9 @@ const Sidebar = ({ setActivePage, activePage, activeColor, setActiveColor, isOpe
           <img
             src={avatar2}
             alt="profile"
-            className={`mx-auto w-14 h-14 rounded-full mb-4 ring-2
-                ${activeColor === "emerald" ? "ring-emerald-500" : activeColor === "sky" ? "ring-sky-500" : activeColor === "violet" ? "ring-violet-500" : activeColor === "amber" ? "ring-amber-200" : "ring-red-500"}`}
+            onClick={() => setActivePage("about")}
+            className={`hover:cursor-pointer mx-auto w-14 h-14 rounded-full mb-4 ring-2
+              ${activeColor === "emerald" ? "ring-emerald-500" : activeColor === "sky" ? "ring-sky-500" : activeColor === "violet" ? "ring-violet-500" : activeColor === "amber" ? "ring-amber-200" : "ring-red-500"}`}
           />
 
           <h2 className="text-xl font-bold font-[Space_Grotesk]">Sajid Izzulhaq</h2>

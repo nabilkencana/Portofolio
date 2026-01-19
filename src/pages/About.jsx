@@ -1,6 +1,6 @@
 import TextType from "../components/text/TextType";
 import Lanyard from "../components/ui/Lanyard";
-import logo_teknokrat from "../assets/cards/logo_teknokrat.png";
+import logo_telkom from "../assets/cards/logo_telkom.png";
 import logo_me from "../assets/cards/logo_me.png";
 import google_maps from "../assets/cards/google_maps.png";
 import BlurText from "../components/ui/BlurText";
@@ -13,19 +13,19 @@ import { motion } from "motion/react";
 const socialLinks = [
   {
     name: "linkedin",
-    href: "https://www.linkedin.com/in/muhammad-sajid-4752742a0/",
+    href: "https://www.linkedin.com/in/nabilkencana/",
   },
   {
     name: "github",
-    href: "https://github.com/Sanzzyy",
+    href: "https://github.com/nabilkencana",
   },
   {
     name: "instagram",
-    href: "https://www.instagram.com/syzen.web/",
+    href: "https://www.instagram.com/nabill.anwr/",
   },
   {
     name: "tiktok",
-    href: "https://www.tiktok.com/@syzen.web",
+    href: "https://www.tiktok.com/@nabilkencana20",
   },
 ];
 
@@ -97,11 +97,11 @@ const About = ({ isReady }) => {
             <div className="space-y-3 pt-3 lg:pt-28 2xl:pt-44">
               {/* HEADLINE */}
               {isReady && (
-                <BlurText text="Hi 👋, I'm Sajid Izzulhaq" className="font-[Space_Grotesk] text-4xl lg:text-5xl font-bold leading-tight" animateBy="words" delay={100} direction="top" onAnimationComplete={() => setShowTyping(true)} />
+                <BlurText text="Hi 👋, I'm Nabil Kencana" className="font-[Space_Grotesk] text-4xl lg:text-5xl font-bold leading-tight" animateBy="words" delay={100} direction="top" onAnimationComplete={() => setShowTyping(true)} />
               )}
 
               {/* TYPING */}
-              {showTyping && <TextType text={["Fullstack Developer", "Content Creator"]} typingSpeed={35} deletingSpeed={25} pauseDuration={1200} cursorCharacter="_" className="text-(--accent) tracking-widest" />}
+              {showTyping && <TextType text={["Fullstack Developer", "Mobile App Developer", "UI / UX Designer"]} typingSpeed={35} deletingSpeed={25} pauseDuration={1200} cursorCharacter="_" className="text-(--accent) tracking-widest" />}
 
               <motion.div
                 initial={{ opacity: 0, y: 12 }}
@@ -115,7 +115,7 @@ const About = ({ isReady }) => {
               >
                 {showDescription && (
                   <SplitText
-                    text="I am a university student actively improving my skills in web development, focusing on building clean, modern, and user-friendly applications using React, Tailwind CSS, and backend fundamentals."
+                    text="Saya adalah siswa SMK Telkom Malang yang sedang aktif mengembangkan kemampuan di bidang web development, dengan fokus pada pembuatan aplikasi yang modern, bersih, dan mudah digunakan menggunakan React, Tailwind CSS, serta dasar-dasar backend."
                     className="text-zinc-300 text-base leading-relaxed max-w-xl text-start"
                     animateBy="words"
                   />
@@ -166,7 +166,7 @@ const About = ({ isReady }) => {
 
             {/* LANYARD */}
 
-            <div className="h-[500px] 2xl:h-[620px]">
+            <div className="h-[500px] 2xl:h-[620px]5">
               {showLanyard && (
                 <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, ease: "easeOut" }}>
                   <Lanyard position={[0, 0, 18]} />
@@ -185,23 +185,23 @@ const About = ({ isReady }) => {
 
         <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" variants={gridContainer} initial="hidden" whileInView="visible" viewport={{ once: true }}>
           {/* NAME */}
-          <motion.a href="https://www.linkedin.com/in/muhammad-sajid-4752742a0/" variants={cardItem} whileHover={{ y: -2 }}>
+          <motion.a href="https://www.linkedin.com/in/nabilkencana/" variants={cardItem} whileHover={{ y: -2 }}>
             <div className="flex items-center gap-4 p-5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-(--accent) transition">
               <img src={logo_me} alt="Profile" className="w-12 h-12 object-contain" />
               <div>
-                <p className="text-sm text-zinc-400">Name</p>
-                <p className="font-medium">Sajid Izzulhaq</p>
+                <p className="text-sm text-zinc-400">Nama</p>
+                <p className="font-medium">Nabil Kencana</p>
               </div>
             </div>
           </motion.a>
 
           {/* EDUCATION */}
-          <motion.a href="https://teknokrat.ac.id/" variants={cardItem} whileHover={{ y: -2 }}>
+          <motion.a href="https://www.smktelkom-mlg.sch.id/" variants={cardItem} whileHover={{ y: -2 }}>
             <div className="flex items-center gap-4 p-5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-(--accent) transition">
-              <img src={logo_teknokrat} alt="University" className="w-12 h-12 object-contain" />
+              <img src={logo_telkom} alt="University" className="w-12 h-12 object-contain" />
               <div>
-                <p className="text-sm text-zinc-400">Education</p>
-                <p className="font-medium">University Teknokrat</p>
+                <p className="text-sm text-zinc-400">Pendidikan</p>
+                <p className="font-medium">SMK Telkom Malang</p>
               </div>
             </div>
           </motion.a>
@@ -211,8 +211,8 @@ const About = ({ isReady }) => {
             <div className="flex items-center gap-4 p-5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-(--accent) transition">
               <img src={google_maps} alt="Location" className="w-10 h-10 object-contain" />
               <div>
-                <p className="text-sm text-zinc-400">Location</p>
-                <p className="font-medium">Bandar Lampung</p>
+                <p className="text-sm text-zinc-400">Lokasi</p>
+                <p className="font-medium">Malang</p>
               </div>
             </div>
           </motion.div>
@@ -221,31 +221,48 @@ const About = ({ isReady }) => {
 
       {/* ================= EXPERIENCE ================= */}
       <div className="p-6">
-        <motion.h3 className="flex items-center gap-3 text-xl font-semibold mb-6" variants={sectionTitle} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+        <motion.h3
+          className="flex items-center gap-3 text-xl font-semibold mb-6"
+          variants={sectionTitle}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
           <i className="ri-organization-chart text-(--accent) text-2xl" />
-          Experience
+          Pengalaman
         </motion.h3>
 
-        <motion.div className="space-y-4" variants={gridContainer} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+        <motion.div
+          className="space-y-4"
+          variants={gridContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
           {[
             {
-              title: "Frontend Developer (Self Learning)",
-              desc: "Learning and building responsive web interfaces using React, Tailwind CSS, and modern JavaScript.",
+              title: "Frontend Developer (Belajar Mandiri)",
+              desc: "Mempelajari dan membangun tampilan web yang responsif menggunakan React, Tailwind CSS, dan JavaScript modern.",
             },
             {
-              title: "Personal Web Projects",
-              desc: "Developing personal portfolio websites, landing pages, and interactive components.",
+              title: "Proyek Web Pribadi",
+              desc: "Mengembangkan website portfolio, landing page, dan komponen interaktif untuk meningkatkan skill pengembangan web.",
             },
             {
-              title: "UI & Layout Practice",
-              desc: "Designing clean layouts, typography systems, and responsive grids using Tailwind CSS and Figma references.",
+              title: "Latihan UI & Layout",
+              desc: "Merancang layout yang rapi, sistem tipografi, dan grid responsif menggunakan Tailwind CSS dengan referensi desain dari Figma.",
             },
             {
-              title: "Laravel CRUD & Authentication System",
-              desc: "Building web applications with CRUD, authentication, and role-based access control.",
+              title: "Sistem CRUD & Autentikasi NestJs",
+              desc: "Membangun aplikasi web dengan fitur CRUD, sistem login, serta role-based access control.",
             },
           ].map((item, i) => (
-            <motion.div key={i} variants={cardItem} whileHover={{ y: -2 }} className="p-5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-(--accent) transition">
+            <motion.div
+              key={i}
+              variants={cardItem}
+              whileHover={{ y: -2 }}
+              className="p-5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-(--accent) transition"
+            >
               <h4 className="font-semibold">{item.title}</h4>
               <p className="text-sm text-zinc-400 mt-1">{item.desc}</p>
             </motion.div>

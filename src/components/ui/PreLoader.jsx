@@ -42,7 +42,7 @@ const Preloader = ({ onFinish }) => {
       {step === "count2" && <CountUp from={90} to={100} duration={0.9} onEnd={() => setStep("done")} className="text-6xl font-bold text-white font-[Space_Grotesk]" />}
 
       {/* DONE */}
-      {step === "done" && <span className="text-5xl font-bold text-white font-[Space_Grotesk] animate-fade-in">Let&apos;s Go!</span>}
+      {step === "done" && <span className="text-5xl font-bold text-white font-[Space_Grotesk] animate-fade-in">Selamat Datang!</span>}
     </div>
   );
 };

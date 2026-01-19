@@ -9,8 +9,8 @@ const Achievements = () => {
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, ease: "easeOut" }}>
         <div className="p-6 max-w-2xl">
-          <h1 className="font-[Space_Grotesk] text-4xl font-bold">Achievements</h1>
-          <p className="text-zinc-400 mt-3 leading-relaxed">A selection of certifications and learning achievements that reflect my continuous growth in technology and problem solving.</p>
+          <h1 className="font-[Space_Grotesk] text-4xl font-bold">Pencapaian</h1>
+          <p className="text-zinc-400 mt-3 leading-relaxed">Beberapa sertifikasi dan pencapaian pembelajaran yang mencerminkan perkembangan saya dalam teknologi dan pemecahan masalah.</p>
         </div>
       </motion.div>
 
@@ -23,13 +23,13 @@ const Achievements = () => {
               <img src={item.image} alt={item.title} className="w-full h-full object-cover border-2" />
 
               {/* subtle overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
             </div>
 
             {/* CONTENT */}
             <div className="p-4 space-y-3">
               {/* TITLE */}
-              <h3 className="font-semibold text-lg text-(--accent)">{item.title}</h3>
+              <h3 className="font-semibold text-lg text-accent">{item.title}</h3>
 
               {/* TECH STACK */}
               <div className="flex flex-wrap gap-2">

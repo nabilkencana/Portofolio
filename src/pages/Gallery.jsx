@@ -41,14 +41,14 @@ const Gallery = ({ activeColor }) => {
   return (
     <section className="space-y-12 p-6">
       <div>
-        <h1 className="font-[Space_Grotesk] text-4xl font-bold">My Gallery</h1>
-        <p className="text-zinc-400 max-w-xl mt-3">Moments from my journey — coding, events, hobbies, and daily life.</p>
+        <h1 className="font-[Space_Grotesk] text-4xl font-bold">Galeri Saya</h1>
+        <p className="text-zinc-400 max-w-xl mt-3">Momen dari perjalanan saya — ngoding, acara, hobi, dan kehidupan sehari-hari</p>
       </div>
 
-      <div className="h-[500px] rounded-3xl overflow-hidden relative">
+      <div className="h-125 rounded-3xl overflow-hidden relative">
         {!ready && (
           <div className="absolute inset-0 flex items-center justify-center bg-zinc-900/60 backdrop-blur">
-            <p className="text-sm text-zinc-400 animate-pulse">Loading gallery...</p>
+            <p className="text-sm text-zinc-400 animate-pulse">Memuat gallery...</p>
           </div>
         )}
 

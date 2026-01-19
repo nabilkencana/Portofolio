@@ -11,7 +11,7 @@ import Chat from "./pages/Chat";
 import Aurora from "./components/ui/Aurora";
 import Preloader from "./components/ui/PreLoader";
 import { getRedirectResult } from "firebase/auth";
-import { auth } from "./firebase";
+import { auth } from "./lib/firebase";
 
 
 const App = () => {

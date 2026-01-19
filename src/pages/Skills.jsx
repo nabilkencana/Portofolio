@@ -7,8 +7,8 @@ const Skills = () => {
     <section className="space-y-12 p-6">
       {/* HEADER */}
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: "easeOut" }}>
-        <h1 className="font-[Space_Grotesk] text-4xl font-bold">My Skills</h1>
-        <p className="text-zinc-400 max-w-xl mt-3">Technologies and tools I use to build modern web applications.</p>
+        <h1 className="font-[Space_Grotesk] text-4xl font-bold">Keahlian Saya</h1>
+        <p className="text-zinc-400 max-w-xl mt-3">Teknologi dan tools yang saya gunakan untuk membangun aplikasi web modern.</p>
       </motion.div>
 
       {/* SKILLS GRID */}

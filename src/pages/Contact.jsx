@@ -8,26 +8,26 @@ import { motion } from "motion/react";
 const socials = [
   {
     name: "Gmail",
-    value: "sajidizzulhaqz@gmail.com",
-    href: "https://mail.google.com/mail/?view=cm&to=sajidizzulhaqz@gmail.com&su=Hello&body=Halo Sajid",
+    value: "nabilkencana20@gmail.com",
+    href: "https://mail.google.com/mail/?view=cm&to=nabilkencana20@gmail.com&su=Hello&body=Halo Nabil",
     icon: gmail,
   },
   {
     name: "Instagram",
-    value: "@syzen.web",
-    href: "https://www.instagram.com/syzen.web/",
+    value: "@nabill.anwr",
+    href: "https://www.instagram.com/nabill.anwr/",
     icon: instagram,
   },
   {
     name: "GitHub",
-    value: "https://github.com/Sanzzyy",
-    href: "https://github.com/Sanzzyy",
+    value: "https://github.com/nabilkencana",
+    href: "https://github.com/nabilkencana",
     icon: github,
   },
   {
     name: "TikTok",
-    value: "@syzen.web",
-    href: "https://www.tiktok.com/@syzen.web",
+    value: "@nabilkencana20",
+    href: "https://www.tiktok.com/@nabilkencana20",
     icon: tiktok,
   },
 ];
@@ -39,8 +39,8 @@ const Contact = () => {
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, ease: "easeOut" }}>
           <div className="mb-12 text-center">
-            <h1 className="font-[Space_Grotesk] text-4xl font-bold">Get in Touch</h1>
-            <p className="mt-3 text-zinc-400">Feel free to reach me through these platforms</p>
+            <h1 className="font-[Space_Grotesk] text-4xl font-bold">Hubungi Saya</h1>
+            <p className="mt-3 text-zinc-400">Silakan hubungi saya melalui platform berikut</p>
           </div>
         </motion.div>
 
@@ -58,7 +58,7 @@ const Contact = () => {
               bg-zinc-900/70 p-6
               backdrop-blur
               transition-all duration-300
-              hover:border-[var(--accent)]
+              hover:border-accent
               hover:bg-zinc-900
               "
             >
@@ -68,8 +68,8 @@ const Contact = () => {
                 absolute inset-0 opacity-0
                 group-hover:opacity-100
                 transition
-                bg-gradient-to-br
-                from-[var(--accent)]/10
+                bg-linear-to-br
+                from-(--accent)/10
                 to-transparent
                 "
               />
@@ -101,7 +101,7 @@ const Contact = () => {
                   className="
                   ri-arrow-right-up-line
                   text-zinc-500
-                  group-hover:text-[var(--accent)]
+                  group-hover:text-accent
                     transition
                   "
                 />

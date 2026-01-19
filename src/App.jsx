@@ -13,7 +13,7 @@ import Preloader from "./components/ui/PreLoader";
 
 const App = () => {
   // page
-  const [activePage, setActivePage] = useState("about");
+  const [activePage, setActivePage] = useState("tentang");
   // color
   const [activeColor, setActiveColor] = useState("emerald");
   // hamburger menu
@@ -68,15 +68,15 @@ const App = () => {
 
   const renderPage = () => {
     switch (activePage) {
-      case "projects":
+      case "proyek":
         return <Projects />;
-      case "gallery":
+      case "galeri":
         return <Gallery activeColor={activeColor} />;
-      case "skills":
+      case "keahlian":
         return <Skills />;
-      case "contact":
+      case "kontak":
         return <Contact />;
-      case "achievements":
+      case "pencapaian":
         return <Achievements />;
       case "chat":
         return <Chat />;

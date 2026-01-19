@@ -7,8 +7,8 @@ const Projects = () => {
     <section className="space-y-12 p-6">
       {/* HEADER */}
       <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, ease: "easeOut" }}>
-        <h1 className="font-[Space_Grotesk] text-4xl font-bold mt-1">My Projects</h1>
-        <p className="text-zinc-400 max-w-xl mt-3">A selection of projects I’ve built using modern web technologies.</p>
+        <h1 className="font-[Space_Grotesk] text-4xl font-bold mt-1">Proyek Saya</h1>
+        <p className="text-zinc-400 max-w-xl mt-3">Beberapa proyek yang telah saya bangun menggunakan teknologi web modern.</p>
       </motion.div>
 
       {/* PROJECT GRID */}

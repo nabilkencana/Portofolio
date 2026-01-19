@@ -17,12 +17,12 @@ const hoverMap = {
 };
 
 const navItems = [
-  { id: "about", label: "About", icon: "ri-user-3-line" },
-  { id: "gallery", label: "Gallery", icon: "ri-image-line" },
-  { id: "skills", label: "Skills", icon: "ri-code-line" },
-  { id: "projects", label: "Projects", icon: "ri-folder-line" },
-  { id: "achievements", label: "Achievements", icon: "ri-award-line" },
-  { id: "contact", label: "Contact", icon: "ri-mail-line" },
+  { id: "tentang", label: "Tentang", icon: "ri-user-3-line" },
+  { id: "galeri", label: "Galeri", icon: "ri-image-line" },
+  { id: "keahlian", label: "Keahlian", icon: "ri-code-line" },
+  { id: "proyek", label: "Proyek", icon: "ri-folder-line" },
+  { id: "pencapaian", label: "Pencapaian", icon: "ri-award-line" },
+  { id: "kontak", label: "Kontak", icon: "ri-mail-line" },
   { id: "chat", label: "Chat", icon: "ri-chat-3-line" },
 ];
 
@@ -67,7 +67,7 @@ const Sidebar = ({ setActivePage, activePage, activeColor, setActiveColor, isOpe
               ${activeColor === "emerald" ? "ring-emerald-500" : activeColor === "sky" ? "ring-sky-500" : activeColor === "violet" ? "ring-violet-500" : activeColor === "amber" ? "ring-amber-200" : "ring-red-500"}`}
           />
 
-          <h2 className="text-xl font-bold font-[Space_Grotesk]">Sajid Izzulhaq</h2>
+          <h2 className="text-xl font-bold font-[Space_Grotesk]">M. Nabil Anwar K.</h2>
           <p className="text-sm text-zinc-400">Fullstack</p>
         </div>
         {/* Navigation */}
@@ -109,8 +109,8 @@ const Sidebar = ({ setActivePage, activePage, activeColor, setActiveColor, isOpe
         {/* Theme Switcher */}
         <div className="pt-4 border-t border-zinc-800">
           <p className="text-[10px] text-zinc-500 text-center mb-3 tracking-[0.25em]">
-            THEME
-            <span className="ml-2 capitalize text-(--accent)">{activeColor}</span>
+            TEMA
+            <span className="ml-2 capitalize text-accent">{activeColor}</span>
           </p>
 
           <div className="flex justify-center gap-3">

@@ -24,62 +24,62 @@ const galleryData = [
   {
     image: sertif2,
     title: "Sertifikat",
-    description: "Sertifikat Juara 2 INOTEK 2025",
+    description: "Sertifikat Juara 2 INOTEK 2025.",
   },
   {
     image: sertif3,
     title: "Semua Sertif",
-    description: "Sertifikat Selama 1 Semester",
+    description: "Sertifikat Selama 1 Semester.",
   },
   {
     image: random1,
     title: "Random",
-    description: "PAP Berangkat Sekul",
+    description: "PAP Berangkat Sekul.",
   },
   {
     image: random2,
     title: "Pameran",
-    description: "Pameran ASTRA HONDA MOTOR",
+    description: "Pameran ASTRA HONDA MOTOR.",
   },
   {
     image: random3,
     title: "Fotbar",
-    description: "Fotbar Satu kelas",
+    description: "Fotbar Satu kelas.",
   },
   {
     image: random4,
     title: "Mirror Selfie",
-    description: "Mirror Selfie Di Purwokerto",
+    description: "Mirror Selfie Di Purwokerto.",
   },
   {
     image: random5,
     title: "Foto Pantai",
-    description: "Foto Disaat Senja",
+    description: "Foto Disaat Senja.",
   },
   {
     image: makan1,
-    title: "Event",
-    description: "Live Session",
+    title: "Makan Malam",
+    description: "Makan ayam geprek sebelum tidur.",
   },
   {
     image: cafe1,
     title: "Cafe Sudimoro",
-    description: "Cafe Sudimoro Tulungagung",
+    description: "Cafe Sudimoro Tulungagung.",
   },
   {
     image: cafe2,
     title: "Wikusama Coffe",
-    description: "Mengubah Partition",
+    description: "Mengubah Partition.",
   },
   {
     image: code1,
     title: "Display Pameran",
-    description: "Display Aplikasi WargaKita",
+    description: "Display Aplikasi WargaKita.",
   },
   {
     image: code2,
     title: "Pengerjaan Aplikasi",
-    description: "Pengerjaan Aplikasi WargaKita",
+    description: "Pengerjaan Aplikasi WargaKita.",
   },
 ];
 

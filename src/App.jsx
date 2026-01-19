@@ -10,6 +10,9 @@ import Achievements from "./pages/Achievements";
 import Chat from "./pages/Chat";
 import Aurora from "./components/ui/Aurora";
 import Preloader from "./components/ui/PreLoader";
+import { getRedirectResult } from "firebase/auth";
+import { auth } from "./firebase";
+
 
 const App = () => {
   // page
@@ -84,6 +87,19 @@ const App = () => {
         return  <About isReady={isReady} />;
     }
   };
+
+  useEffect(() => {
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result?.user) {
+          console.log("Login GitHub sukses:", result.user);
+        }
+      })
+      .catch((error) => {
+        console.error("Redirect error:", error);
+      });
+  }, []);
+
 
   return (
     <div className={`select-none relative min-h-screen bg-zinc-950 overflow-hidden {${loading ? "opacity-0" : "opacity-100"}`}>

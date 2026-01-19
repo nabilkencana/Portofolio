@@ -196,7 +196,7 @@ const About = ({ isReady }) => {
           </motion.a>
 
           {/* EDUCATION */}
-          <motion.a href="https://www.smktelkom-mlg.sch.id/" variants={cardItem} whileHover={{ y: -2 }}>
+          <motion.a href="https://www.smktelkom-mlg.sch.id/" variants={cardItem} whileHover={{ y: -2 }} target="_blank">
             <div className="flex items-center gap-4 p-5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-(--accent) transition">
               <img src={logo_telkom} alt="University" className="w-12 h-12 object-contain" />
               <div>
@@ -207,7 +207,7 @@ const About = ({ isReady }) => {
           </motion.a>
 
           {/* LOCATION */}
-          <motion.div variants={cardItem} whileHover={{ y: -2 }}>
+          <motion.a href="https://maps.app.goo.gl/ZUq4PFxcfAMGNzh98" variants={cardItem} whileHover={{ y: -2 }} target="_blank">
             <div className="flex items-center gap-4 p-5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-(--accent) transition">
               <img src={google_maps} alt="Location" className="w-10 h-10 object-contain" />
               <div>
@@ -215,7 +215,7 @@ const About = ({ isReady }) => {
                 <p className="font-medium">Malang</p>
               </div>
             </div>
-          </motion.div>
+          </motion.a>
         </motion.div>
       </div>
 

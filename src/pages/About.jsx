@@ -185,7 +185,7 @@ const About = ({ isReady }) => {
 
         <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" variants={gridContainer} initial="hidden" whileInView="visible" viewport={{ once: true }}>
           {/* NAME */}
-          <motion.a href="https://www.linkedin.com/in/nabilkencana/" variants={cardItem} whileHover={{ y: -2 }}>
+          <motion.a href="https://www.linkedin.com/in/nabilkencana/" variants={cardItem} whileHover={{ y: -2 }} target="_blank">
             <div className="flex items-center gap-4 p-5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-(--accent) transition">
               <img src={logo_me} alt="Profile" className="w-12 h-12 object-contain" />
               <div>

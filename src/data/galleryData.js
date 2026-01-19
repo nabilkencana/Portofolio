@@ -1,6 +1,5 @@
 // Import Sertif 
 import sertif2 from "../assets/gallery/sertif2.JPG"
-import sertif1 from "../assets/gallery/sertif1.jpg"
 import sertif3 from '../assets/gallery/sertif3.png'
 
 // Import Random
@@ -22,11 +21,6 @@ import code1 from '../assets/gallery/code1.png'
 import code2 from '../assets/gallery/code2.png'
 
 const galleryData = [
-  {
-    image: sertif1,
-    title: "Sertifikat",
-    description: "Semua Sertifikat",
-  },
   {
     image: sertif2,
     title: "Sertifikat",

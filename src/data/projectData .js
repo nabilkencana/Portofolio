@@ -6,6 +6,7 @@ import website_portofolio2 from '../assets/projects/website_portofolio2.png'
 import website_wayang from '../assets/projects/website_wayang.png'
 import aplikasi_wargakita from '../assets/projects/aplikasi_wargakita.png'
 import website_ecoguard from '../assets/projects/website_EcoGuardAI.png'
+import aplikasi_ecoguard from '../assets/projects/aplikasi_ecoguard.png';
 
 export const projectData = [
   {
@@ -56,5 +57,12 @@ export const projectData = [
     subtitle: "ReactJs • TailwindCSS",
     borderColor: "#10b981",
     gradient: "linear-gradient(160deg,#10b981 0%,#000 70%)",
+  },
+  {
+    image: aplikasi_ecoguard,
+    title: "Aplikasi EcoGuad AI",
+    subtitle: "FLutter • SQLLite",
+    borderColor: "#10d160",
+    gradient: "linear-gradient(160deg,#10d160 0%,#000 70%)",
   },
 ];

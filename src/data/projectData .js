@@ -5,6 +5,7 @@ import website_mandalanawa from '../assets/projects/website_mandalanawa.png'
 import website_portofolio2 from '../assets/projects/website_portofolio2.png'
 import website_wayang from '../assets/projects/website_wayang.png'
 import aplikasi_wargakita from '../assets/projects/aplikasi_wargakita.png'
+import website_ecoguard from '../assets/projects/website_EcoGuardAI.png'
 
 export const projectData = [
   {
@@ -48,5 +49,12 @@ export const projectData = [
     subtitle: "HTML • Python • JavaScript",
     borderColor: "#6A5ACD",
     gradient: "linear-gradient(160deg,#6A5ACD 0%,#000 70%)",
+  },
+  {
+    image: website_ecoguard,
+    title: "Landing Page EcoGuad AI",
+    subtitle: "ReactJs • TailwindCSS",
+    borderColor: "#10b981",
+    gradient: "linear-gradient(160deg,#10b981 0%,#000 70%)",
   },
 ];

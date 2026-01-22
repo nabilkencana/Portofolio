@@ -20,6 +20,9 @@ import cafe2 from '../assets/gallery/cafe2.png'
 import code1 from '../assets/gallery/code1.png'
 import code2 from '../assets/gallery/code2.png'
 
+// Import Avatar
+import avatar from '@/assets/gallery/avatar.png';
+
 const galleryData = [
   {
     image: sertif2,
@@ -80,6 +83,11 @@ const galleryData = [
     image: code2,
     title: "Pengerjaan Aplikasi",
     description: "Pengerjaan Aplikasi WargaKita.",
+  },
+  {
+    image: avatar,
+    title: "Dokumentasi Eksul",
+    description: "Foto saat ekskul ITSoftware.",
   },
 ];
 

@@ -21,7 +21,7 @@ import code1 from '../assets/gallery/code1.png'
 import code2 from '../assets/gallery/code2.png'
 
 // Import Avatar
-import avatar from '@/assets/gallery/avatar.png';
+import avatar from '../assets/gallery/avatar.png';
 
 const galleryData = [
   {

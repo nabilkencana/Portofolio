@@ -7,6 +7,7 @@ import website_wayang from '../assets/projects/website_wayang.png'
 import aplikasi_wargakita from '../assets/projects/aplikasi_wargakita.png'
 import website_ecoguard from '../assets/projects/website_EcoGuardAI.png'
 import aplikasi_ecoguard from '../assets/projects/aplikasi_ecoguard.png';
+import website_career from '../assets/projects/website_career.png';
 
 export const projectData = [
   {
@@ -64,5 +65,12 @@ export const projectData = [
     subtitle: "FLutter • SQLLite",
     borderColor: "#10d160",
     gradient: "linear-gradient(160deg,#10d160 0%,#000 70%)",
+  },
+  {
+    image: website_career,
+    title: "Website Career",
+    subtitle: "NextJS • Firebase",
+    borderColor: "#1E90FF",
+    gradient: "linear-gradient(160deg,#1E90FF 0%,#000 70%)",
   },
 ];

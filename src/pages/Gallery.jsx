@@ -239,24 +239,6 @@ const Gallery = ({ activeColor }) => {
                     </div>
                   </div>
                 </div>
-
-                {/* Performance Tips */}
-                <div className="bg-zinc-900/50 rounded-xl p-4 border border-zinc-800">
-                  <div className="flex items-start gap-3">
-                    <Zap className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
-                    <div className="text-left">
-                      <p className="text-sm font-medium text-white mb-1">
-                        Tips Loading Cepat
-                      </p>
-                      <ul className="text-xs text-zinc-400 space-y-1">
-                        <li>• Gambar dioptimasi untuk web (WebP format)</li>
-                        <li>• Lazy loading diterapkan</li>
-                        <li>• CDN untuk distribusi global</li>
-                        <li>• Progressive image loading</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>

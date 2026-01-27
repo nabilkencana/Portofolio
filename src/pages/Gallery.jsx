@@ -431,25 +431,6 @@ const Gallery = ({ activeColor }) => {
       {/* FOOTER INFO */}
       {infiniteItems.length > 0 && (
         <div className="px-2 md:px-0">
-          {/* Mobile Instructions */}
-          {isMobile && (
-            <div className="mt-4 p-3 bg-zinc-900/30 rounded-xl">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center">
-                    <span className="text-sm">👆</span>
-                  </div>
-                  <span className="text-xs text-zinc-300">Tap untuk detail</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center">
-                    <span className="text-sm">👈👉</span>
-                  </div>
-                  <span className="text-xs text-zinc-300">Swipe untuk navigasi</span>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       )}
 

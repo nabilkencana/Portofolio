@@ -8,6 +8,7 @@ import aplikasi_wargakita from '../assets/projects/aplikasi_wargakita.png'
 import website_ecoguard from '../assets/projects/website_EcoGuardAI.png'
 import aplikasi_ecoguard from '../assets/projects/aplikasi_ecoguard.png';
 import website_career from '../assets/projects/website_career.png';
+import website_ujs from '../assets/projects/website_ujs.png';
 
 export const projectData = [
   {
@@ -72,5 +73,12 @@ export const projectData = [
     subtitle: "NextJS • Firebase",
     borderColor: "#1E90FF",
     gradient: "linear-gradient(160deg,#1E90FF 0%,#000 70%)",
+  },
+  {
+    image: website_ujs,
+    title: "Website UJS",
+    subtitle: "HTML • CSS • JavaScript",
+    borderColor: "#305492",
+    gradient: "linear-gradient(160deg,#305492 0%,#000 70%)",
   },
 ];

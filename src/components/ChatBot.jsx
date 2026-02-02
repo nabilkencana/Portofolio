@@ -1,17 +1,27 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { MessageSquare, X, Send, User, Bot, Loader2 } from 'lucide-react';
+import { MessageSquare, X, Send, Bot, Loader2, Trash2, Sparkles } from 'lucide-react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { botContext } from '../data/botContext';
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
-  const [messages, setMessages] = useState([
-    { role: 'assistant', content: 'Halo! Saya AI Nabil. Ada yang bisa saya bantu tentang portofolio Nabil?' }
-  ]);
+  const [messages, setMessages] = useState(() => {
+    const saved = localStorage.getItem('chat_history');
+    return saved ? JSON.parse(saved) : [
+      { role: 'assistant', content: 'Halo! Saya AI Nabil. Ada yang bisa saya bantu tentang portofolio Nabil?' }
+    ];
+  });
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
+
+  const suggestedQuestions = [
+    "Siapa Nabil?",
+    "Apa saja proyeknya?",
+    "Apa keahliannya?",
+    "Kontak Nabil"
+  ];
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -19,16 +29,23 @@ const ChatBot = () => {
 
   useEffect(() => {
     scrollToBottom();
+    localStorage.setItem('chat_history', JSON.stringify(messages));
   }, [messages]);
 
   const toggleChat = () => setIsOpen(!isOpen);
 
-  const handleSend = async (e) => {
-    e.preventDefault();
-    if (!input.trim() || isLoading) return;
+  const clearChat = () => {
+    const initialMessage = [{ role: 'assistant', content: 'Halo! Saya AI Nabil. Ada yang bisa saya bantu tentang portofolio Nabil?' }];
+    setMessages(initialMessage);
+    localStorage.setItem('chat_history', JSON.stringify(initialMessage));
+  };
 
-    const userText = input.trim();
-    const userMessage = { role: 'user', content: userText };
+  const handleSend = async (e, textOverride = null) => {
+    if (e) e.preventDefault();
+    const messageText = textOverride || input.trim();
+    if (!messageText || isLoading) return;
+
+    const userMessage = { role: 'user', content: messageText };
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
@@ -42,7 +59,7 @@ const ChatBot = () => {
 
       const genAI = new GoogleGenerativeAI(apiKey);
       const model = genAI.getGenerativeModel({
-        model: "gemini-2.5-flash",
+        model: "gemini-1.5-flash",
         systemInstruction: botContext,
       });
 
@@ -56,7 +73,7 @@ const ChatBot = () => {
 
       const chat = model.startChat({ history });
 
-      const result = await chat.sendMessage(userText);
+      const result = await chat.sendMessage(messageText);
       const response = await result.response;
       const text = response.text();
 
@@ -65,7 +82,7 @@ const ChatBot = () => {
       console.error("ChatBot Error:", error);
 
       // Fallback Mock Logic
-      const lowerInput = userText.toLowerCase();
+      const lowerInput = messageText.toLowerCase();
       let fallbackResponse = "";
 
       if (lowerInput.includes('siapa') || lowerInput.includes('nabil')) {
@@ -91,7 +108,7 @@ const ChatBot = () => {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end font-sans">
       {/* Chat Window */}
       <AnimatePresence>
         {isOpen && (
@@ -99,70 +116,115 @@ const ChatBot = () => {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="mb-4 w-[90vw] sm:w-[350px] h-[500px] bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl flex flex-col overflow-hidden backdrop-blur-xl"
+            className="mb-4 w-[90vw] sm:w-[380px] h-[550px] bg-zinc-900/95 border border-zinc-800 rounded-2xl shadow-2xl flex flex-col overflow-hidden backdrop-blur-xl"
           >
             {/* Header */}
-            <div className="p-4 bg-zinc-800 flex items-center justify-between border-b border-zinc-700">
+            <div className="p-4 bg-zinc-800/50 flex items-center justify-between border-b border-zinc-700/50">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-(--accent) flex items-center justify-center">
-                  <Bot size={20} className="text-black" />
+                <div className="w-10 h-10 rounded-full bg-(--accent) flex items-center justify-center shadow-lg">
+                  <Bot size={24} className="text-black" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-sm text-white">Nabil AI Assistant</h3>
+                  <h3 className="font-bold text-sm text-white flex items-center gap-1.5">
+                    Nabil AI Assistant
+                    <Sparkles size={12} className="text-(--accent)" />
+                  </h3>
                   <div className="flex items-center gap-1.5">
                     <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-[10px] text-zinc-300">Online</span>
+                    <span className="text-[10px] text-zinc-400">Online & Ready</span>
                   </div>
                 </div>
               </div>
-              <button
-                onClick={toggleChat}
-                className="p-1 hover:bg-zinc-700 rounded-full transition-colors text-white"
-              >
-                <X size={20} />
-              </button>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={clearChat}
+                  title="Hapus Percakapan"
+                  className="p-2 hover:bg-zinc-700/50 rounded-full transition-colors text-zinc-400 hover:text-red-400"
+                >
+                  <Trash2 size={18} />
+                </button>
+                <button
+                  onClick={toggleChat}
+                  className="p-2 hover:bg-zinc-700/50 rounded-full transition-colors text-zinc-400 hover:text-white"
+                >
+                  <X size={20} />
+                </button>
+              </div>
             </div>
 
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide">
               {messages.map((msg, index) => (
-                <div
+                <motion.div
+                  initial={{ opacity: 0, x: msg.role === 'user' ? 20 : -20 }}
+                  animate={{ opacity: 1, x: 0 }}
                   key={index}
                   className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-[80%] p-3 rounded-2xl text-sm ${msg.role === 'user'
-                        ? 'bg-(--accent) text-black rounded-tr-none'
-                        : 'bg-zinc-800 text-zinc-100 rounded-tl-none border border-zinc-700'
+                    className={`max-w-[85%] p-3.5 rounded-2xl text-sm leading-relaxed shadow-sm ${msg.role === 'user'
+                        ? 'bg-(--accent) text-black rounded-tr-none font-medium'
+                        : 'bg-zinc-800 text-zinc-100 rounded-tl-none border border-zinc-700/50'
                       }`}
                   >
                     {msg.content}
                   </div>
-                </div>
+                </motion.div>
               ))}
               {isLoading && (
                 <div className="flex justify-start">
-                  <div className="bg-zinc-800 text-zinc-100 p-3 rounded-2xl rounded-tl-none border border-zinc-700">
-                    <Loader2 size={16} className="animate-spin" />
+                  <div className="bg-zinc-800 text-zinc-100 p-4 rounded-2xl rounded-tl-none border border-zinc-700/50">
+                    <div className="flex gap-1">
+                      <motion.div
+                        animate={{ y: [0, -5, 0] }}
+                        transition={{ duration: 0.6, repeat: Infinity, delay: 0 }}
+                        className="w-1.5 h-1.5 bg-zinc-500 rounded-full"
+                      />
+                      <motion.div
+                        animate={{ y: [0, -5, 0] }}
+                        transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }}
+                        className="w-1.5 h-1.5 bg-zinc-500 rounded-full"
+                      />
+                      <motion.div
+                        animate={{ y: [0, -5, 0] }}
+                        transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }}
+                        className="w-1.5 h-1.5 bg-zinc-500 rounded-full"
+                      />
+                    </div>
                   </div>
                 </div>
               )}
               <div ref={messagesEndRef} />
             </div>
 
+            {/* Suggested Questions */}
+            {!isLoading && messages.length <= 1 && (
+              <div className="px-4 py-2 flex flex-wrap gap-2">
+                {suggestedQuestions.map((q, i) => (
+                  <button
+                    key={i}
+                    onClick={() => handleSend(null, q)}
+                    className="text-[11px] bg-zinc-800 hover:bg-zinc-700 text-zinc-300 px-3 py-1.5 rounded-full border border-zinc-700 transition-colors"
+                  >
+                    {q}
+                  </button>
+                ))}
+              </div>
+            )}
+
             {/* Input */}
-            <form onSubmit={handleSend} className="p-4 border-t border-zinc-800 flex gap-2">
+            <form onSubmit={handleSend} className="p-4 border-t border-zinc-800/50 flex gap-2 bg-zinc-900/50">
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Tanya sesuatu..."
-                className="flex-1 bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-(--accent) transition-colors text-white placeholder:text-zinc-500"
+                className="flex-1 bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-(--accent) transition-all text-white placeholder:text-zinc-600 shadow-inner"
               />
               <button
                 type="submit"
-                disabled={isLoading}
-                className="p-2 bg-(--accent) text-black rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50"
+                disabled={isLoading || !input.trim()}
+                className="p-2.5 bg-(--accent) text-black rounded-xl hover:opacity-90 transition-all disabled:opacity-30 disabled:grayscale shadow-lg active:scale-95"
               >
                 <Send size={18} />
               </button>
@@ -173,16 +235,34 @@ const ChatBot = () => {
 
       {/* Toggle Button */}
       <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
         onClick={toggleChat}
-        className="w-14 h-14 bg-(--accent) rounded-full flex items-center justify-center shadow-lg cursor-pointer transition-transform duration-200"
+        className="w-14 h-14 bg-(--accent) rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)] cursor-pointer transition-all duration-300 relative group"
       >
-        {isOpen ? (
-          <X size={28} className="text-black" />
-        ) : (
-          <MessageSquare size={28} className="text-black" />
-        )}
+        <AnimatePresence mode="wait">
+          {isOpen ? (
+            <motion.div
+              key="close"
+              initial={{ rotate: -90, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              exit={{ rotate: 90, opacity: 0 }}
+            >
+              <X size={28} className="text-black" />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="chat"
+              initial={{ rotate: 90, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              exit={{ rotate: -90, opacity: 0 }}
+              className="relative"
+            >
+              <MessageSquare size={28} className="text-black" />
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-black animate-bounce" />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.button>
     </div>
   );

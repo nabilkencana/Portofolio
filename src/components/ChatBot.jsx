@@ -36,13 +36,13 @@ const ChatBot = () => {
     try {
       const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
-      if (!apiKey || apiKey === 'YOUR_GEMINI_API_KEY') {
+      if (!apiKey) {
         throw new Error('API_KEY_MISSING');
       }
 
       const genAI = new GoogleGenerativeAI(apiKey);
       const model = genAI.getGenerativeModel({
-        model: "gemini-1.5-flash",
+        model: "gemini-2.5-flash",
         systemInstruction: botContext,
       });
 
@@ -108,16 +108,16 @@ const ChatBot = () => {
                   <Bot size={20} className="text-black" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-sm">Nabil AI Assistant</h3>
+                  <h3 className="font-semibold text-sm text-white">Nabil AI Assistant</h3>
                   <div className="flex items-center gap-1.5">
                     <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-[10px] text-zinc-400">Online</span>
+                    <span className="text-[10px] text-zinc-300">Online</span>
                   </div>
                 </div>
               </div>
               <button
                 onClick={toggleChat}
-                className="p-1 hover:bg-zinc-700 rounded-full transition-colors"
+                className="p-1 hover:bg-zinc-700 rounded-full transition-colors text-white"
               >
                 <X size={20} />
               </button>
@@ -131,11 +131,10 @@ const ChatBot = () => {
                   className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-[80%] p-3 rounded-2xl text-sm ${
-                      msg.role === 'user'
+                    className={`max-w-[80%] p-3 rounded-2xl text-sm ${msg.role === 'user'
                         ? 'bg-(--accent) text-black rounded-tr-none'
-                        : 'bg-zinc-800 text-zinc-200 rounded-tl-none border border-zinc-700'
-                    }`}
+                        : 'bg-zinc-800 text-zinc-100 rounded-tl-none border border-zinc-700'
+                      }`}
                   >
                     {msg.content}
                   </div>
@@ -143,7 +142,7 @@ const ChatBot = () => {
               ))}
               {isLoading && (
                 <div className="flex justify-start">
-                  <div className="bg-zinc-800 text-zinc-200 p-3 rounded-2xl rounded-tl-none border border-zinc-700">
+                  <div className="bg-zinc-800 text-zinc-100 p-3 rounded-2xl rounded-tl-none border border-zinc-700">
                     <Loader2 size={16} className="animate-spin" />
                   </div>
                 </div>
@@ -158,7 +157,7 @@ const ChatBot = () => {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Tanya sesuatu..."
-                className="flex-1 bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-(--accent) transition-colors"
+                className="flex-1 bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-(--accent) transition-colors text-white placeholder:text-zinc-500"
               />
               <button
                 type="submit"

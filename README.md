@@ -21,6 +21,7 @@ Portfolio website interaktif yang dibangun dengan React dan teknologi modern unt
 - 🚀 **Image Optimization** - Kompresi otomatis, lazy loading, dan adaptive quality
 - 🏆 **Achievements Showcase** - Tampilan sertifikat dan penghargaan
 - 📊 **Projects Portfolio** - Showcase proyek dengan detail teknologi
+- 🔗 **Clickable Project Cards** - Klik untuk membuka live demo atau repository
 
 ## 🛠️ Tech Stack
 
@@ -156,9 +157,12 @@ File production akan tersimpan di folder `dist/`
 
 ### 2. Proyek (Projects)
 - Showcase 10+ proyek
+- **Klik card untuk membuka website/demo**
+- **Hover effect dengan spotlight interaktif**
 - Filter berdasarkan teknologi
 - Gradient border cards
 - Detail teknologi yang digunakan
+- Link ke live demo, GitHub, atau dokumentasi
 
 ### 3. Keahlian (Skills)
 - 15+ teknologi yang dikuasai

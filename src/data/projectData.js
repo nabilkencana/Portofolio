@@ -17,6 +17,7 @@ export const projectData = [
     subtitle: "ReactJS • TailwindCSS ",
     borderColor: "#F97316",
     gradient: "linear-gradient(160deg,#F97316 0%,#000 70%)",
+    url: "https://website-iitc.vercel.app/", // Ganti dengan URL proyek Anda
   },
   {
     image: aplikasi_wargakita,
@@ -24,13 +25,15 @@ export const projectData = [
     subtitle: "Flutter • NestJS • Supabase",
     borderColor: "#61DAFB",
     gradient: "linear-gradient(160deg,#61DAFB 0%,#000 70%)",
+    url: "https://wargakita.canadev.my.id", // Ganti dengan URL proyek Anda
   },
   {
-    image: website_mandalanawa ,
+    image: website_mandalanawa,
     title: "Company Profile PT Mandalanawa",
     subtitle: "ReactJs • TailwindCSS • NestJS",
     borderColor: "#9CAF88",
     gradient: "linear-gradient(160deg,#9CAF88 0%,#000 70%)",
+    url: "https://mandalanawa.com", // Ganti dengan URL proyek Anda
   },
   {
     image: website_tokobangunan,
@@ -38,6 +41,7 @@ export const projectData = [
     subtitle: "ReactJs • TailwindCSS • Laravel",
     borderColor: "#06B6D4",
     gradient: "linear-gradient(160deg,#06B6D4 0%,#000 70%)",
+    url: "https://tokobangunan.vercel.app", // Ganti dengan URL proyek Anda
   },
   {
     image: website_portofolio2,
@@ -45,6 +49,7 @@ export const projectData = [
     subtitle: "NextJs • TailwindCSS • PostgreSQL",
     borderColor: "#4682B4",
     gradient: "linear-gradient(160deg,#4682B4 0%,#000 70%)",
+    url: "https://portfolio-guru.vercel.app", // Ganti dengan URL proyek Anda
   },
   {
     image: facemask_detection,
@@ -52,6 +57,7 @@ export const projectData = [
     subtitle: "HTML • Python • JavaScript",
     borderColor: "#6A5ACD",
     gradient: "linear-gradient(160deg,#6A5ACD 0%,#000 70%)",
+    url: "https://github.com/nabilkencana/facemask-detection", // Ganti dengan URL proyek Anda
   },
   {
     image: website_ecoguard,
@@ -59,6 +65,7 @@ export const projectData = [
     subtitle: "ReactJs • TailwindCSS",
     borderColor: "#10b981",
     gradient: "linear-gradient(160deg,#10b981 0%,#000 70%)",
+    url: "https://ecoguard.canadev.my.id/", // Ganti dengan URL proyek Anda
   },
   {
     image: aplikasi_ecoguard,
@@ -66,6 +73,7 @@ export const projectData = [
     subtitle: "FLutter • SQLLite",
     borderColor: "#10d160",
     gradient: "linear-gradient(160deg,#10d160 0%,#000 70%)",
+    url: "https://ecoguard.canadev.my.id/", // Ganti dengan URL proyek Anda
   },
   {
     image: website_career,
@@ -73,6 +81,7 @@ export const projectData = [
     subtitle: "NextJS • Firebase",
     borderColor: "#1E90FF",
     gradient: "linear-gradient(160deg,#1E90FF 0%,#000 70%)",
+    url: "https://career-website.vercel.app", // Ganti dengan URL proyek Anda
   },
   {
     image: website_ujs,
@@ -80,5 +89,6 @@ export const projectData = [
     subtitle: "HTML • CSS • JavaScript",
     borderColor: "#305492",
     gradient: "linear-gradient(160deg,#305492 0%,#000 70%)",
+    url: "https://ujstravel.vercel.app/", // Ganti dengan URL proyek Anda
   },
 ];

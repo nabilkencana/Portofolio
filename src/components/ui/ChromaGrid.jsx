@@ -106,8 +106,11 @@ const ChromaGrid = ({ items, className = "", radius = 300, damping = 0.45, fadeO
     });
   };
 
-  const handleCardClick = (url) => {
-    if (url) window.open(url, "_blank", "noopener,noreferrer");
+  const handleCardClick = (url, e) => {
+    if (url) {
+      // Buka URL di tab baru
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
   };
 
   const handleCardMove = (e) => {
@@ -133,8 +136,8 @@ const ChromaGrid = ({ items, className = "", radius = 300, damping = 0.45, fadeO
         <article
           key={i}
           onMouseMove={handleCardMove}
-          onClick={() => handleCardClick(c.url)}
-          className="group relative flex flex-col w-[300px] rounded-lg overflow-hidden border-2 border-transparent transition-colors duration-300 "
+          onClick={(e) => handleCardClick(c.url, e)}
+          className="group relative flex flex-col w-[300px] rounded-lg overflow-hidden border-2 border-transparent transition-all duration-300 cursor-pointer hover:scale-105 hover:shadow-2xl active:scale-95"
           style={{
             "--card-border": c.borderColor || "transparent",
             background: c.gradient,
@@ -148,13 +151,23 @@ const ChromaGrid = ({ items, className = "", radius = 300, damping = 0.45, fadeO
             }}
           />
           <div className="relative z-10 flex-1 p-3 box-border">
-            <img src={c.image} alt={c.title} loading="lazy" className="w-[80%] h-[80%]  md:w-full md:h-full object-cover mx-auto " />
+            <img src={c.image} alt={c.title} loading="lazy" className="w-[80%] h-[80%]  md:w-full md:h-full object-cover mx-auto transition-transform duration-300 group-hover:scale-105" />
           </div>
           <footer className="relative z-10 p-3 text-white font-sans grid grid-cols-1 gap-x-3 gap-y-1">
             <h3 className="m-0 text-[1.05rem] font-semibold">{c.title}</h3>
             {c.handle && <span className="text-[0.95rem] opacity-80 text-right">{c.handle}</span>}
             <p className="m-0 text-[0.85rem] opacity-85">{c.subtitle}</p>
             {c.location && <span className="text-[0.85rem] opacity-85 text-right">{c.location}</span>}
+            {c.url && (
+              <div className="flex items-center gap-2 mt-2 text-[0.8rem] opacity-70 group-hover:opacity-100 transition-opacity">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+                <span>Klik untuk membuka</span>
+              </div>
+            )}
           </footer>
         </article>
       ))}

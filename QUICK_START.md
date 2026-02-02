@@ -62,8 +62,21 @@ Edit `src/data/projectData.js`:
   subtitle: "Tech Stack",
   borderColor: "#10b981",
   gradient: "linear-gradient(160deg,#10b981 0%,#000 70%)",
+  url: "https://your-project-url.com", // URL proyek (website/GitHub/demo)
 }
 ```
+
+**Fitur Klik Proyek:**
+- Klik card proyek untuk membuka website/demo
+- Hover untuk melihat efek spotlight
+- Icon "Klik untuk membuka" muncul saat hover
+- Otomatis buka di tab baru
+
+**Tips URL Proyek:**
+- Website live: `https://your-project.vercel.app`
+- GitHub repo: `https://github.com/username/repo`
+- Demo video: `https://youtube.com/watch?v=...`
+- Figma design: `https://figma.com/file/...`
 
 ## 🏆 Menambahkan Achievement
 

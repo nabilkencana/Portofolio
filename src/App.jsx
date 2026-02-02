@@ -10,6 +10,7 @@ import Achievements from "./pages/Achievements";
 import Chat from "./pages/Chat";
 import Aurora from "./components/ui/Aurora";
 import Preloader from "./components/ui/PreLoader";
+import ChatBot from "./components/ChatBot";
 import { getRedirectResult } from "firebase/auth";
 import { auth } from "./lib/firebase";
 
@@ -119,6 +120,7 @@ const App = () => {
       </div>
       {loading && <Preloader onFinish={() => setLoading(false)} />}
       {!isReady && <Preloader onFinish={() => setIsReady(true)} />}
+      <ChatBot />
     </div>
   );
 };

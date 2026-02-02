@@ -17,7 +17,8 @@ Portfolio website interaktif yang dibangun dengan React dan teknologi modern unt
 - ⚡ **Smooth Animations** - Animasi halus dengan GSAP dan Motion
 - 🔥 **Firebase Integration** - Autentikasi dan database real-time
 - 💬 **Real-time Chat** - Fitur chat dengan Firebase
-- 🖼️ **Gallery Section** - Galeri foto interaktif
+- 🖼️ **Gallery Section** - Galeri foto interaktif dengan optimasi loading
+- 🚀 **Image Optimization** - Kompresi otomatis, lazy loading, dan adaptive quality
 - 🏆 **Achievements Showcase** - Tampilan sertifikat dan penghargaan
 - 📊 **Projects Portfolio** - Showcase proyek dengan detail teknologi
 
@@ -44,6 +45,12 @@ Portfolio website interaktif yang dibangun dengan React dan teknologi modern unt
 ### UI Components
 - **Lucide React** - Icon library
 - **Remixicon** - Icon font
+
+### Optimasi
+- **Canvas API** - Kompresi gambar client-side
+- **Intersection Observer** - Lazy loading images
+- **WebP/JPEG** - Format gambar optimal
+- **Adaptive Loading** - Menyesuaikan dengan kecepatan koneksi
 
 ## 📂 Struktur Proyek
 
@@ -161,6 +168,10 @@ File production akan tersimpan di folder `dist/`
 
 ### 4. Galeri (Gallery)
 - Foto-foto personal dan proyek
+- **Optimasi loading gambar otomatis**
+- **Kompresi 70-85% ukuran file**
+- **Adaptive quality berdasarkan koneksi**
+- **Progressive loading (prioritas 3 gambar pertama)**
 - Lightbox view
 - Responsive grid layout
 - Smooth transitions
@@ -212,6 +223,20 @@ npm run build    # Build untuk production
 npm run preview  # Preview production build
 npm run lint     # Menjalankan ESLint
 ```
+
+## 🚀 Optimasi Performa
+
+### Image Optimization
+Gallery menggunakan sistem optimasi gambar canggih:
+
+- ✅ **Kompresi Otomatis** - Mengurangi ukuran file 70-85%
+- ✅ **WebP Format** - Format modern yang lebih ringan
+- ✅ **Lazy Loading** - Load gambar saat dibutuhkan
+- ✅ **Adaptive Quality** - Menyesuaikan dengan kecepatan koneksi
+- ✅ **Progressive Loading** - Prioritas gambar yang terlihat dulu
+- ✅ **Responsive Sizing** - Ukuran optimal untuk setiap device
+
+Detail lengkap: [docs/IMAGE_OPTIMIZATION.md](docs/IMAGE_OPTIMIZATION.md)
 
 ## 🤝 Kontribusi
 

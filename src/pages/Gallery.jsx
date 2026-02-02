@@ -11,6 +11,13 @@ import {
   Monitor,
   AlertCircle
 } from "lucide-react";
+import {
+  compressImageFromUrl,
+  getOptimalQuality,
+  getOptimalMaxWidth,
+  getConnectionSpeed,
+  generatePlaceholder
+} from "../utils/imageOptimizer";
 
 const Gallery = ({ activeColor }) => {
   const [ready, setReady] = useState(false);
@@ -20,36 +27,46 @@ const Gallery = ({ activeColor }) => {
   const [loadingStage, setLoadingStage] = useState("preparing");
   const [isMobile, setIsMobile] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [connectionSpeed, setConnectionSpeed] = useState('fast');
 
-  // Deteksi ukuran layar
+  // Deteksi ukuran layar dan koneksi
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
 
     checkMobile();
+    setConnectionSpeed(getConnectionSpeed());
+
     window.addEventListener('resize', checkMobile);
 
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Fungsi untuk optimasi gambar di client-side
-  const optimizeImageUrl = (url) => {
+  // Fungsi untuk optimasi gambar di client-side dengan kompresi
+  const optimizeImageUrl = async (url) => {
     if (!url) return null;
 
-    if (url.includes('cloudinary') || url.includes('imgix')) {
-      return url;
-    }
+    try {
+      // Jika sudah optimized URL (cloudinary, imgix, dll)
+      if (url.includes('cloudinary') || url.includes('imgix')) {
+        return url;
+      }
 
-    if (url.startsWith('/')) {
-      return url;
-    }
+      // Untuk gambar lokal, kompres di client-side
+      const maxWidth = getOptimalMaxWidth();
+      const quality = getOptimalQuality();
 
-    return url;
+      // Kompres gambar
+      const compressed = await compressImageFromUrl(url, maxWidth, quality);
+      return compressed;
+    } catch (error) {
+      console.warn('Failed to optimize image:', url, error);
+      return url; // Fallback ke original
+    }
   };
 
   const infiniteItems = useMemo(() => {
-    // Validasi jika galleryData undefined atau bukan array
     if (!galleryData || !Array.isArray(galleryData)) {
       console.error('galleryData is undefined or not an array');
       return [];
@@ -63,13 +80,7 @@ const Gallery = ({ activeColor }) => {
           title: item?.title || 'Untitled',
           description: item?.description || '',
           link: item?.link || "#",
-          placeholder: `data:image/svg+xml;base64,${btoa(
-            `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
-              <rect width="400" height="300" fill="#1f2937"/>
-              <rect x="150" y="120" width="100" height="60" rx="10" fill="#374151"/>
-              <circle cx="200" cy="150" r="20" fill="#4b5563"/>
-            </svg>`
-          )}`,
+          placeholder: generatePlaceholder(400, 300),
         }));
     } catch (error) {
       console.error('Error processing galleryData:', error);
@@ -100,7 +111,6 @@ const Gallery = ({ activeColor }) => {
         setLoadingStage("preparing");
         setHasError(false);
 
-        // Validasi infiniteItems
         if (!infiniteItems || infiniteItems.length === 0) {
           setLoadingStage("ready");
           setReady(true);
@@ -111,48 +121,48 @@ const Gallery = ({ activeColor }) => {
         setTotalImages(imageUrls.length);
 
         setLoadingStage("optimizing");
-        const optimizedUrls = imageUrls.map(url => optimizeImageUrl(url));
-        setOptimizedImages(optimizedUrls);
 
-        await new Promise(resolve => setTimeout(resolve, 300));
+        // Optimasi gambar secara bertahap (3 gambar pertama prioritas)
+        const priorityCount = 3;
+        const optimizedUrls = [];
 
+        // Load dan kompres gambar prioritas dulu
+        for (let i = 0; i < Math.min(priorityCount, imageUrls.length); i++) {
+          const optimized = await optimizeImageUrl(imageUrls[i]);
+          optimizedUrls.push(optimized);
+          setImagesLoaded(i + 1);
+        }
+
+        // Load sisanya di background
         setLoadingStage("loading");
 
-        const loadPromises = optimizedUrls.map((src, index) => {
-          return new Promise((resolve) => {
-            // Skip jika tidak ada gambar
-            if (!src) {
-              setImagesLoaded(prev => prev + 1);
-              return resolve();
-            }
-
-            const img = new Image();
-            img.onload = () => {
-              setImagesLoaded(prev => prev + 1);
-              resolve();
-            };
-            img.onerror = () => {
-              // Fallback ke placeholder jika gambar gagal load
-              setImagesLoaded(prev => prev + 1);
-              console.warn(`Failed to load image: ${src}`);
-              resolve();
-            };
-            img.src = src;
-          });
+        const remainingPromises = imageUrls.slice(priorityCount).map(async (url, index) => {
+          // Delay kecil untuk tidak block UI
+          await new Promise(resolve => setTimeout(resolve, index * 50));
+          const optimized = await optimizeImageUrl(url);
+          optimizedUrls[priorityCount + index] = optimized;
+          setImagesLoaded(prev => prev + 1);
+          return optimized;
         });
 
+        // Set gambar prioritas dulu agar bisa langsung ditampilkan
+        setOptimizedImages([...optimizedUrls]);
+
+        // Tunggu sisanya dengan timeout
+        const timeoutDuration = connectionSpeed === 'slow' ? 3000 : isMobile ? 5000 : 8000;
         const timeoutPromise = new Promise(resolve => {
           setTimeout(() => {
             console.warn('Image loading timeout');
             resolve();
-          }, isMobile ? 5000 : 8000);
+          }, timeoutDuration);
         });
 
         await Promise.race([
-          Promise.all(loadPromises),
+          Promise.all(remainingPromises),
           timeoutPromise
         ]);
 
+        setOptimizedImages(optimizedUrls);
         setLoadingStage("ready");
         setTimeout(() => setReady(true), 200);
 
@@ -165,7 +175,7 @@ const Gallery = ({ activeColor }) => {
     };
 
     loadImagesWithOptimization();
-  }, [infiniteItems, isMobile]);
+  }, [infiniteItems, isMobile, connectionSpeed]);
 
   const progressPercentage = totalImages > 0
     ? Math.round((imagesLoaded / totalImages) * 100)
@@ -341,8 +351,8 @@ const Gallery = ({ activeColor }) => {
                   <div className="w-full h-1.5 md:h-3 bg-zinc-900 rounded-full overflow-hidden shadow-inner">
                     <div
                       className={`h-full rounded-full transition-all duration-300 ease-out relative ${hasError
-                          ? 'bg-gradient-to-r from-yellow-500/80 to-yellow-500'
-                          : 'bg-gradient-to-r from-accent/80 to-accent'
+                        ? 'bg-gradient-to-r from-yellow-500/80 to-yellow-500'
+                        : 'bg-gradient-to-r from-accent/80 to-accent'
                         }`}
                       style={{ width: `${progressPercentage}%` }}
                     >
@@ -356,13 +366,19 @@ const Gallery = ({ activeColor }) => {
                       <div className="flex items-center gap-1 bg-zinc-900/50 px-2 md:px-3 py-1 md:py-1.5 rounded-lg">
                         <div className="w-2 h-2 rounded-full bg-green-500"></div>
                         <span className="text-xs text-zinc-300">
-                          {isMobile ? "Mobile optimized" : "WebP format"}
+                          {connectionSpeed === 'slow' ? 'Koneksi lambat' : connectionSpeed === 'medium' ? 'Koneksi sedang' : 'Koneksi cepat'}
                         </span>
                       </div>
                       <div className="flex items-center gap-1 bg-zinc-900/50 px-2 md:px-3 py-1 md:py-1.5 rounded-lg">
                         <div className="w-2 h-2 rounded-full bg-blue-500"></div>
                         <span className="text-xs text-zinc-300">
-                          {isMobile ? "Fast load" : "Lazy loading"}
+                          {isMobile ? "Optimasi mobile" : "Optimasi desktop"}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1 bg-zinc-900/50 px-2 md:px-3 py-1 md:py-1.5 rounded-lg">
+                        <div className="w-2 h-2 rounded-full bg-purple-500"></div>
+                        <span className="text-xs text-zinc-300">
+                          Kompresi aktif
                         </span>
                       </div>
                     </div>
@@ -373,7 +389,9 @@ const Gallery = ({ activeColor }) => {
                 {isMobile && !hasError && (
                   <div className="bg-zinc-900/30 rounded-xl p-3 border border-zinc-800">
                     <p className="text-xs text-zinc-400 text-center">
-                      💡 Gunakan WiFi untuk loading gambar yang lebih cepat
+                      💡 {connectionSpeed === 'slow'
+                        ? 'Koneksi lambat terdeteksi - gambar dikompres maksimal'
+                        : 'Gunakan WiFi untuk loading gambar yang lebih cepat'}
                     </p>
                   </div>
                 )}

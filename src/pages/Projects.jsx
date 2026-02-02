@@ -1,5 +1,5 @@
 import ChromaGrid from "../components/ui/ChromaGrid";
-import { projectData } from "../data/projectData ";
+import { projectData } from "../data/projectData";
 import { motion } from "motion/react";
 
 const Projects = () => {

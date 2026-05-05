@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Projects from "./pages/Projects";
 import Sidebar from "./components/Sidebar";
 import Topbar from "./components/Topbar";
@@ -13,6 +13,9 @@ import Preloader from "./components/ui/PreLoader";
 import ChatBot from "./components/ChatBot";
 import { getRedirectResult } from "firebase/auth";
 import { auth } from "./lib/firebase";
+import AdminLoginModal from "./components/AdminLoginModal";
+import AdminPanel from "./pages/AdminPanel";
+import { isAdminLoggedIn } from "./lib/adminAuth";
 
 
 const App = () => {
@@ -25,6 +28,9 @@ const App = () => {
   // preloader
   const [loading, setLoading] = useState(true);
   const [isReady, setIsReady] = useState(false);
+  // admin
+  const [showAdminLogin, setShowAdminLogin] = useState(false);
+  const [showAdminPanel, setShowAdminPanel] = useState(false);
   // scrollbarcolos
   const scrollbarColors = {
     emerald: "#10b981",
@@ -101,6 +107,23 @@ const App = () => {
       });
   }, []);
 
+  // Hidden admin shortcut: Ctrl + Shift + A
+  const handleKeydown = useCallback((e) => {
+    if (e.ctrlKey && e.shiftKey && e.key === "A") {
+      e.preventDefault();
+      if (isAdminLoggedIn()) {
+        setShowAdminPanel(true);
+      } else {
+        setShowAdminLogin(true);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeydown);
+    return () => window.removeEventListener("keydown", handleKeydown);
+  }, [handleKeydown]);
+
 
   return (
     <div className={`select-none relative min-h-screen bg-zinc-950 overflow-hidden {${loading ? "opacity-0" : "opacity-100"}`}>
@@ -121,6 +144,17 @@ const App = () => {
       {loading && <Preloader onFinish={() => setLoading(false)} />}
       {!isReady && <Preloader onFinish={() => setIsReady(true)} />}
       <ChatBot />
+
+      {/* HIDDEN ADMIN — hanya via Ctrl+Shift+A */}
+      {showAdminLogin && (
+        <AdminLoginModal
+          onSuccess={() => { setShowAdminLogin(false); setShowAdminPanel(true); }}
+          onClose={() => setShowAdminLogin(false)}
+        />
+      )}
+      {showAdminPanel && (
+        <AdminPanel onClose={() => setShowAdminPanel(false)} />
+      )}
     </div>
   );
 };

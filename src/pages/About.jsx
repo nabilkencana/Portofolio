@@ -207,7 +207,7 @@ const About = ({ isReady }) => {
           </motion.a>
 
           {/* LOCATION */}
-          <motion.a href="https://maps.app.goo.gl/ZUq4PFxcfAMGNzh98" variants={cardItem} whileHover={{ y: -2 }} target="_blank">
+          <motion.a variants={cardItem} whileHover={{ y: -2 }} >
             <div className="flex items-center gap-4 p-5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-(--accent) transition">
               <img src={google_maps} alt="Location" className="w-10 h-10 object-contain" />
               <div>

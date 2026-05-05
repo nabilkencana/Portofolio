@@ -12,6 +12,7 @@ import website_ujs from '../assets/projects/website_ujs.png';
 
 export const projectData = [
   {
+    id: "proj_1",
     image: website_wayang,
     title: "Website Wayang Interaktif",
     subtitle: "ReactJS • TailwindCSS ",
@@ -20,6 +21,7 @@ export const projectData = [
     url: "https://website-iitc.vercel.app/", // Ganti dengan URL proyek Anda
   },
   {
+    id: "proj_2",
     image: aplikasi_wargakita,
     title: "Aplikasi WargaKita",
     subtitle: "Flutter • NestJS • Supabase",
@@ -28,6 +30,7 @@ export const projectData = [
     url: "https://wargakita.canadev.my.id", // Ganti dengan URL proyek Anda
   },
   {
+    id: "proj_3",
     image: website_mandalanawa,
     title: "Company Profile PT Mandalanawa",
     subtitle: "ReactJs • TailwindCSS • NestJS",
@@ -36,6 +39,7 @@ export const projectData = [
     url: "https://mandalanawa.com", // Ganti dengan URL proyek Anda
   },
   {
+    id: "proj_4",
     image: website_tokobangunan,
     title: "Website TokoBangunan",
     subtitle: "ReactJs • TailwindCSS • Laravel",
@@ -44,6 +48,7 @@ export const projectData = [
     url: "https://tokobangunan.vercel.app", // Ganti dengan URL proyek Anda
   },
   {
+    id: "proj_5",
     image: website_portofolio2,
     title: "Portofolio Guru Pendidik",
     subtitle: "NextJs • TailwindCSS • PostgreSQL",
@@ -52,6 +57,7 @@ export const projectData = [
     url: "https://portfolio-guru.vercel.app", // Ganti dengan URL proyek Anda
   },
   {
+    id: "proj_6",
     image: facemask_detection,
     title: "Mendeteksi Masker",
     subtitle: "HTML • Python • JavaScript",
@@ -60,6 +66,7 @@ export const projectData = [
     url: "https://github.com/nabilkencana/facemask-detection", // Ganti dengan URL proyek Anda
   },
   {
+    id: "proj_7",
     image: website_ecoguard,
     title: "Landing Page EcoGuad AI",
     subtitle: "ReactJs • TailwindCSS",
@@ -68,6 +75,7 @@ export const projectData = [
     url: "https://ecoguard.canadev.my.id/", // Ganti dengan URL proyek Anda
   },
   {
+    id: "proj_8",
     image: aplikasi_ecoguard,
     title: "Aplikasi EcoGuad AI",
     subtitle: "FLutter • SQLLite",
@@ -76,6 +84,7 @@ export const projectData = [
     url: "https://ecoguard.canadev.my.id/", // Ganti dengan URL proyek Anda
   },
   {
+    id: "proj_9",
     image: website_career,
     title: "Website Career",
     subtitle: "NextJS • Firebase",
@@ -84,11 +93,12 @@ export const projectData = [
     url: "https://career-website.vercel.app", // Ganti dengan URL proyek Anda
   },
   {
+    id: "proj_10",
     image: website_ujs,
     title: "Website UJS",
     subtitle: "HTML • CSS • JavaScript",
     borderColor: "#305492",
     gradient: "linear-gradient(160deg,#305492 0%,#000 70%)",
-    url: "https://ujstravel.vercel.app/", // Ganti dengan URL proyek Anda
+    url: "https://www.ujstravelmalangjuanda.com/", // Ganti dengan URL proyek Anda
   },
 ];

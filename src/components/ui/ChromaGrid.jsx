@@ -1,7 +1,7 @@
 import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 
-const ChromaGrid = ({ items, className = "", radius = 300, damping = 0.45, fadeOut = 0.6, ease = "power3.out" }) => {
+const ChromaGrid = ({ items, className = "", radius = 300, damping = 0.45, fadeOut = 0.6, ease = "power3.out", onItemClick }) => {
   const rootRef = useRef(null);
   const fadeRef = useRef(null);
   const setX = useRef(null);
@@ -106,10 +106,13 @@ const ChromaGrid = ({ items, className = "", radius = 300, damping = 0.45, fadeO
     });
   };
 
-  const handleCardClick = (url, e) => {
-    if (url) {
-      // Buka URL di tab baru
-      window.open(url, "_blank", "noopener,noreferrer");
+  const handleCardClick = (item, e) => {
+    if (onItemClick) {
+      onItemClick(item);
+      return;
+    }
+    if (item.url) {
+      window.open(item.url, "_blank", "noopener,noreferrer");
     }
   };
 
@@ -136,7 +139,7 @@ const ChromaGrid = ({ items, className = "", radius = 300, damping = 0.45, fadeO
         <article
           key={i}
           onMouseMove={handleCardMove}
-          onClick={(e) => handleCardClick(c.url, e)}
+          onClick={(e) => handleCardClick(c, e)}
           className="group relative flex flex-col w-[300px] rounded-lg overflow-hidden border-2 border-transparent transition-all duration-300 cursor-pointer hover:scale-105 hover:shadow-2xl active:scale-95"
           style={{
             "--card-border": c.borderColor || "transparent",

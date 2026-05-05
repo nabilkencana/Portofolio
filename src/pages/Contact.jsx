@@ -1,4 +1,4 @@
-import React from "react";
+ import React from "react";
 import gmail from "../assets/cards/gmail.png";
 import instagram from "../assets/cards/instagram.png";
 import github from "../assets/cards/github.png";

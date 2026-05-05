@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { galleryData } from "../data/galleryData";
 import InfiniteMenu from "../components/ui/InfiniteMenu";
+import { getMergedGallery } from "../lib/adminStore";
 import {
   Loader2,
   Camera,
@@ -28,6 +29,21 @@ const Gallery = ({ activeColor }) => {
   const [isMobile, setIsMobile] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [connectionSpeed, setConnectionSpeed] = useState('fast');
+  const [mergedGallery, setMergedGallery] = useState([]);
+
+  // Listen for admin panel updates (realtime)
+  useEffect(() => {
+    const loadData = async () => {
+      const data = await getMergedGallery(galleryData);
+      setMergedGallery(data);
+    };
+
+    loadData();
+
+    const handler = () => loadData();
+    window.addEventListener("adminDataUpdated", handler);
+    return () => window.removeEventListener("adminDataUpdated", handler);
+  }, []);
 
   // Deteksi ukuran layar dan koneksi
   useEffect(() => {
@@ -48,8 +64,8 @@ const Gallery = ({ activeColor }) => {
     if (!url) return null;
 
     try {
-      // Jika sudah optimized URL (cloudinary, imgix, dll)
-      if (url.includes('cloudinary') || url.includes('imgix')) {
+      // Jika sudah optimized URL (cloudinary, imgix, dll) atau base64 admin
+      if (url.includes('cloudinary') || url.includes('imgix') || url.startsWith('data:')) {
         return url;
       }
 
@@ -66,14 +82,17 @@ const Gallery = ({ activeColor }) => {
     }
   };
 
+  // Gunakan data gabungan yang sudah di-merge dari adminStore
   const infiniteItems = useMemo(() => {
-    if (!galleryData || !Array.isArray(galleryData)) {
+    const combined = mergedGallery;
+
+    if (!combined || !Array.isArray(combined)) {
       console.error('galleryData is undefined or not an array');
       return [];
     }
 
     try {
-      return [...galleryData]
+      return combined
         .sort((a, b) => (a.priority ?? 99) - (b.priority ?? 99))
         .map((item) => ({
           image: item?.image || '',
@@ -86,7 +105,7 @@ const Gallery = ({ activeColor }) => {
       console.error('Error processing galleryData:', error);
       return [];
     }
-  }, []);
+  }, [mergedGallery]);
 
   useEffect(() => {
     const root = document.documentElement;

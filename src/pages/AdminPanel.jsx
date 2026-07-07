@@ -339,19 +339,73 @@ const AdminPanel = ({ onClose, initialTab = "gallery" }) => {
     return uploadImageToCloudinary(file);
   };
 
-  const processImageFile = (file, setForm, setPreview) => {
+  // Client-side image compression (no dependencies, uses HTML Canvas)
+  const compressImage = (file, maxWidth = 1200, maxHeight = 1200, quality = 0.75) => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          let width = img.width;
+          let height = img.height;
+
+          // Scale down if exceeds max dimensions
+          if (width > maxWidth || height > maxHeight) {
+            if (width > height) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            } else {
+              width = Math.round((width * maxHeight) / height);
+              height = maxHeight;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Convert to compressed jpeg base64
+          const compressedBase64 = canvas.toDataURL("image/jpeg", quality);
+
+          // Re-create a File object from the compressed blob
+          canvas.toBlob((blob) => {
+            if (!blob) {
+              resolve({ base64: e.target.result, file });
+              return;
+            }
+            const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", {
+              type: "image/jpeg",
+              lastModified: Date.now()
+            });
+            resolve({ base64: compressedBase64, file: compressedFile });
+          }, "image/jpeg", quality);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const processImageFile = async (file, setForm, setPreview) => {
     if (!file || !file.type.startsWith("image/")) return;
-    if (file.size > 10 * 1024 * 1024) {
-      showToast("Gambar terlalu besar (maks 10MB)", "error");
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const base64 = e.target.result;
-      setForm((p) => ({ ...p, image: base64, imageFile: file }));
+    showToast("Mengompres gambar...", "info");
+    try {
+      const { base64, file: compressedFile } = await compressImage(file);
+      setForm((p) => ({ ...p, image: base64, imageFile: compressedFile }));
       setPreview(base64);
-    };
-    reader.readAsDataURL(file);
+      showToast("Gambar terkompresi!");
+    } catch (err) {
+      console.error("Compression error:", err);
+      // Fallback to original file if compression fails
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setForm((p) => ({ ...p, image: e.target.result, imageFile: file }));
+        setPreview(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleDrop = (e, setForm, setPreview, setDragging) => {

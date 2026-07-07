@@ -1,12 +1,13 @@
 import TextType from "../components/text/TextType";
-import Lanyard from "../components/ui/Lanyard";
 import logo_telkom from "../assets/cards/logo_telkom.webp";
 import logo_me from "../assets/cards/logo_me.webp";
 import google_maps from "../assets/cards/google_maps.webp";
 import BlurText from "../components/ui/BlurText";
 import SplitText from "../components/ui/SplitText";
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { motion } from "motion/react";
+
+const Lanyard = lazy(() => import("../components/ui/Lanyard"));
 
 // import myFoto from "../assets/my_foto.jpeg";
 
@@ -169,7 +170,9 @@ const About = ({ isReady }) => {
             <div className="h-[500px] 2xl:h-[620px]5">
               {showLanyard && (
                 <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, ease: "easeOut" }}>
-                  <Lanyard position={[0, 0, 18]} />
+                  <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-zinc-500 font-medium">Memuat Interactive Card...</div>}>
+                    <Lanyard position={[0, 0, 18]} />
+                  </Suspense>
                 </motion.div>
               )}
             </div>

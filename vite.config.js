@@ -67,25 +67,13 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes("node_modules")) {
-            if (
-              id.includes("three") || 
-              id.includes("@react-three") || 
-              id.includes("ogl") || 
-              id.includes("gl-matrix") || 
-              id.includes("meshline")
-            ) {
-              return "vendor-three-3d";
-            }
-            if (id.includes("gsap") || id.includes("@gsap")) {
-              return "vendor-gsap";
-            }
-            if (id.includes("motion") || id.includes("framer-motion")) {
-              return "vendor-motion";
+            // Keep React, React-DOM, and React Three Fiber together to avoid scope/hooks resolution issues
+            if (id.includes("three")) {
+              return "vendor-three";
             }
             if (id.includes("firebase")) {
               return "vendor-firebase";
             }
-            return "vendor-others";
           }
         },
       },

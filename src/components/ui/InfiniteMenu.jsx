@@ -581,6 +581,7 @@ class InfiniteGridMenu {
   }
 
   run(time = 0) {
+    if (this.destroyed) return;
     this.#deltaTime = Math.min(32, time - this.#time);
     this.#time = time;
     this.#deltaFrames = this.#deltaTime / this.TARGET_FRAME_DURATION;
@@ -590,6 +591,10 @@ class InfiniteGridMenu {
     this.#render();
 
     requestAnimationFrame((t) => this.run(t));
+  }
+
+  destroy() {
+    this.destroyed = true;
   }
 
   #init(onInit) {
@@ -667,26 +672,40 @@ class InfiniteGridMenu {
     canvas.width = this.atlasSize * cellSize;
     canvas.height = this.atlasSize * cellSize;
 
-    Promise.all(
-      this.items.map(
-        (item) =>
-          new Promise((resolve) => {
-            const img = new Image();
-            img.crossOrigin = "anonymous";
-            img.onload = () => resolve(img);
-            img.src = item.image;
-          })
-      )
-    ).then((images) => {
-      images.forEach((img, i) => {
+    // Fill canvas with placeholder color initially
+    ctx.fillStyle = "#18181b"; // zinc-900 color
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Initial binding to let WebGL start rendering immediately with a blank/zinc atlas
+    gl.bindTexture(gl.TEXTURE_2D, this.tex);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, canvas);
+    gl.generateMipmap(gl.TEXTURE_2D);
+
+    // Load each image asynchronously in parallel
+    this.items.forEach((item, i) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => {
+        // If sketch is destroyed or context lost, abort texture update
+        if (this.destroyed || !this.gl || gl.isContextLost()) return;
+
         const x = (i % this.atlasSize) * cellSize;
         const y = Math.floor(i / this.atlasSize) * cellSize;
-        ctx.drawImage(img, x, y, cellSize, cellSize);
-      });
 
-      gl.bindTexture(gl.TEXTURE_2D, this.tex);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, canvas);
-      gl.generateMipmap(gl.TEXTURE_2D);
+        // Clear cell background and draw image
+        ctx.fillStyle = "#18181b";
+        ctx.fillRect(x, y, cellSize, cellSize);
+        ctx.drawImage(img, x, y, cellSize, cellSize);
+
+        // Update the texture in WebGL
+        gl.bindTexture(gl.TEXTURE_2D, this.tex);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, canvas);
+        gl.generateMipmap(gl.TEXTURE_2D);
+      };
+      img.onerror = () => {
+        console.warn(`Failed to load gallery image: ${item.image}`);
+      };
+      img.src = item.image;
     });
   }
 
@@ -878,6 +897,9 @@ export default function InfiniteMenu({ items = [], scale = 1.0 }) {
 
     return () => {
       window.removeEventListener("resize", handleResize);
+      if (sketch) {
+        sketch.destroy();
+      }
     };
   }, [items, scale]);
 

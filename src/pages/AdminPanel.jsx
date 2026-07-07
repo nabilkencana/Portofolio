@@ -1,10 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { logoutAdmin } from "../lib/adminAuth";
 import {
-  getAdminGallery, addAdminGalleryItem, deleteAdminGalleryItem, updateAdminGalleryItem,
-  getAdminProjects, addAdminProjectItem, deleteAdminProjectItem, updateAdminProjectItem,
-  getAdminAchievements, addAdminAchievementItem, deleteAdminAchievementItem, updateAdminAchievementItem,
+  getMergedGallery, addAdminGalleryItem, deleteAdminGalleryItem, updateAdminGalleryItem,
+  getMergedProjects, addAdminProjectItem, deleteAdminProjectItem, updateAdminProjectItem,
+  getMergedAchievements, addAdminAchievementItem, deleteAdminAchievementItem, updateAdminAchievementItem,
 } from "../lib/adminStore";
+import { galleryData } from "../data/galleryData";
+import { projectData } from "../data/projectData";
+import { achievementsData } from "../data/achievementsData";
 import { uploadImageToCloudinary } from "../lib/cloudinary";
 import {
   Images, FolderKanban, LogOut, Plus, Trash2, Upload,
@@ -19,136 +22,178 @@ const COLOR_PRESETS = [
 
 // ─── Komponen card kecil untuk preview ───
 const GalleryPreviewCard = ({ item, onEdit, onDelete }) => (
-  <div style={{
-    background: "rgba(255,255,255,0.03)",
-    border: "1px solid rgba(255,255,255,0.08)",
-    borderRadius: "12px",
-    overflow: "hidden",
-    position: "relative",
-  }}>
-    <img src={item.image} alt={item.title} style={{ width: "100%", height: "100px", objectFit: "cover" }} />
-    <div style={{ padding: "8px 10px" }}>
-      <p style={{ color: "#fff", fontSize: "12px", fontWeight: "600", margin: 0 }}>{item.title}</p>
-      <p style={{ color: "#71717a", fontSize: "11px", margin: "2px 0 0" }}>{item.description}</p>
+  <div className="group relative rounded-xl overflow-hidden bg-zinc-900/60 border border-zinc-800/80 hover:border-zinc-700/80 hover:bg-zinc-800/40 transition-all duration-300 shadow-md">
+    <div className="relative aspect-video w-full overflow-hidden bg-zinc-950">
+      <img 
+        src={item.image} 
+        alt={item.title} 
+        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80" />
+      
+      {/* Badges */}
+      <div className="absolute top-2.5 left-2.5 flex flex-wrap gap-1.5 pointer-events-none select-none">
+        {item.isAdmin ? (
+          <span className="px-2 py-0.5 rounded-md text-[9px] font-bold tracking-wider uppercase text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 backdrop-blur-md">
+            ADMIN
+          </span>
+        ) : (
+          <span className="px-2 py-0.5 rounded-md text-[9px] font-bold tracking-wider uppercase text-orange-300 bg-orange-500/10 border border-orange-500/20 backdrop-blur-md">
+            STATIC
+          </span>
+        )}
+      </div>
+
+      {/* Action overlay */}
+      <div className="absolute top-2.5 right-2.5 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        {onEdit && (
+          <button 
+            onClick={onEdit} 
+            title="Edit Item"
+            className="p-1.5 rounded-lg bg-zinc-900/90 hover:bg-sky-500 text-zinc-300 hover:text-white border border-zinc-800 transition-all duration-200 cursor-pointer shadow-md hover:scale-105"
+          >
+            <Edit2 size={11} />
+          </button>
+        )}
+        {onDelete && (
+          <button 
+            onClick={onDelete} 
+            title="Hapus Item"
+            className="p-1.5 rounded-lg bg-zinc-900/90 hover:bg-red-500 text-zinc-300 hover:text-white border border-zinc-800 transition-all duration-200 cursor-pointer shadow-md hover:scale-105"
+          >
+            <Trash2 size={11} />
+          </button>
+        )}
+      </div>
     </div>
     
-    <div style={{ position: "absolute", top: "6px", right: "6px", display: "flex", gap: "6px" }}>
-      {onEdit && (
-        <button onClick={onEdit} style={{
-          background: "rgba(14,165,233,0.85)", border: "none", borderRadius: "6px",
-          padding: "4px", cursor: "pointer", display: "flex", alignItems: "center",
-        }}>
-          <Edit2 size={12} color="#fff" />
-        </button>
-      )}
-      {onDelete && (
-        <button onClick={onDelete} style={{
-          background: "rgba(239,68,68,0.85)", border: "none", borderRadius: "6px",
-          padding: "4px", cursor: "pointer", display: "flex", alignItems: "center",
-        }}>
-          <Trash2 size={12} color="#fff" />
-        </button>
+    <div className="p-3 space-y-1">
+      <p className="text-zinc-100 text-xs font-semibold truncate font-[Space_Grotesk]">{item.title}</p>
+      {item.description && (
+        <p className="text-zinc-400 text-[10px] line-clamp-2 leading-relaxed">{item.description}</p>
       )}
     </div>
-
-    {item.isAdmin && (
-      <span style={{
-        position: "absolute", top: "6px", left: "6px",
-        background: "rgba(16,185,129,0.85)", borderRadius: "4px",
-        padding: "2px 6px", fontSize: "9px", color: "#fff", fontWeight: "700",
-      }}>ADMIN</span>
-    )}
   </div>
 );
 
 const ProjectPreviewCard = ({ item, onEdit, onDelete }) => (
-  <div style={{
-    background: item.gradient || "rgba(255,255,255,0.03)",
-    border: `1px solid ${item.borderColor || "rgba(255,255,255,0.08)"}`,
-    borderRadius: "12px",
-    padding: "12px",
-    position: "relative",
-    display: "flex",
-    gap: "10px",
-    alignItems: "center",
-  }}>
-    {item.image && (
-      <img src={item.image} alt={item.title} style={{ width: "48px", height: "36px", objectFit: "cover", borderRadius: "6px", flexShrink: 0 }} />
+  <div 
+    className="relative rounded-xl p-3 bg-zinc-900/60 border hover:bg-zinc-800/40 transition-all duration-300 flex gap-3.5 items-center group shadow-md"
+    style={{ 
+      borderColor: item.borderColor ? `${item.borderColor}25` : "rgba(255,255,255,0.08)",
+      background: item.gradient ? `linear-gradient(135deg, rgba(20, 20, 22, 0.9) 0%, ${item.borderColor}08 100%)` : undefined 
+    }}
+  >
+    {item.image ? (
+      <div className="w-12 h-12 rounded-lg overflow-hidden bg-zinc-950 flex-shrink-0 border border-zinc-800/80">
+        <img src={item.image} alt={item.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+      </div>
+    ) : (
+      <div className="w-12 h-12 rounded-lg bg-zinc-950/60 border border-zinc-800/80 flex items-center justify-center flex-shrink-0">
+        <FolderKanban size={16} className="text-zinc-600" />
+      </div>
     )}
-    <div style={{ flex: 1, minWidth: 0 }}>
-      <p style={{ color: "#fff", fontSize: "12px", fontWeight: "600", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.title}</p>
-      <p style={{ color: "#a1a1aa", fontSize: "11px", margin: "2px 0 0" }}>{item.subtitle}</p>
+    
+    <div className="flex-1 min-w-0 space-y-0.5">
+      <div className="flex items-center gap-2">
+        <p className="text-zinc-100 text-xs font-semibold truncate font-[Space_Grotesk]">{item.title}</p>
+        {item.isAdmin ? (
+          <span className="px-1.5 py-0.5 rounded text-[8px] font-bold tracking-wider uppercase text-emerald-300 bg-emerald-500/10 border border-emerald-500/20">
+            ADM
+          </span>
+        ) : (
+          <span className="px-1.5 py-0.5 rounded text-[8px] font-bold tracking-wider uppercase text-orange-300 bg-orange-500/10 border border-orange-500/20">
+            STA
+          </span>
+        )}
+      </div>
+      <p className="text-zinc-400 text-[10px] truncate">{item.subtitle}</p>
     </div>
     
-    <div style={{ display: "flex", gap: "6px", flexShrink: 0 }}>
+    <div className="flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex-shrink-0">
       {onEdit && (
-        <button onClick={onEdit} style={{
-          background: "rgba(14,165,233,0.85)", border: "none", borderRadius: "6px",
-          padding: "4px", cursor: "pointer", display: "flex", alignItems: "center",
-        }}>
-          <Edit2 size={12} color="#fff" />
+        <button 
+          onClick={onEdit} 
+          title="Edit Proyek"
+          className="p-1.5 rounded-lg bg-zinc-900/90 hover:bg-sky-500 text-zinc-300 hover:text-white border border-zinc-800 transition-all duration-200 cursor-pointer shadow-md hover:scale-105"
+        >
+          <Edit2 size={11} />
         </button>
       )}
       {onDelete && (
-        <button onClick={onDelete} style={{
-          background: "rgba(239,68,68,0.85)", border: "none", borderRadius: "6px",
-          padding: "4px", cursor: "pointer", display: "flex", alignItems: "center",
-        }}>
-          <Trash2 size={12} color="#fff" />
+        <button 
+          onClick={onDelete} 
+          title="Hapus Proyek"
+          className="p-1.5 rounded-lg bg-zinc-900/90 hover:bg-red-500 text-zinc-300 hover:text-white border border-zinc-800 transition-all duration-200 cursor-pointer shadow-md hover:scale-105"
+        >
+          <Trash2 size={11} />
         </button>
       )}
     </div>
-
-    {item.isAdmin && (
-      <span style={{
-        position: "absolute", top: "4px", right: "70px",
-        background: "rgba(16,185,129,0.85)", borderRadius: "4px",
-        padding: "1px 5px", fontSize: "9px", color: "#fff", fontWeight: "700",
-      }}>ADMIN</span>
-    )}
   </div>
 );
 
 const AchievementPreviewCard = ({ item, onEdit, onDelete }) => (
-  <div style={{
-    background: "rgba(255,255,255,0.03)",
-    border: "1px solid rgba(255,255,255,0.08)",
-    borderRadius: "12px",
-    overflow: "hidden",
-    position: "relative",
-  }}>
-    <img src={item.image} alt={item.title} style={{ width: "100%", height: "100px", objectFit: "cover" }} />
-    <div style={{ padding: "8px 10px" }}>
-      <p style={{ color: "#fff", fontSize: "12px", fontWeight: "600", margin: 0 }}>{item.title}</p>
-      <p style={{ color: "#71717a", fontSize: "11px", margin: "2px 0 0" }}>{item.description}</p>
+  <div className="group relative rounded-xl overflow-hidden bg-zinc-900/60 border border-zinc-800/80 hover:border-zinc-700/80 hover:bg-zinc-800/40 transition-all duration-300 shadow-md">
+    <div className="relative aspect-video w-full overflow-hidden bg-zinc-950">
+      <img 
+        src={item.image} 
+        alt={item.title} 
+        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80" />
+      
+      {/* Badges */}
+      <div className="absolute top-2.5 left-2.5 flex flex-wrap gap-1.5 pointer-events-none select-none">
+        {item.isAdmin ? (
+          <span className="px-2 py-0.5 rounded-md text-[9px] font-bold tracking-wider uppercase text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 backdrop-blur-md">
+            ADMIN
+          </span>
+        ) : (
+          <span className="px-2 py-0.5 rounded-md text-[9px] font-bold tracking-wider uppercase text-orange-300 bg-orange-500/10 border border-orange-500/20 backdrop-blur-md">
+            STATIC
+          </span>
+        )}
+      </div>
+
+      {/* Action overlay */}
+      <div className="absolute top-2.5 right-2.5 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        {onEdit && (
+          <button 
+            onClick={onEdit} 
+            title="Edit Pencapaian"
+            className="p-1.5 rounded-lg bg-zinc-900/90 hover:bg-sky-500 text-zinc-300 hover:text-white border border-zinc-800 transition-all duration-200 cursor-pointer shadow-md hover:scale-105"
+          >
+            <Edit2 size={11} />
+          </button>
+        )}
+        {onDelete && (
+          <button 
+            onClick={onDelete} 
+            title="Hapus Pencapaian"
+            className="p-1.5 rounded-lg bg-zinc-900/90 hover:bg-red-500 text-zinc-300 hover:text-white border border-zinc-800 transition-all duration-200 cursor-pointer shadow-md hover:scale-105"
+          >
+            <Trash2 size={11} />
+          </button>
+        )}
+      </div>
     </div>
     
-    <div style={{ position: "absolute", top: "6px", right: "6px", display: "flex", gap: "6px" }}>
-      {onEdit && (
-        <button onClick={onEdit} style={{
-          background: "rgba(14,165,233,0.85)", border: "none", borderRadius: "6px",
-          padding: "4px", cursor: "pointer", display: "flex", alignItems: "center",
-        }}>
-          <Edit2 size={12} color="#fff" />
-        </button>
+    <div className="p-3 space-y-1.5">
+      <p className="text-zinc-100 text-xs font-semibold truncate font-[Space_Grotesk]">{item.title}</p>
+      {item.tech && item.tech.length > 0 && (
+        <div className="flex flex-wrap gap-1 select-none">
+          {item.tech.map((t, idx) => (
+            <span key={idx} className="px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400 text-[8px] font-medium tracking-wide border border-zinc-800/80">
+              {t}
+            </span>
+          ))}
+        </div>
       )}
-      {onDelete && (
-        <button onClick={onDelete} style={{
-          background: "rgba(239,68,68,0.85)", border: "none", borderRadius: "6px",
-          padding: "4px", cursor: "pointer", display: "flex", alignItems: "center",
-        }}>
-          <Trash2 size={12} color="#fff" />
-        </button>
+      {item.description && (
+        <p className="text-zinc-400 text-[10px] line-clamp-2 leading-relaxed">{item.description}</p>
       )}
     </div>
-
-    {item.isAdmin && (
-      <span style={{
-        position: "absolute", top: "6px", left: "6px",
-        background: "rgba(16,185,129,0.85)", borderRadius: "4px",
-        padding: "2px 6px", fontSize: "9px", color: "#fff", fontWeight: "700",
-      }}>ADMIN</span>
-    )}
   </div>
 );
 
@@ -159,16 +204,16 @@ const Toast = ({ message, type, onDone }) => {
     return () => clearTimeout(t);
   }, [onDone]);
   return (
-    <div style={{
-      position: "fixed", bottom: "24px", right: "24px", zIndex: 99999,
-      background: type === "success" ? "rgba(16,185,129,0.95)" : "rgba(239,68,68,0.95)",
-      color: "#fff", padding: "12px 20px", borderRadius: "12px",
-      fontFamily: "Inter, sans-serif", fontSize: "13px", fontWeight: "600",
-      boxShadow: "0 8px 30px rgba(0,0,0,0.5)",
-      display: "flex", alignItems: "center", gap: "8px",
-      animation: "slideUp 0.3s ease",
-    }}>
-      <CheckCircle2 size={16} />
+    <div 
+      className={`fixed bottom-6 right-6 z-[99999] px-4 py-3 rounded-xl border font-semibold text-xs flex items-center gap-2.5 shadow-2xl backdrop-blur-md animate-slideUp`}
+      style={{
+        background: type === "error" ? "rgba(239, 68, 68, 0.15)" : "rgba(16, 185, 129, 0.15)",
+        borderColor: type === "error" ? "rgba(239, 68, 68, 0.3)" : "rgba(16, 185, 129, 0.3)",
+        color: type === "error" ? "#fecaca" : "#d1fae5",
+        boxShadow: type === "error" ? "0 10px 30px rgba(239,68,68,0.15)" : "0 10px 30px rgba(16,185,129,0.15)",
+      }}
+    >
+      {type === "error" ? <AlertCircle size={15} className="text-red-400" /> : <CheckCircle2 size={15} className="text-emerald-400" />}
       {message}
     </div>
   );
@@ -176,46 +221,43 @@ const Toast = ({ message, type, onDone }) => {
 
 // ─── Confirmation Modal ───
 const ConfirmModal = ({ title, message, onConfirm, onCancel }) => (
-  <div style={{
-    position: "fixed", inset: 0, zIndex: 100000,
-    background: "rgba(0,0,0,0.8)", backdropFilter: "blur(4px)",
-    display: "flex", alignItems: "center", justifyContent: "center",
-    padding: "16px"
-  }}>
-    <div style={{
-      background: "linear-gradient(135deg, #18181b 0%, #09090b 100%)",
-      border: "1px solid rgba(239,68,68,0.3)",
-      borderRadius: "16px", padding: "24px", width: "100%", maxWidth: "360px",
-      boxShadow: "0 20px 40px rgba(0,0,0,0.5)"
-    }}>
-      <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
-        <div style={{ background: "rgba(239,68,68,0.1)", padding: "8px", borderRadius: "50%" }}>
-          <AlertCircle size={24} color="#ef4444" />
+  <div className="fixed inset-0 z-[100000] bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div className="w-full max-w-sm bg-gradient-to-b from-zinc-900 to-zinc-950 border border-zinc-800 rounded-2xl p-6 shadow-2xl space-y-4 animate-scaleUp">
+      <div className="flex gap-3.5 items-start">
+        <div className="p-2 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400">
+          <AlertCircle size={20} />
         </div>
-        <h3 style={{ color: "#fff", margin: 0, fontSize: "16px" }}>{title}</h3>
+        <div className="space-y-1">
+          <h3 className="text-zinc-100 font-bold text-sm tracking-wide font-[Space_Grotesk]">{title}</h3>
+          <p className="text-zinc-400 text-xs leading-relaxed">{message}</p>
+        </div>
       </div>
-      <p style={{ color: "#a1a1aa", fontSize: "13px", marginBottom: "24px", lineHeight: "1.5" }}>{message}</p>
-      <div style={{ display: "flex", justifyContent: "flex-end", gap: "12px" }}>
-        <button onClick={onCancel} style={{
-          background: "transparent", border: "1px solid rgba(255,255,255,0.1)", color: "#fff",
-          padding: "8px 16px", borderRadius: "8px", fontSize: "13px", cursor: "pointer"
-        }}>Batal</button>
-        <button onClick={onConfirm} style={{
-          background: "#ef4444", border: "none", color: "#fff",
-          padding: "8px 16px", borderRadius: "8px", fontSize: "13px", cursor: "pointer", fontWeight: "600"
-        }}>Hapus</button>
+      
+      <div className="flex gap-2.5 justify-end">
+        <button 
+          onClick={onCancel} 
+          className="px-4 py-2 rounded-xl bg-zinc-800/80 hover:bg-zinc-850 text-zinc-300 hover:text-white border border-zinc-700/50 hover:border-zinc-600/50 text-xs font-semibold transition-all cursor-pointer"
+        >
+          Batal
+        </button>
+        <button 
+          onClick={onConfirm} 
+          className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold transition-all cursor-pointer shadow-lg shadow-red-600/20 hover:scale-[1.02] active:scale-[0.98]"
+        >
+          Hapus
+        </button>
       </div>
     </div>
   </div>
 );
 
 // ─── MAIN ADMIN PANEL ───
-const AdminPanel = ({ onClose }) => {
-  const [tab, setTab] = useState("gallery");
+const AdminPanel = ({ onClose, initialTab = "gallery" }) => {
+  const [tab, setTab] = useState(initialTab);
   const [toast, setToast] = useState(null);
   const [uploading, setUploading] = useState(false);
   
-  const [confirmDelete, setConfirmDelete] = useState(null); // { type, id }
+  const [confirmDelete, setConfirmDelete] = useState(null);
 
   // Gallery state
   const [adminGallery, setAdminGallery] = useState([]);
@@ -242,14 +284,16 @@ const AdminPanel = ({ onClose }) => {
   const [isAchievementDragging, setIsAchievementDragging] = useState(false);
   const achievementFileInputRef = useRef(null);
 
-  // Load data on mount
+  // Load ALL data on mount (static + Firestore merged)
   useEffect(() => {
     const loadData = async () => {
-      const gallery = await getAdminGallery();
+      const [gallery, projects, achievements] = await Promise.all([
+        getMergedGallery(galleryData),
+        getMergedProjects(projectData),
+        getMergedAchievements(achievementsData),
+      ]);
       setAdminGallery(gallery);
-      const projects = await getAdminProjects();
       setAdminProjects(projects);
-      const achievements = await getAdminAchievements();
       setAdminAchievements(achievements);
     };
     loadData();
@@ -259,11 +303,46 @@ const AdminPanel = ({ onClose }) => {
     setToast({ message, type });
   };
 
-  // ── Helpers untuk upload image ──
+  // Helpers to refresh individual lists after mutations
+  const refreshAll = async () => {
+    const [g, p, a] = await Promise.all([
+      getMergedGallery(galleryData),
+      getMergedProjects(projectData),
+      getMergedAchievements(achievementsData),
+    ]);
+    setAdminGallery(g); setAdminProjects(p); setAdminAchievements(a);
+  };
+
+  // ── Unified image upload ──
+  const uploadImage = async (file, folder = "gallery") => {
+    try {
+      const reader = new FileReader();
+      const base64 = await new Promise((resolve, reject) => {
+        reader.onload = (e) => resolve(e.target.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+      const ext = file.name.split(".").pop().toLowerCase();
+      const filename = `${Date.now()}_${Math.random().toString(36).slice(2, 8)}.${ext}`;
+      const res = await fetch("/api/upload-local", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ filename, data: base64, folder }),
+      });
+      if (res.ok) {
+        const { url } = await res.json();
+        return url;
+      }
+    } catch {
+      // fallback
+    }
+    return uploadImageToCloudinary(file);
+  };
+
   const processImageFile = (file, setForm, setPreview) => {
     if (!file || !file.type.startsWith("image/")) return;
-    if (file.size > 5 * 1024 * 1024) {
-      showToast("Gambar terlalu besar (maks 5MB)", "error");
+    if (file.size > 10 * 1024 * 1024) {
+      showToast("Gambar terlalu besar (maks 10MB)", "error");
       return;
     }
     const reader = new FileReader();
@@ -292,10 +371,11 @@ const AdminPanel = ({ onClose }) => {
     let imageUrl = galleryForm.image;
     try {
       if (galleryForm.imageFile) {
-        showToast("Mengunggah gambar...", "info");
-        imageUrl = await uploadImageToCloudinary(galleryForm.imageFile);
+        showToast("Menyimpan gambar...", "info");
+        imageUrl = await uploadImage(galleryForm.imageFile, "gallery");
       }
-      const payload = { ...galleryForm, image: imageUrl };
+      const { imageFile: _gf, ...galleryRest } = galleryForm;
+      const payload = { ...galleryRest, image: imageUrl };
 
       if (galleryForm.id) {
         const updated = await updateAdminGalleryItem(galleryForm.id, payload);
@@ -308,6 +388,7 @@ const AdminPanel = ({ onClose }) => {
       }
       setGalleryForm({ id: null, title: "", description: "", image: "", imageFile: null });
       setGalleryPreview(null);
+      await refreshAll();
       window.dispatchEvent(new Event("adminDataUpdated"));
     } catch (e) {
       showToast("Gagal menyimpan data", "error");
@@ -323,11 +404,22 @@ const AdminPanel = ({ onClose }) => {
   };
 
   const executeGalleryDelete = async () => {
-    await deleteAdminGalleryItem(confirmDelete.id);
-    setAdminGallery((p) => p.filter((i) => i.id !== confirmDelete.id));
-    setConfirmDelete(null);
-    showToast("Foto dihapus");
-    window.dispatchEvent(new Event("adminDataUpdated"));
+    console.log("[executeGalleryDelete] started. id:", confirmDelete?.id);
+    try {
+      if (!confirmDelete || !confirmDelete.id) {
+        console.warn("[executeGalleryDelete] No confirmDelete or ID found.");
+        return;
+      }
+      await deleteAdminGalleryItem(confirmDelete.id);
+      console.log("[executeGalleryDelete] deleteAdminGalleryItem successful.");
+      setConfirmDelete(null);
+      showToast("Foto dihapus");
+      await refreshAll();
+      window.dispatchEvent(new Event("adminDataUpdated"));
+    } catch (e) {
+      console.error("[delete-gallery] Error:", e);
+      showToast("Gagal menghapus data", "error");
+    }
   };
 
   // ── Project Actions ──
@@ -340,11 +432,12 @@ const AdminPanel = ({ onClose }) => {
     let imageUrl = projectForm.image;
     try {
       if (projectForm.imageFile) {
-        showToast("Mengunggah gambar...", "info");
-        imageUrl = await uploadImageToCloudinary(projectForm.imageFile);
+        showToast("Menyimpan gambar...", "info");
+        imageUrl = await uploadImage(projectForm.imageFile, "projects");
       }
       const gradient = `linear-gradient(160deg,${selectedColor} 0%,#000 70%)`;
-      const payload = { ...projectForm, borderColor: selectedColor, gradient, image: imageUrl };
+      const { imageFile: _pf, ...projectRest } = projectForm;
+      const payload = { ...projectRest, borderColor: selectedColor, gradient, image: imageUrl };
       
       if (projectForm.id) {
         const updated = await updateAdminProjectItem(projectForm.id, payload);
@@ -359,6 +452,7 @@ const AdminPanel = ({ onClose }) => {
       setProjectForm({ id: null, title: "", subtitle: "", image: "", imageFile: null, url: "", borderColor: "#10b981", gradient: "" });
       setProjectPreview(null);
       setSelectedColor("#10b981");
+      await refreshAll();
       window.dispatchEvent(new Event("adminDataUpdated"));
     } catch (e) {
       showToast("Gagal menyimpan data", "error");
@@ -375,11 +469,22 @@ const AdminPanel = ({ onClose }) => {
   };
 
   const executeProjectDelete = async () => {
-    await deleteAdminProjectItem(confirmDelete.id);
-    setAdminProjects((p) => p.filter((i) => i.id !== confirmDelete.id));
-    setConfirmDelete(null);
-    showToast("Project dihapus");
-    window.dispatchEvent(new Event("adminDataUpdated"));
+    console.log("[executeProjectDelete] started. id:", confirmDelete?.id);
+    try {
+      if (!confirmDelete || !confirmDelete.id) {
+        console.warn("[executeProjectDelete] No confirmDelete or ID found.");
+        return;
+      }
+      await deleteAdminProjectItem(confirmDelete.id);
+      console.log("[executeProjectDelete] deleteAdminProjectItem successful.");
+      setConfirmDelete(null);
+      showToast("Project dihapus");
+      await refreshAll();
+      window.dispatchEvent(new Event("adminDataUpdated"));
+    } catch (e) {
+      console.error("[delete-project] Error:", e);
+      showToast("Gagal menghapus data", "error");
+    }
   };
 
   // ── Achievement Actions ──
@@ -392,14 +497,15 @@ const AdminPanel = ({ onClose }) => {
     let imageUrl = achievementForm.image;
     try {
       if (achievementForm.imageFile) {
-        showToast("Mengunggah gambar...", "info");
-        imageUrl = await uploadImageToCloudinary(achievementForm.imageFile);
+        showToast("Menyimpan gambar...", "info");
+        imageUrl = await uploadImage(achievementForm.imageFile, "certificate");
       }
       const techArray = typeof achievementForm.tech === "string" 
         ? achievementForm.tech.split(",").map(t => t.trim()).filter(Boolean)
         : achievementForm.tech;
         
-      const payload = { ...achievementForm, tech: techArray, image: imageUrl };
+      const { imageFile: _af, ...achievementRest } = achievementForm;
+      const payload = { ...achievementRest, tech: techArray, image: imageUrl };
 
       if (achievementForm.id) {
         const updated = await updateAdminAchievementItem(achievementForm.id, payload);
@@ -412,6 +518,7 @@ const AdminPanel = ({ onClose }) => {
       }
       setAchievementForm({ id: null, title: "", description: "", tech: "", image: "", imageFile: null });
       setAchievementPreview(null);
+      await refreshAll();
       window.dispatchEvent(new Event("adminDataUpdated"));
     } catch (e) {
       showToast("Gagal menyimpan data", "error");
@@ -434,122 +541,94 @@ const AdminPanel = ({ onClose }) => {
   };
 
   const executeAchievementDelete = async () => {
-    await deleteAdminAchievementItem(confirmDelete.id);
-    setAdminAchievements((p) => p.filter((i) => i.id !== confirmDelete.id));
-    setConfirmDelete(null);
-    showToast("Pencapaian dihapus");
-    window.dispatchEvent(new Event("adminDataUpdated"));
-  };
-
-  // ── Styling helpers ──
-  const inputStyle = {
-    width: "100%", background: "rgba(255,255,255,0.04)",
-    border: "1px solid rgba(255,255,255,0.1)", borderRadius: "10px",
-    color: "#fff", padding: "10px 14px", fontSize: "13px",
-    fontFamily: "Inter, sans-serif", outline: "none", boxSizing: "border-box",
-  };
-  const labelStyle = { color: "#a1a1aa", fontSize: "12px", fontWeight: "600", marginBottom: "6px", display: "block" };
-  const btnPrimary = {
-    background: "linear-gradient(135deg,#10b981 0%,#059669 100%)",
-    border: "none", borderRadius: "10px", color: "#fff",
-    padding: "10px 20px", fontSize: "13px", fontWeight: "600",
-    cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px",
-    fontFamily: "Inter, sans-serif", boxShadow: "0 4px 15px rgba(16,185,129,0.3)",
+    console.log("[executeAchievementDelete] started. id:", confirmDelete?.id);
+    try {
+      if (!confirmDelete || !confirmDelete.id) {
+        console.warn("[executeAchievementDelete] No confirmDelete or ID found.");
+        return;
+      }
+      await deleteAdminAchievementItem(confirmDelete.id);
+      console.log("[executeAchievementDelete] deleteAdminAchievementItem successful.");
+      setConfirmDelete(null);
+      showToast("Pencapaian dihapus");
+      await refreshAll();
+      window.dispatchEvent(new Event("adminDataUpdated"));
+    } catch (e) {
+      console.error("[delete-achievement] Error:", e);
+      showToast("Gagal menghapus data", "error");
+    }
   };
 
   return (
-    <div style={{
-      position: "fixed", inset: 0, zIndex: 9998,
-      background: "rgba(0,0,0,0.92)", backdropFilter: "blur(16px)",
-      display: "flex", alignItems: "center", justifyContent: "center",
-      padding: "16px",
-      fontFamily: "Inter, sans-serif",
-    }}>
-      <div style={{
-        width: "100%", maxWidth: "900px", maxHeight: "90vh",
-        background: "linear-gradient(135deg,rgba(18,18,20,0.99) 0%,rgba(9,9,11,0.99) 100%)",
-        border: "1px solid rgba(16,185,129,0.2)",
-        borderRadius: "20px", overflow: "hidden",
-        boxShadow: "0 0 80px rgba(16,185,129,0.08), 0 30px 60px rgba(0,0,0,0.9)",
-        display: "flex", flexDirection: "column",
-      }}>
-
+    <div className="fixed inset-0 z-[9998] bg-black/85 backdrop-blur-xl flex items-center justify-center p-4">
+      <div className="w-full max-w-4xl h-[85vh] bg-gradient-to-br from-zinc-900/95 to-zinc-950/98 border border-zinc-800/80 rounded-2xl overflow-hidden shadow-2xl flex flex-col animate-scaleUp">
+        
         {/* ── Header ── */}
-        <div style={{
-          display: "flex", alignItems: "center", justifyContent: "space-between",
-          padding: "18px 24px", borderBottom: "1px solid rgba(255,255,255,0.07)",
-          background: "rgba(16,185,129,0.05)",
-        }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <div style={{
-              width: "36px", height: "36px", borderRadius: "10px",
-              background: "linear-gradient(135deg,rgba(16,185,129,0.3),rgba(16,185,129,0.1))",
-              border: "1px solid rgba(16,185,129,0.4)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-            }}>
-              <Eye size={18} color="#10b981" />
+        <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-800/70 bg-zinc-900/20 backdrop-blur-md">
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500/20 to-emerald-500/5 border border-emerald-500/30 flex items-center justify-center shadow-lg shadow-emerald-500/5">
+              <Eye size={18} className="text-emerald-400" />
             </div>
             <div>
-              <h2 style={{ color: "#fff", margin: 0, fontSize: "16px", fontWeight: "700", fontFamily: "Space Grotesk, sans-serif" }}>
-                Admin Panel
-              </h2>
-              <p style={{ color: "#52525b", margin: 0, fontSize: "11px" }}>Nabil Kencana — Private Access</p>
+              <h2 className="text-zinc-100 text-sm font-bold tracking-wide font-[Space_Grotesk]">Admin Panel</h2>
+              <p className="text-zinc-500 text-[10px] tracking-wide font-medium">Nabil Kencana — Workspace Content Creator</p>
             </div>
           </div>
-          <button onClick={() => { logoutAdmin(); onClose(); }} style={{
-            background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)",
-            borderRadius: "10px", color: "#ef4444", padding: "8px 14px",
-            cursor: "pointer", display: "flex", alignItems: "center", gap: "6px",
-            fontSize: "12px", fontWeight: "600", fontFamily: "Inter, sans-serif",
-          }}>
-            <LogOut size={14} />
+          <button 
+            onClick={() => { logoutAdmin(); onClose(); }} 
+            className="flex items-center gap-2 px-3 py-2 rounded-xl bg-red-500/5 hover:bg-red-500 border border-red-500/10 hover:border-red-500/20 text-red-400 hover:text-white text-xs font-bold transition-all duration-300 cursor-pointer hover:shadow-lg hover:shadow-red-500/10 hover:scale-[1.02] active:scale-[0.98]"
+          >
+            <LogOut size={13} />
             Keluar
           </button>
         </div>
 
         {/* ── Tab Bar ── */}
-        <div style={{ display: "flex", borderBottom: "1px solid rgba(255,255,255,0.07)", padding: "0 24px" }}>
+        <div className="flex px-6 border-b border-zinc-800/50 bg-zinc-950/20">
           {[
-            { id: "gallery", icon: <Images size={15} />, label: "Gallery" },
-            { id: "project", icon: <FolderKanban size={15} />, label: "Projects" },
-            { id: "achievement", icon: <Award size={15} />, label: "Achievements" },
-          ].map((t) => (
-            <button key={t.id} onClick={() => setTab(t.id)} style={{
-              background: "none", border: "none", cursor: "pointer",
-              padding: "14px 18px", display: "flex", alignItems: "center", gap: "6px",
-              fontSize: "13px", fontWeight: "600", fontFamily: "Inter, sans-serif",
-              color: tab === t.id ? "#10b981" : "#52525b",
-              borderBottom: tab === t.id ? "2px solid #10b981" : "2px solid transparent",
-              transition: "all 0.2s",
-              marginBottom: "-1px",
-            }}>
-              {t.icon}{t.label}
-              <span style={{
-                background: tab === t.id ? "rgba(16,185,129,0.15)" : "rgba(255,255,255,0.05)",
-                color: tab === t.id ? "#10b981" : "#52525b",
-                borderRadius: "20px", padding: "1px 8px", fontSize: "10px",
-              }}>
-                {t.id === "gallery" ? adminGallery.length : t.id === "project" ? adminProjects.length : adminAchievements.length}
-              </span>
-            </button>
-          ))}
+            { id: "gallery", icon: <Images size={14} />, label: "Gallery", data: adminGallery },
+            { id: "project", icon: <FolderKanban size={14} />, label: "Projects", data: adminProjects },
+            { id: "achievement", icon: <Award size={14} />, label: "Achievements", data: adminAchievements },
+          ].map((t) => {
+            const isActive = tab === t.id;
+            return (
+              <button 
+                key={t.id} 
+                onClick={() => setTab(t.id)} 
+                className={`relative flex items-center gap-2 px-5 py-4 text-xs font-bold tracking-wide transition-all duration-300 border-b-2 cursor-pointer
+                  ${isActive ? "text-emerald-400 border-emerald-500 font-extrabold" : "text-zinc-500 border-transparent hover:text-zinc-300"}`}
+              >
+                {t.icon}
+                <span>{t.label}</span>
+                <span 
+                  className={`ml-1.5 px-2 py-0.5 rounded-full text-[9px] font-bold border transition-colors duration-300
+                    ${isActive ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" : "bg-zinc-900 border-zinc-800 text-zinc-500"}`}
+                >
+                  {t.data.length}
+                </span>
+              </button>
+            );
+          })}
         </div>
 
-        {/* ── Content ── */}
-        <div style={{ flex: 1, overflowY: "auto", padding: "24px", display: "flex", gap: "24px", flexDirection: window.innerWidth < 768 ? 'column' : 'row' }}>
+        {/* ── Content Body ── */}
+        <div className="flex-1 overflow-y-auto p-6 flex flex-col md:flex-row gap-6 custom-scrollbar">
 
           {/* ─── GALLERY TAB ─── */}
           {tab === "gallery" && (
             <>
-              {/* Form */}
-              <div style={{ flex: "0 0 300px", display: "flex", flexDirection: "column", gap: "16px" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <h3 style={{ color: "#fff", margin: 0, fontSize: "14px", fontWeight: "700" }}>
+              {/* Left Column - Form */}
+              <div className="w-full md:w-[320px] flex-shrink-0 flex flex-col gap-4">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-zinc-200 font-bold text-xs tracking-wider uppercase font-[Space_Grotesk]">
                     {galleryForm.id ? "Edit Foto" : "Tambah Foto Baru"}
                   </h3>
                   {galleryForm.id && (
-                    <button onClick={() => { setGalleryForm({ id: null, title: "", description: "", image: "" }); setGalleryPreview(null); }} style={{ background: "none", border: "none", color: "#a1a1aa", fontSize: "12px", cursor: "pointer", display: "flex", alignItems: "center" }}>
-                      <X size={12} style={{ marginRight: 4 }} /> Batal Edit
+                    <button 
+                      onClick={() => { setGalleryForm({ id: null, title: "", description: "", image: "" }); setGalleryPreview(null); }} 
+                      className="flex items-center gap-1 text-zinc-500 hover:text-zinc-300 text-[10px] font-semibold cursor-pointer transition-colors"
+                    >
+                      <X size={11} /> Batal Edit
                     </button>
                   )}
                 </div>
@@ -560,78 +639,85 @@ const AdminPanel = ({ onClose }) => {
                   onDragLeave={() => setIsDragging(false)}
                   onDrop={(e) => handleDrop(e, setGalleryForm, setGalleryPreview, setIsDragging)}
                   onClick={() => fileInputRef.current?.click()}
-                  style={{
-                    border: `2px dashed ${isDragging ? "#10b981" : "rgba(255,255,255,0.12)"}`,
-                    borderRadius: "12px", padding: "20px",
-                    cursor: "pointer", textAlign: "center",
-                    background: isDragging ? "rgba(16,185,129,0.05)" : "rgba(255,255,255,0.02)",
-                    transition: "all 0.2s",
-                    minHeight: "120px", display: "flex", flexDirection: "column",
-                    alignItems: "center", justifyContent: "center", gap: "8px",
-                  }}
+                  className={`relative border-2 border-dashed rounded-xl p-5 cursor-pointer text-center flex flex-col items-center justify-center gap-2.5 transition-all duration-300 min-h-[140px]
+                    ${isDragging 
+                      ? "border-emerald-500 bg-emerald-500/5 shadow-[0_0_20px_rgba(16,185,129,0.08)]" 
+                      : "border-zinc-800 hover:border-zinc-700 bg-zinc-900/20 hover:bg-zinc-900/40"}`}
                 >
                   {galleryPreview ? (
-                    <img src={galleryPreview} alt="preview"
-                      style={{ width: "100%", maxHeight: "120px", objectFit: "cover", borderRadius: "8px" }} />
+                    <div className="relative w-full h-[120px] rounded-lg overflow-hidden border border-zinc-850">
+                      <img src={galleryPreview} alt="preview" className="w-full h-full object-cover" />
+                    </div>
                   ) : (
                     <>
-                      <Upload size={24} color={isDragging ? "#10b981" : "#52525b"} />
-                      <p style={{ color: "#71717a", fontSize: "12px", margin: 0 }}>
-                        Drag & drop atau <span style={{ color: "#10b981" }}>klik upload</span>
-                      </p>
-                      <p style={{ color: "#3f3f46", fontSize: "11px", margin: 0 }}>PNG, JPG, WEBP · maks 5MB</p>
+                      <div className="p-3 rounded-full bg-zinc-900 text-zinc-400 group-hover:text-zinc-300 transition-colors">
+                        <Upload size={18} />
+                      </div>
+                      <div className="space-y-0.5">
+                        <p className="text-zinc-300 text-xs font-semibold">Tarik gambar kemari</p>
+                        <p className="text-zinc-500 text-[10px] font-medium">atau <span className="text-emerald-400 font-bold hover:underline">cari berkas</span></p>
+                      </div>
                     </>
                   )}
-                  <input ref={fileInputRef} type="file" accept="image/*" hidden
+                  <input ref={fileInputRef} type="file" accept="image/*" className="hidden"
                     onChange={(e) => processImageFile(e.target.files[0], setGalleryForm, setGalleryPreview)} />
                 </div>
 
                 {galleryPreview && (
-                  <button onClick={() => { setGalleryPreview(null); setGalleryForm((p) => ({ ...p, image: "" })); }}
-                    style={{ background: "none", border: "none", cursor: "pointer", color: "#ef4444", fontSize: "12px", display: "flex", alignItems: "center", gap: "4px" }}>
-                    <X size={12} /> Hapus gambar
+                  <button 
+                    onClick={() => { setGalleryPreview(null); setGalleryForm((p) => ({ ...p, image: "" })); }}
+                    className="flex items-center gap-1.5 text-red-400 hover:text-red-300 text-[10px] font-bold cursor-pointer transition-colors self-start ml-1"
+                  >
+                    <X size={12} /> Hapus Gambar
                   </button>
                 )}
 
-                <div>
-                  <label style={labelStyle}>Judul *</label>
-                  <input style={inputStyle} placeholder="Contoh: Foto Wisuda"
+                <div className="space-y-1">
+                  <label className="text-zinc-400 text-[10px] font-bold tracking-wider uppercase ml-1">Judul *</label>
+                  <input 
+                    className="w-full bg-zinc-900/60 focus:bg-zinc-900 border border-zinc-800/80 focus:border-emerald-500/50 rounded-xl px-3.5 py-2.5 text-xs text-zinc-100 placeholder-zinc-600 outline-none transition-all focus:shadow-[0_0_15px_rgba(16,185,129,0.06)]" 
+                    placeholder="Contoh: Foto Wisuda"
                     value={galleryForm.title}
-                    onChange={(e) => setGalleryForm((p) => ({ ...p, title: e.target.value }))} />
+                    onChange={(e) => setGalleryForm((p) => ({ ...p, title: e.target.value }))} 
+                  />
                 </div>
 
-                <div>
-                  <label style={labelStyle}>Deskripsi</label>
-                  <textarea style={{ ...inputStyle, resize: "vertical", minHeight: "70px" }}
+                <div className="space-y-1">
+                  <label className="text-zinc-400 text-[10px] font-bold tracking-wider uppercase ml-1">Deskripsi</label>
+                  <textarea 
+                    className="w-full bg-zinc-900/60 focus:bg-zinc-900 border border-zinc-800/80 focus:border-emerald-500/50 rounded-xl px-3.5 py-2.5 text-xs text-zinc-100 placeholder-zinc-600 outline-none transition-all focus:shadow-[0_0_15px_rgba(16,185,129,0.06)] resize-none h-20"
                     placeholder="Deskripsi singkat..."
                     value={galleryForm.description}
-                    onChange={(e) => setGalleryForm((p) => ({ ...p, description: e.target.value }))} />
+                    onChange={(e) => setGalleryForm((p) => ({ ...p, description: e.target.value }))} 
+                  />
                 </div>
 
-                <button onClick={handleGalleryAddOrUpdate} disabled={uploading} style={{ ...btnPrimary, opacity: uploading ? 0.7 : 1, cursor: uploading ? "not-allowed" : "pointer" }}>
-                  {uploading ? <Loader2 size={15} className="spin" /> : (galleryForm.id ? <Save size={15} /> : <Plus size={15} />)} 
+                <button 
+                  onClick={handleGalleryAddOrUpdate} 
+                  disabled={uploading} 
+                  className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold text-white transition-all shadow-lg select-none cursor-pointer
+                    ${uploading 
+                      ? "bg-zinc-850 border border-zinc-800 text-zinc-500 cursor-not-allowed" 
+                      : "bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/10 hover:shadow-emerald-600/20 active:scale-[0.98]"}`}
+                >
+                  {uploading ? <Loader2 size={13} className="animate-spin text-zinc-500" /> : (galleryForm.id ? <Save size={13} /> : <Plus size={13} />)} 
                   {uploading ? "Menyimpan..." : (galleryForm.id ? "Simpan Perubahan" : "Tambahkan ke Gallery")}
                 </button>
               </div>
 
-              {/* Grid preview */}
-              <div style={{ flex: 1 }}>
-                <h3 style={{ color: "#fff", margin: "0 0 16px", fontSize: "14px", fontWeight: "700" }}>
-                  Foto Admin ({adminGallery.length})
+              {/* Right Column - Cards List */}
+              <div className="flex-1 min-w-0 flex flex-col gap-4">
+                <h3 className="text-zinc-400 font-bold text-xs tracking-wider uppercase font-[Space_Grotesk]">
+                  Daftar Foto ({adminGallery.length})
                 </h3>
                 {adminGallery.length === 0 ? (
-                  <div style={{
-                    border: "1px dashed rgba(255,255,255,0.08)", borderRadius: "12px",
-                    padding: "40px", textAlign: "center",
-                  }}>
-                    <FileImage size={32} color="#3f3f46" style={{ margin: "0 auto 8px" }} />
-                    <p style={{ color: "#52525b", fontSize: "13px", margin: 0 }}>Belum ada foto yang ditambahkan</p>
+                  <div className="flex-1 flex flex-col items-center justify-center border border-dashed border-zinc-800/80 rounded-2xl p-12 text-center bg-zinc-900/5">
+                    <FileImage size={32} className="text-zinc-600 mb-3 animate-pulse" />
+                    <p className="text-zinc-400 text-xs font-semibold">Belum ada foto</p>
+                    <p className="text-zinc-600 text-[10px] mt-1">Gunakan formulir untuk menambahkan item</p>
                   </div>
                 ) : (
-                  <div style={{
-                    display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: "10px",
-                    maxHeight: "480px", overflowY: "auto",
-                  }}>
+                  <div className="flex-1 overflow-y-auto pr-1 grid grid-cols-2 sm:grid-cols-3 gap-3.5 max-h-[500px] custom-scrollbar">
                     {adminGallery.map((item) => (
                       <GalleryPreviewCard key={item.id} item={item} 
                         onEdit={() => handleGalleryEdit(item)}
@@ -647,120 +733,142 @@ const AdminPanel = ({ onClose }) => {
           {/* ─── PROJECT TAB ─── */}
           {tab === "project" && (
             <>
-              {/* Form */}
-              <div style={{ flex: "0 0 300px", display: "flex", flexDirection: "column", gap: "16px" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <h3 style={{ color: "#fff", margin: 0, fontSize: "14px", fontWeight: "700" }}>
+              {/* Left Column - Form */}
+              <div className="w-full md:w-[320px] flex-shrink-0 flex flex-col gap-4">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-zinc-200 font-bold text-xs tracking-wider uppercase font-[Space_Grotesk]">
                     {projectForm.id ? "Edit Project" : "Tambah Project Baru"}
                   </h3>
                   {projectForm.id && (
-                    <button onClick={() => { setProjectForm({ id: null, title: "", subtitle: "", image: "", url: "", borderColor: "#10b981", gradient: "" }); setProjectPreview(null); }} style={{ background: "none", border: "none", color: "#a1a1aa", fontSize: "12px", cursor: "pointer", display: "flex", alignItems: "center" }}>
-                      <X size={12} style={{ marginRight: 4 }} /> Batal Edit
+                    <button 
+                      onClick={() => { setProjectForm({ id: null, title: "", subtitle: "", image: "", url: "", borderColor: "#10b981", gradient: "" }); setProjectPreview(null); }}
+                      className="flex items-center gap-1 text-zinc-500 hover:text-zinc-300 text-[10px] font-semibold cursor-pointer transition-colors"
+                    >
+                      <X size={11} /> Batal Edit
                     </button>
                   )}
                 </div>
 
-                {/* Drop zone image untuk Project */}
+                {/* Drop zone */}
                 <div
                   onDragOver={(e) => { e.preventDefault(); setIsProjectDragging(true); }}
                   onDragLeave={() => setIsProjectDragging(false)}
                   onDrop={(e) => handleDrop(e, setProjectForm, setProjectPreview, setIsProjectDragging)}
                   onClick={() => projectFileInputRef.current?.click()}
-                  style={{
-                    border: `2px dashed ${isProjectDragging ? "#10b981" : "rgba(255,255,255,0.12)"}`,
-                    borderRadius: "12px", padding: "12px",
-                    cursor: "pointer", textAlign: "center",
-                    background: isProjectDragging ? "rgba(16,185,129,0.05)" : "rgba(255,255,255,0.02)",
-                    transition: "all 0.2s",
-                    minHeight: "100px", display: "flex", flexDirection: "column",
-                    alignItems: "center", justifyContent: "center", gap: "8px",
-                  }}
+                  className={`relative border-2 border-dashed rounded-xl p-4 cursor-pointer text-center flex flex-col items-center justify-center gap-2 transition-all duration-300 min-h-[110px]
+                    ${isProjectDragging 
+                      ? "border-emerald-500 bg-emerald-500/5 shadow-[0_0_20px_rgba(16,185,129,0.08)]" 
+                      : "border-zinc-800 hover:border-zinc-700 bg-zinc-900/20 hover:bg-zinc-900/40"}`}
                 >
                   {projectPreview ? (
-                    <img src={projectPreview} alt="preview"
-                      style={{ width: "100%", maxHeight: "100px", objectFit: "cover", borderRadius: "8px" }} />
+                    <div className="relative w-full h-[90px] rounded-lg overflow-hidden border border-zinc-850">
+                      <img src={projectPreview} alt="preview" className="w-full h-full object-cover" />
+                    </div>
                   ) : (
                     <>
-                      <Upload size={20} color={isProjectDragging ? "#10b981" : "#52525b"} />
-                      <p style={{ color: "#71717a", fontSize: "12px", margin: 0 }}>
-                        <span style={{ color: "#10b981" }}>Upload</span> Thumbnail Project
-                      </p>
+                      <Upload size={16} className="text-zinc-400" />
+                      <p className="text-zinc-300 text-xs font-semibold">Upload Thumbnail Project</p>
+                      <p className="text-zinc-500 text-[9px]">Tarik & drop disini</p>
                     </>
                   )}
-                  <input ref={projectFileInputRef} type="file" accept="image/*" hidden
+                  <input ref={projectFileInputRef} type="file" accept="image/*" className="hidden"
                     onChange={(e) => processImageFile(e.target.files[0], setProjectForm, setProjectPreview)} />
                 </div>
+
                 {projectPreview && (
-                  <button onClick={() => { setProjectPreview(null); setProjectForm((p) => ({ ...p, image: "" })); }}
-                    style={{ background: "none", border: "none", cursor: "pointer", color: "#ef4444", fontSize: "12px", display: "flex", alignItems: "center", gap: "4px", marginTop: "-8px" }}>
-                    <X size={12} /> Hapus gambar
+                  <button 
+                    onClick={() => { setProjectPreview(null); setProjectForm((p) => ({ ...p, image: "" })); }}
+                    className="flex items-center gap-1.5 text-red-400 hover:text-red-300 text-[10px] font-bold cursor-pointer transition-colors self-start ml-1"
+                  >
+                    <X size={12} /> Hapus Gambar
                   </button>
                 )}
 
-                <div>
-                  <label style={labelStyle}>Judul Project *</label>
-                  <input style={inputStyle} placeholder="Nama project..."
+                <div className="space-y-1">
+                  <label className="text-zinc-400 text-[10px] font-bold tracking-wider uppercase ml-1">Judul Project *</label>
+                  <input 
+                    className="w-full bg-zinc-900/60 focus:bg-zinc-900 border border-zinc-800/80 focus:border-emerald-500/50 rounded-xl px-3.5 py-2.5 text-xs text-zinc-100 placeholder-zinc-600 outline-none transition-all focus:shadow-[0_0_15px_rgba(16,185,129,0.06)]" 
+                    placeholder="Nama project..."
                     value={projectForm.title}
-                    onChange={(e) => setProjectForm((p) => ({ ...p, title: e.target.value }))} />
+                    onChange={(e) => setProjectForm((p) => ({ ...p, title: e.target.value }))} 
+                  />
                 </div>
 
-                <div>
-                  <label style={labelStyle}>Subtitle / Stack *</label>
-                  <input style={inputStyle} placeholder="ReactJS • TailwindCSS"
+                <div className="space-y-1">
+                  <label className="text-zinc-400 text-[10px] font-bold tracking-wider uppercase ml-1">Subtitle / Stack *</label>
+                  <input 
+                    className="w-full bg-zinc-900/60 focus:bg-zinc-900 border border-zinc-800/80 focus:border-emerald-500/50 rounded-xl px-3.5 py-2.5 text-xs text-zinc-100 placeholder-zinc-600 outline-none transition-all focus:shadow-[0_0_15px_rgba(16,185,129,0.06)]" 
+                    placeholder="ReactJS • TailwindCSS"
                     value={projectForm.subtitle}
-                    onChange={(e) => setProjectForm((p) => ({ ...p, subtitle: e.target.value }))} />
+                    onChange={(e) => setProjectForm((p) => ({ ...p, subtitle: e.target.value }))} 
+                  />
                 </div>
 
-                <div>
-                  <label style={labelStyle}>URL Project</label>
-                  <input style={inputStyle} placeholder="https://..."
+                <div className="space-y-1">
+                  <label className="text-zinc-400 text-[10px] font-bold tracking-wider uppercase ml-1">URL Project</label>
+                  <input 
+                    className="w-full bg-zinc-900/60 focus:bg-zinc-900 border border-zinc-800/80 focus:border-emerald-500/50 rounded-xl px-3.5 py-2.5 text-xs text-zinc-100 placeholder-zinc-600 outline-none transition-all focus:shadow-[0_0_15px_rgba(16,185,129,0.06)]" 
+                    placeholder="https://..."
                     value={projectForm.url}
-                    onChange={(e) => setProjectForm((p) => ({ ...p, url: e.target.value }))} />
+                    onChange={(e) => setProjectForm((p) => ({ ...p, url: e.target.value }))} 
+                  />
                 </div>
 
-                <div>
-                  <label style={labelStyle}><Palette size={11} style={{ display: "inline", marginRight: "4px" }} />Warna Aksen</label>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "8px" }}>
-                    {COLOR_PRESETS.map((c) => (
-                      <button key={c} onClick={() => setSelectedColor(c)} style={{
-                        width: "28px", height: "28px", borderRadius: "8px",
-                        background: c, border: selectedColor === c ? "3px solid #fff" : "2px solid transparent",
-                        cursor: "pointer", transition: "all 0.15s",
-                        boxShadow: selectedColor === c ? `0 0 10px ${c}` : "none",
-                      }} />
-                    ))}
+                <div className="space-y-1.5">
+                  <label className="text-zinc-400 text-[10px] font-bold tracking-wider uppercase ml-1 flex items-center gap-1.5"><Palette size={11} /> Warna Aksen</label>
+                  <div className="flex flex-wrap gap-2 p-1.5 bg-zinc-900/20 border border-zinc-800/80 rounded-xl justify-between">
+                    {COLOR_PRESETS.map((c) => {
+                      const isSelected = selectedColor === c;
+                      return (
+                        <button 
+                          key={c} 
+                          onClick={() => setSelectedColor(c)} 
+                          className="w-6 h-6 rounded-lg transition-all duration-300 cursor-pointer hover:scale-110"
+                          style={{
+                            background: c,
+                            boxShadow: isSelected ? `0 0 12px ${c}c0` : "none",
+                            transform: isSelected ? "scale(1.15)" : undefined,
+                            border: isSelected ? "2px solid #fff" : "1px solid rgba(255,255,255,0.15)"
+                          }} 
+                        />
+                      );
+                    })}
                   </div>
                 </div>
 
-                {/* Preview card mini */}
                 {projectForm.title && (
-                  <div>
-                    <label style={labelStyle}>Preview Project Card</label>
+                  <div className="space-y-1">
+                    <label className="text-zinc-400 text-[10px] font-bold tracking-wider uppercase ml-1">Preview Project Card</label>
                     <ProjectPreviewCard item={{ ...projectForm, borderColor: selectedColor, gradient: `linear-gradient(160deg,${selectedColor} 0%,#000 70%)` }} />
                   </div>
                 )}
 
-                <button onClick={handleProjectAddOrUpdate} disabled={uploading} style={{ ...btnPrimary, opacity: uploading ? 0.7 : 1, cursor: uploading ? "not-allowed" : "pointer" }}>
-                  {uploading ? <Loader2 size={15} className="spin" /> : (projectForm.id ? <Save size={15} /> : <Plus size={15} />)} 
+                <button 
+                  onClick={handleProjectAddOrUpdate} 
+                  disabled={uploading} 
+                  className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold text-white transition-all shadow-lg select-none cursor-pointer
+                    ${uploading 
+                      ? "bg-zinc-850 border border-zinc-800 text-zinc-500 cursor-not-allowed" 
+                      : "bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/10 hover:shadow-emerald-600/20 active:scale-[0.98]"}`}
+                >
+                  {uploading ? <Loader2 size={13} className="animate-spin text-zinc-500" /> : (projectForm.id ? <Save size={13} /> : <Plus size={13} />)} 
                   {uploading ? "Menyimpan..." : (projectForm.id ? "Simpan Perubahan" : "Simpan Project")}
                 </button>
               </div>
 
-              {/* List project admin */}
-              <div style={{ flex: 1 }}>
-                <h3 style={{ color: "#fff", margin: "0 0 16px", fontSize: "14px", fontWeight: "700" }}>
-                  Projects Admin ({adminProjects.length})
+              {/* Right Column - Cards List */}
+              <div className="flex-1 min-w-0 flex flex-col gap-4">
+                <h3 className="text-zinc-400 font-bold text-xs tracking-wider uppercase font-[Space_Grotesk]">
+                  Daftar Project ({adminProjects.length})
                 </h3>
                 {adminProjects.length === 0 ? (
-                  <div style={{
-                    border: "1px dashed rgba(255,255,255,0.08)", borderRadius: "12px",
-                    padding: "40px", textAlign: "center",
-                  }}>
-                    <FolderKanban size={32} color="#3f3f46" style={{ margin: "0 auto 8px" }} />
-                    <p style={{ color: "#52525b", fontSize: "13px", margin: 0 }}>Belum ada project yang ditambahkan</p>
+                  <div className="flex-1 flex flex-col items-center justify-center border border-dashed border-zinc-800/80 rounded-2xl p-12 text-center bg-zinc-900/5">
+                    <FolderKanban size={32} className="text-zinc-600 mb-3 animate-pulse" />
+                    <p className="text-zinc-400 text-xs font-semibold">Belum ada project</p>
+                    <p className="text-zinc-600 text-[10px] mt-1">Gunakan formulir untuk menambahkan item</p>
                   </div>
                 ) : (
-                  <div style={{ display: "flex", flexDirection: "column", gap: "8px", maxHeight: "480px", overflowY: "auto" }}>
+                  <div className="flex-1 overflow-y-auto pr-1 flex flex-col gap-2.5 max-h-[500px] custom-scrollbar">
                     {adminProjects.map((item) => (
                       <ProjectPreviewCard key={item.id} item={item} 
                         onEdit={() => handleProjectEdit(item)}
@@ -776,15 +884,18 @@ const AdminPanel = ({ onClose }) => {
           {/* ─── ACHIEVEMENT TAB ─── */}
           {tab === "achievement" && (
             <>
-              {/* Form */}
-              <div style={{ flex: "0 0 300px", display: "flex", flexDirection: "column", gap: "16px" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <h3 style={{ color: "#fff", margin: 0, fontSize: "14px", fontWeight: "700" }}>
+              {/* Left Column - Form */}
+              <div className="w-full md:w-[320px] flex-shrink-0 flex flex-col gap-4">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-zinc-200 font-bold text-xs tracking-wider uppercase font-[Space_Grotesk]">
                     {achievementForm.id ? "Edit Pencapaian" : "Tambah Pencapaian"}
                   </h3>
                   {achievementForm.id && (
-                    <button onClick={() => { setAchievementForm({ id: null, title: "", description: "", tech: "", image: "" }); setAchievementPreview(null); }} style={{ background: "none", border: "none", color: "#a1a1aa", fontSize: "12px", cursor: "pointer", display: "flex", alignItems: "center" }}>
-                      <X size={12} style={{ marginRight: 4 }} /> Batal Edit
+                    <button 
+                      onClick={() => { setAchievementForm({ id: null, title: "", description: "", tech: "", image: "" }); setAchievementPreview(null); }}
+                      className="flex items-center gap-1 text-zinc-500 hover:text-zinc-300 text-[10px] font-semibold cursor-pointer transition-colors"
+                    >
+                      <X size={11} /> Batal Edit
                     </button>
                   )}
                 </div>
@@ -795,85 +906,95 @@ const AdminPanel = ({ onClose }) => {
                   onDragLeave={() => setIsAchievementDragging(false)}
                   onDrop={(e) => handleDrop(e, setAchievementForm, setAchievementPreview, setIsAchievementDragging)}
                   onClick={() => achievementFileInputRef.current?.click()}
-                  style={{
-                    border: `2px dashed ${isAchievementDragging ? "#10b981" : "rgba(255,255,255,0.12)"}`,
-                    borderRadius: "12px", padding: "20px",
-                    cursor: "pointer", textAlign: "center",
-                    background: isAchievementDragging ? "rgba(16,185,129,0.05)" : "rgba(255,255,255,0.02)",
-                    transition: "all 0.2s",
-                    minHeight: "120px", display: "flex", flexDirection: "column",
-                    alignItems: "center", justifyContent: "center", gap: "8px",
-                  }}
+                  className={`relative border-2 border-dashed rounded-xl p-5 cursor-pointer text-center flex flex-col items-center justify-center gap-2.5 transition-all duration-300 min-h-[140px]
+                    ${isAchievementDragging 
+                      ? "border-emerald-500 bg-emerald-500/5 shadow-[0_0_20px_rgba(16,185,129,0.08)]" 
+                      : "border-zinc-800 hover:border-zinc-700 bg-zinc-900/20 hover:bg-zinc-900/40"}`}
                 >
                   {achievementPreview ? (
-                    <img src={achievementPreview} alt="preview"
-                      style={{ width: "100%", maxHeight: "120px", objectFit: "cover", borderRadius: "8px" }} />
+                    <div className="relative w-full h-[120px] rounded-lg overflow-hidden border border-zinc-850">
+                      <img src={achievementPreview} alt="preview" className="w-full h-full object-cover" />
+                    </div>
                   ) : (
                     <>
-                      <Upload size={24} color={isAchievementDragging ? "#10b981" : "#52525b"} />
-                      <p style={{ color: "#71717a", fontSize: "12px", margin: 0 }}>
-                        Drag & drop atau <span style={{ color: "#10b981" }}>klik upload</span>
-                      </p>
-                      <p style={{ color: "#3f3f46", fontSize: "11px", margin: 0 }}>PNG, JPG, WEBP · maks 5MB</p>
+                      <div className="p-3 rounded-full bg-zinc-900 text-zinc-400 group-hover:text-zinc-300 transition-colors">
+                        <Upload size={18} />
+                      </div>
+                      <div className="space-y-0.5">
+                        <p className="text-zinc-300 text-xs font-semibold">Tarik gambar kemari</p>
+                        <p className="text-zinc-500 text-[10px] font-medium">atau <span className="text-emerald-400 font-bold hover:underline">cari berkas</span></p>
+                      </div>
                     </>
                   )}
-                  <input ref={achievementFileInputRef} type="file" accept="image/*" hidden
+                  <input ref={achievementFileInputRef} type="file" accept="image/*" className="hidden"
                     onChange={(e) => processImageFile(e.target.files[0], setAchievementForm, setAchievementPreview)} />
                 </div>
 
                 {achievementPreview && (
-                  <button onClick={() => { setAchievementPreview(null); setAchievementForm((p) => ({ ...p, image: "" })); }}
-                    style={{ background: "none", border: "none", cursor: "pointer", color: "#ef4444", fontSize: "12px", display: "flex", alignItems: "center", gap: "4px" }}>
-                    <X size={12} /> Hapus gambar
+                  <button 
+                    onClick={() => { setAchievementPreview(null); setAchievementForm((p) => ({ ...p, image: "" })); }}
+                    className="flex items-center gap-1.5 text-red-400 hover:text-red-300 text-[10px] font-bold cursor-pointer transition-colors self-start ml-1"
+                  >
+                    <X size={12} /> Hapus Gambar
                   </button>
                 )}
 
-                <div>
-                  <label style={labelStyle}>Judul Pencapaian *</label>
-                  <input style={inputStyle} placeholder="Contoh: Sertifikat React..."
+                <div className="space-y-1">
+                  <label className="text-zinc-400 text-[10px] font-bold tracking-wider uppercase ml-1">Judul Pencapaian *</label>
+                  <input 
+                    className="w-full bg-zinc-900/60 focus:bg-zinc-900 border border-zinc-800/80 focus:border-emerald-500/50 rounded-xl px-3.5 py-2.5 text-xs text-zinc-100 placeholder-zinc-600 outline-none transition-all focus:shadow-[0_0_15px_rgba(16,185,129,0.06)]" 
+                    placeholder="Contoh: Sertifikat React..."
                     value={achievementForm.title}
-                    onChange={(e) => setAchievementForm((p) => ({ ...p, title: e.target.value }))} />
+                    onChange={(e) => setAchievementForm((p) => ({ ...p, title: e.target.value }))} 
+                  />
                 </div>
 
-                <div>
-                  <label style={labelStyle}>Kategori / Tech (pisahkan koma)</label>
-                  <input style={inputStyle} placeholder="Aplikasi, Ide Bisnis"
+                <div className="space-y-1">
+                  <label className="text-zinc-400 text-[10px] font-bold tracking-wider uppercase ml-1">Kategori / Tech (pisahkan koma)</label>
+                  <input 
+                    className="w-full bg-zinc-900/60 focus:bg-zinc-900 border border-zinc-800/80 focus:border-emerald-500/50 rounded-xl px-3.5 py-2.5 text-xs text-zinc-100 placeholder-zinc-600 outline-none transition-all focus:shadow-[0_0_15px_rgba(16,185,129,0.06)]" 
+                    placeholder="Aplikasi, Ide Bisnis"
                     value={achievementForm.tech}
-                    onChange={(e) => setAchievementForm((p) => ({ ...p, tech: e.target.value }))} />
+                    onChange={(e) => setAchievementForm((p) => ({ ...p, tech: e.target.value }))} 
+                  />
                 </div>
 
-                <div>
-                  <label style={labelStyle}>Deskripsi</label>
-                  <textarea style={{ ...inputStyle, resize: "vertical", minHeight: "70px" }}
+                <div className="space-y-1">
+                  <label className="text-zinc-400 text-[10px] font-bold tracking-wider uppercase ml-1">Deskripsi</label>
+                  <textarea 
+                    className="w-full bg-zinc-900/60 focus:bg-zinc-900 border border-zinc-800/80 focus:border-emerald-500/50 rounded-xl px-3.5 py-2.5 text-xs text-zinc-100 placeholder-zinc-600 outline-none transition-all focus:shadow-[0_0_15px_rgba(16,185,129,0.06)] resize-none h-20"
                     placeholder="Deskripsi singkat..."
                     value={achievementForm.description}
-                    onChange={(e) => setAchievementForm((p) => ({ ...p, description: e.target.value }))} />
+                    onChange={(e) => setAchievementForm((p) => ({ ...p, description: e.target.value }))} 
+                  />
                 </div>
 
-                <button onClick={handleAchievementAddOrUpdate} disabled={uploading} style={{ ...btnPrimary, opacity: uploading ? 0.7 : 1, cursor: uploading ? "not-allowed" : "pointer" }}>
-                  {uploading ? <Loader2 size={15} className="spin" /> : (achievementForm.id ? <Save size={15} /> : <Plus size={15} />)} 
+                <button 
+                  onClick={handleAchievementAddOrUpdate} 
+                  disabled={uploading} 
+                  className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-bold text-white transition-all shadow-lg select-none cursor-pointer
+                    ${uploading 
+                      ? "bg-zinc-850 border border-zinc-800 text-zinc-500 cursor-not-allowed" 
+                      : "bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/10 hover:shadow-emerald-600/20 active:scale-[0.98]"}`}
+                >
+                  {uploading ? <Loader2 size={13} className="animate-spin text-zinc-500" /> : (achievementForm.id ? <Save size={13} /> : <Plus size={13} />)} 
                   {uploading ? "Menyimpan..." : (achievementForm.id ? "Simpan Perubahan" : "Tambahkan Pencapaian")}
                 </button>
               </div>
 
-              {/* Grid preview */}
-              <div style={{ flex: 1 }}>
-                <h3 style={{ color: "#fff", margin: "0 0 16px", fontSize: "14px", fontWeight: "700" }}>
-                  Pencapaian Admin ({adminAchievements.length})
+              {/* Right Column - Cards List */}
+              <div className="flex-1 min-w-0 flex flex-col gap-4">
+                <h3 className="text-zinc-400 font-bold text-xs tracking-wider uppercase font-[Space_Grotesk]">
+                  Daftar Pencapaian ({adminAchievements.length})
                 </h3>
                 {adminAchievements.length === 0 ? (
-                  <div style={{
-                    border: "1px dashed rgba(255,255,255,0.08)", borderRadius: "12px",
-                    padding: "40px", textAlign: "center",
-                  }}>
-                    <Award size={32} color="#3f3f46" style={{ margin: "0 auto 8px" }} />
-                    <p style={{ color: "#52525b", fontSize: "13px", margin: 0 }}>Belum ada pencapaian yang ditambahkan</p>
+                  <div className="flex-1 flex flex-col items-center justify-center border border-dashed border-zinc-800/80 rounded-2xl p-12 text-center bg-zinc-900/5">
+                    <Award size={32} className="text-zinc-600 mb-3 animate-pulse" />
+                    <p className="text-zinc-400 text-xs font-semibold">Belum ada pencapaian</p>
+                    <p className="text-zinc-600 text-[10px] mt-1">Gunakan formulir untuk menambahkan item</p>
                   </div>
                 ) : (
-                  <div style={{
-                    display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: "10px",
-                    maxHeight: "480px", overflowY: "auto",
-                  }}>
+                  <div className="flex-1 overflow-y-auto pr-1 grid grid-cols-2 sm:grid-cols-3 gap-3.5 max-h-[500px] custom-scrollbar">
                     {adminAchievements.map((item) => (
                       <AchievementPreviewCard key={item.id} item={item} 
                         onEdit={() => handleAchievementEdit(item)}
@@ -900,16 +1021,36 @@ const AdminPanel = ({ onClose }) => {
         />
       )}
 
+      {/* Global CSS variables & Keyframes */}
       <style>{`
         @keyframes slideUp {
-          from { opacity: 0; transform: translateY(20px); }
+          from { opacity: 0; transform: translateY(16px); }
           to { opacity: 1; transform: translateY(0); }
         }
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
+        @keyframes scaleUp {
+          from { opacity: 0; transform: scale(0.96); }
+          to { opacity: 1; transform: scale(1); }
         }
-        .spin { animation: spin 1s linear infinite; }
+        .animate-slideUp {
+          animation: slideUp 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        .animate-scaleUp {
+          animation: scaleUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.01);
+          border-radius: 9px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.08);
+          border-radius: 9px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(16, 185, 129, 0.3);
+        }
       `}</style>
     </div>
   );

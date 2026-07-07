@@ -2,71 +2,89 @@ import React, { useState, useEffect } from "react";
 import SpotlightCard from "../components/spotlight_card/SpotlightCard";
 import { achievementsData } from "../data/achievementsData";
 import { getMergedAchievements } from "../lib/adminStore";
+import { isAdminLoggedIn } from "../lib/adminAuth";
 import { motion, AnimatePresence } from "motion/react";
-import { X } from "lucide-react";
+import { X, Plus } from "lucide-react";
 
 const Achievements = () => {
-  const [allAchievements, setAllAchievements] = useState([]);
+  // Show static data immediately — Firestore merge happens silently in background
+  const [allAchievements, setAllAchievements] = useState(achievementsData);
   const [selectedAchievement, setSelectedAchievement] = useState(null);
+  const [adminMode, setAdminMode] = useState(isAdminLoggedIn());
 
-  // Listen for admin panel updates and initial load
   useEffect(() => {
-    const loadData = async () => {
-      const data = await getMergedAchievements(achievementsData);
-      setAllAchievements(data);
-    };
-
-    loadData();
-
-    const handler = () => loadData();
-    window.addEventListener("adminDataUpdated", handler);
-    return () => window.removeEventListener("adminDataUpdated", handler);
+    const merge = () =>
+      getMergedAchievements(achievementsData).then((data) => {
+        setAllAchievements(data);
+        setAdminMode(isAdminLoggedIn());
+      });
+    merge();
+    window.addEventListener("adminDataUpdated", merge);
+    return () => window.removeEventListener("adminDataUpdated", merge);
   }, []);
   
   return (
     <section className="space-y-3 relative">
       {/* Header */}
-      <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, ease: "easeOut" }}>
+      <div>
         <div className="p-6 max-w-2xl">
-          <h1 className="font-[Space_Grotesk] text-4xl font-bold">Pencapaian</h1>
-          <p className="text-zinc-400 mt-3 leading-relaxed">Beberapa sertifikasi dan pencapaian pembelajaran yang mencerminkan perkembangan saya dalam teknologi dan pemecahan masalah.</p>
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h1 className="font-[Space_Grotesk] text-4xl font-bold">Pencapaian</h1>
+              <p className="text-zinc-400 mt-3 leading-relaxed">Beberapa sertifikasi dan pencapaian pembelajaran yang mencerminkan perkembangan saya dalam teknologi dan pemecahan masalah.</p>
+            </div>
+            {adminMode && (
+              <button
+                onClick={() => window.openAdminWithTab?.("achievement")}
+                className="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold
+                  bg-accent/10 hover:bg-accent/20 border border-accent/30 hover:border-accent/60
+                  text-accent transition-all duration-200 mt-1"
+              >
+                <Plus size={16} />
+                Tambah
+              </button>
+            )}
+          </div>
         </div>
-      </motion.div>
+      </div>
 
-      {/* Grid */}
-      <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-6">
+      {/* Grid — no entrance animation, data is already in useState */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-6 pb-6">
         {allAchievements.map((item, index) => (
-          <div key={index} onClick={() => setSelectedAchievement(item)} className="cursor-pointer group">
-            <SpotlightCard spotlightColor="rgba(0, 229, 255, 0.12)" className="rounded-2xl overflow-hidden bg-zinc-900/60 transition-transform duration-300 group-hover:scale-[1.02] h-full">
-              {/* IMAGE (DOMINANT) */}
+          <motion.div
+            key={item.id || index}
+            whileHover={{ y: -6, transition: { duration: 0.22, ease: "easeOut" } }}
+            onClick={() => setSelectedAchievement(item)}
+            className="cursor-pointer group"
+          >
+            <SpotlightCard
+              spotlightColor="rgba(0, 229, 255, 0.15)"
+              className="rounded-2xl overflow-hidden bg-zinc-900/60 h-full ring-1 ring-transparent group-hover:ring-accent/30 transition-all duration-300 group-hover:shadow-[0_8px_32px_rgba(var(--accent-rgb),0.18)]"
+            >
+              {/* IMAGE */}
               <div className="relative w-full overflow-hidden aspect-video">
-                <img src={item.image} alt={item.title} className="w-full h-full object-cover border-2" />
-
-                {/* subtle overlay */}
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="w-full h-full object-cover border-2 transition-transform duration-500 group-hover:scale-105"
+                />
                 <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
               </div>
 
               {/* CONTENT */}
               <div className="p-4 space-y-3">
-                {/* TITLE */}
-                <h3 className="font-semibold text-lg text-accent">{item.title}</h3>
-
-                {/* TECH STACK */}
+                <h3 className="font-semibold text-lg text-accent group-hover:translate-x-1 transition-transform duration-200">{item.title}</h3>
                 <div className="flex flex-wrap gap-2">
-                  {item.tech.map((tech, i) => (
-                    <span key={i} className="text-xs px-2 py-1 rounded-md bg-zinc-800/80 text-zinc-300">
-                      {tech}
-                    </span>
+                  {(Array.isArray(item.tech) ? item.tech : []).map((tech, i) => (
+                    <span key={i} className="text-xs px-2 py-1 rounded-md bg-zinc-800/80 text-zinc-300">{tech}</span>
                   ))}
                 </div>
-
-                {/* DESCRIPTION */}
                 <p className="text-sm text-zinc-400 leading-relaxed line-clamp-3">{item.description}</p>
               </div>
             </SpotlightCard>
-          </div>
+          </motion.div>
         ))}
-      </motion.div>
+      </div>
 
       {/* Modal Popup */}
       <AnimatePresence>

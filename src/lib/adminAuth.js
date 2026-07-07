@@ -4,7 +4,7 @@
 // ============================================================
 
 const ADMIN_SESSION_KEY = "__adm_s__";
-const ADMIN_PASS_HASH = "nabil@admin2025"; // Ganti sesuai kebutuhan
+const ADMIN_PASS_HASH = "nabilkencana"; // Ganti sesuai kebutuhan
 
 /**
  * Validasi password admin

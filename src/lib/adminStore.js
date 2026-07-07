@@ -39,7 +39,7 @@ export async function getAdminGallery() {
   try {
     const snapshot = await getDocs(collection(db, GALLERY_COLLECTION));
     const items = [];
-    snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
+    snapshot.forEach(doc => items.push({ ...doc.data(), id: doc.id }));
     return items;
   } catch (error) {
     console.error("Error fetching gallery:", error);
@@ -72,7 +72,7 @@ export async function addAdminGalleryItem(item) {
     createdAt: new Date().toISOString(),
   };
   const docRef = await addDoc(collection(db, GALLERY_COLLECTION), newItem);
-  return { id: docRef.id, ...newItem };
+  return { ...newItem, id: docRef.id };
 }
 
 export async function updateAdminGalleryItem(id, updates) {
@@ -99,7 +99,7 @@ export async function getAdminProjects() {
   try {
     const snapshot = await getDocs(collection(db, PROJECT_COLLECTION));
     const items = [];
-    snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
+    snapshot.forEach(doc => items.push({ ...doc.data(), id: doc.id }));
     return items;
   } catch (error) {
     console.error("Error fetching projects:", error);
@@ -132,7 +132,7 @@ export async function addAdminProjectItem(item) {
     createdAt: new Date().toISOString(),
   };
   const docRef = await addDoc(collection(db, PROJECT_COLLECTION), newItem);
-  return { id: docRef.id, ...newItem };
+  return { ...newItem, id: docRef.id };
 }
 
 export async function updateAdminProjectItem(id, updates) {
@@ -159,7 +159,7 @@ export async function getAdminAchievements() {
   try {
     const snapshot = await getDocs(collection(db, ACHIEVEMENT_COLLECTION));
     const items = [];
-    snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
+    snapshot.forEach(doc => items.push({ ...doc.data(), id: doc.id }));
     return items;
   } catch (error) {
     console.error("Error fetching achievements:", error);
@@ -192,7 +192,7 @@ export async function addAdminAchievementItem(item) {
     createdAt: new Date().toISOString(),
   };
   const docRef = await addDoc(collection(db, ACHIEVEMENT_COLLECTION), newItem);
-  return { id: docRef.id, ...newItem };
+  return { ...newItem, id: docRef.id };
 }
 
 export async function updateAdminAchievementItem(id, updates) {

@@ -21,7 +21,6 @@ const App = () => {
   const [activePage, setActivePage] = useState("tentang");
   const [activeColor, setActiveColor] = useState("emerald");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [isReady, setIsReady] = useState(false);
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [showAdminPanel, setShowAdminPanel] = useState(false);
@@ -114,7 +113,6 @@ const App = () => {
         </div>
       </div>
 
-      {loading && <Preloader onFinish={() => setLoading(false)} />}
       {!isReady && <Preloader onFinish={() => setIsReady(true)} />}
       <ChatBot />
 

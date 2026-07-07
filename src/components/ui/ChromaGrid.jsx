@@ -154,7 +154,7 @@ const ChromaGrid = ({ items, className = "", radius = 300, damping = 0.45, fadeO
             }}
           />
           <div className="relative z-10 flex-1 p-3 box-border">
-            <img src={c.image} alt={c.title} loading="lazy" className="w-[80%] h-[80%]  md:w-full md:h-full object-cover mx-auto transition-transform duration-300 group-hover:scale-105" />
+            <img src={c.image} alt={c.title || "Gallery Item Image"} loading="lazy" decoding="async" className="w-[80%] h-[80%]  md:w-full md:h-full object-cover mx-auto transition-transform duration-300 group-hover:scale-105" />
           </div>
           <footer className="relative z-10 p-3 text-white font-sans grid grid-cols-1 gap-x-3 gap-y-1">
             <h3 className="m-0 text-[1.05rem] font-semibold">{c.title}</h3>

@@ -66,6 +66,8 @@ const Achievements = () => {
                 <img
                   src={item.image}
                   alt={item.title}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover border-2 transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
@@ -117,6 +119,7 @@ const Achievements = () => {
                 <img
                   src={selectedAchievement.image}
                   alt={selectedAchievement.title}
+                  decoding="async"
                   className="max-w-full max-h-full object-contain rounded-lg drop-shadow-lg"
                 />
               </div>

@@ -1,4 +1,4 @@
-import avatar2 from "../assets/avatar2.png";
+import avatar2 from "../assets/avatar2.webp";
 
 const colorMap = {
   emerald: "bg-emerald-500 !text-black",
@@ -49,7 +49,10 @@ const Sidebar = ({ setActivePage, activePage, activeColor, setActiveColor, isOpe
         <div className="mb-8 text-center">
           <img
             src={avatar2}
-            alt="profile"
+            alt="M. Nabil Anwar Kencana Profile"
+            width="56"
+            height="56"
+            decoding="async"
             onClick={() => setActivePage("about")}
             className={`hover:cursor-pointer mx-auto w-14 h-14 rounded-full mb-4 ring-2
               ${activeColor === "emerald" ? "ring-emerald-500"

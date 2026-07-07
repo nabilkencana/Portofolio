@@ -5,7 +5,7 @@ import css from "../assets/cards/css.svg";
 import js from "../assets/cards/js.svg";
 import flutter from '../assets/cards/flutter.svg'
 import git from "../assets/cards/git.svg";
-import github from "../assets/cards/github.png";
+import github from "../assets/cards/github.webp";
 import nestjs from '../assets/cards/nestjs.svg'
 import mysql from "../assets/cards/mysql.svg";
 import nodejs from "../assets/cards/nodejs.svg";

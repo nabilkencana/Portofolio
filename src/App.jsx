@@ -1,13 +1,7 @@
-import { useState, useEffect, useCallback } from "react";
-import Projects from "./pages/Projects";
+import { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import Sidebar from "./components/Sidebar";
 import Topbar from "./components/Topbar";
-import Skills from "./pages/Skills";
-import Contact from "./pages/Contact";
 import About from "./pages/About";
-import Gallery from "./pages/Gallery";
-import Achievements from "./pages/Achievements";
-import Chat from "./pages/Chat";
 import Aurora from "./components/ui/Aurora";
 import Preloader from "./components/ui/PreLoader";
 import ChatBot from "./components/ChatBot";
@@ -16,6 +10,14 @@ import { auth } from "./lib/firebase";
 import AdminLoginModal from "./components/AdminLoginModal";
 import AdminPanel from "./pages/AdminPanel";
 import { isAdminLoggedIn } from "./lib/adminAuth";
+
+// Code Splitting - Lazy Load off-screen routes
+const Projects = lazy(() => import("./pages/Projects"));
+const Gallery = lazy(() => import("./pages/Gallery"));
+const Skills = lazy(() => import("./pages/Skills"));
+const Contact = lazy(() => import("./pages/Contact"));
+const Achievements = lazy(() => import("./pages/Achievements"));
+const Chat = lazy(() => import("./pages/Chat"));
 
 const App = () => {
   const [activePage, setActivePage] = useState("tentang");
@@ -108,7 +110,11 @@ const App = () => {
           />
           <div className="flex-1 flex flex-col">
             <Topbar activePage={activePage} setIsSidebarOpen={setIsSidebarOpen} />
-            <main className="flex-1 overflow-y-auto">{renderPage()}</main>
+            <main className="flex-1 overflow-y-auto">
+              <Suspense fallback={<div className="h-full w-full bg-zinc-950 flex items-center justify-center text-zinc-500 font-medium">Memuat Halaman...</div>}>
+                {renderPage()}
+              </Suspense>
+            </main>
           </div>
         </div>
       </div>

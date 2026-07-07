@@ -1,27 +1,27 @@
 // Import Sertif 
-import sertif2 from "../assets/gallery/sertif2.JPG"
-import sertif3 from '../assets/gallery/sertif3.png'
+import sertif2 from "../assets/gallery/sertif2.webp"
+import sertif3 from '../assets/gallery/sertif3.webp'
 
 // Import Random
-import random1 from '../assets/gallery/random1.png'
-import random2 from '../assets/gallery/random2.PNG'
-import random3 from '../assets/gallery/random3.png'
-import random4 from '../assets/gallery/random4.png'
-import random5 from '../assets/gallery/random5.png'
+import random1 from '../assets/gallery/random1.webp'
+import random2 from '../assets/gallery/random2.webp'
+import random3 from '../assets/gallery/random3.webp'
+import random4 from '../assets/gallery/random4.webp'
+import random5 from '../assets/gallery/random5.webp'
 
 // Import Makan
-import makan1 from '../assets/gallery/makan1.png'
+import makan1 from '../assets/gallery/makan1.webp'
 
 // Import Cafe
-import cafe1 from '../assets/gallery/cafe1.png'
-import cafe2 from '../assets/gallery/cafe2.png'
+import cafe1 from '../assets/gallery/cafe1.webp'
+import cafe2 from '../assets/gallery/cafe2.webp'
 
 // Import Code
-import code1 from '../assets/gallery/code1.png'
-import code2 from '../assets/gallery/code2.png'
+import code1 from '../assets/gallery/code1.webp'
+import code2 from '../assets/gallery/code2.webp'
 
 // Import Avatar
-import avatar from '../assets/gallery/avatar.png';
+import avatar from '../assets/gallery/avatar.webp';
 
 const galleryData = [
   {

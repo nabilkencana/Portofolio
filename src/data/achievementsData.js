@@ -1,8 +1,8 @@
-import golden_ticket from '../assets/certificate/golden_ticket.jpeg'
-import juara2_inotek from '../assets/certificate/juara2_inotek.png'
-import juara3_webdev from '../assets/certificate/juara3_webdev.jpeg'
-import sertif_amd from '../assets/certificate/sertif_amd.jpeg'
-import sertif_cyber from '../assets/certificate/sertif_cyber.jpeg'
+import golden_ticket from '../assets/certificate/golden_ticket.webp'
+import juara2_inotek from '../assets/certificate/juara2_inotek.webp'
+import juara3_webdev from '../assets/certificate/juara3_webdev.webp'
+import sertif_amd from '../assets/certificate/sertif_amd.webp'
+import sertif_cyber from '../assets/certificate/sertif_cyber.webp'
 
 
 const achievementsData = [

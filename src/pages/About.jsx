@@ -1,8 +1,8 @@
 import TextType from "../components/text/TextType";
 import Lanyard from "../components/ui/Lanyard";
-import logo_telkom from "../assets/cards/logo_telkom.png";
-import logo_me from "../assets/cards/logo_me.png";
-import google_maps from "../assets/cards/google_maps.png";
+import logo_telkom from "../assets/cards/logo_telkom.webp";
+import logo_me from "../assets/cards/logo_me.webp";
+import google_maps from "../assets/cards/google_maps.webp";
 import BlurText from "../components/ui/BlurText";
 import SplitText from "../components/ui/SplitText";
 import { useState, useEffect } from "react";
@@ -187,7 +187,7 @@ const About = ({ isReady }) => {
           {/* NAME */}
           <motion.a href="https://www.linkedin.com/in/nabilkencana/" variants={cardItem} whileHover={{ y: -2 }} target="_blank">
             <div className="flex items-center gap-4 p-5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-(--accent) transition">
-              <img src={logo_me} alt="Profile" className="w-12 h-12 object-contain" />
+              <img src={logo_me} alt="Profile Icon" width="48" height="48" decoding="async" className="w-12 h-12 object-contain" />
               <div>
                 <p className="text-sm text-zinc-400">Nama</p>
                 <p className="font-medium">Nabil Kencana</p>
@@ -198,7 +198,7 @@ const About = ({ isReady }) => {
           {/* EDUCATION */}
           <motion.a href="https://www.smktelkom-mlg.sch.id/" variants={cardItem} whileHover={{ y: -2 }} target="_blank">
             <div className="flex items-center gap-4 p-5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-(--accent) transition">
-              <img src={logo_telkom} alt="University" className="w-12 h-12 object-contain" />
+              <img src={logo_telkom} alt="SMK Telkom Malang Logo" width="48" height="48" decoding="async" className="w-12 h-12 object-contain" />
               <div>
                 <p className="text-sm text-zinc-400">Pendidikan</p>
                 <p className="font-medium">SMK Telkom Malang</p>
@@ -209,7 +209,7 @@ const About = ({ isReady }) => {
           {/* LOCATION */}
           <motion.a variants={cardItem} whileHover={{ y: -2 }} >
             <div className="flex items-center gap-4 p-5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-(--accent) transition">
-              <img src={google_maps} alt="Location" className="w-10 h-10 object-contain" />
+              <img src={google_maps} alt="Malang Map Icon" width="40" height="40" decoding="async" className="w-10 h-10 object-contain" />
               <div>
                 <p className="text-sm text-zinc-400">Lokasi</p>
                 <p className="font-medium">Malang</p>

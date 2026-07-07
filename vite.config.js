@@ -59,4 +59,36 @@ function localUploadPlugin() {
 
 export default defineConfig({
   plugins: [react(), tailwindcss(), localUploadPlugin()],
+  build: {
+    target: "esnext",
+    minify: "esbuild",
+    cssMinify: true,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            if (
+              id.includes("three") || 
+              id.includes("@react-three") || 
+              id.includes("ogl") || 
+              id.includes("gl-matrix") || 
+              id.includes("meshline")
+            ) {
+              return "vendor-three-3d";
+            }
+            if (id.includes("gsap") || id.includes("@gsap")) {
+              return "vendor-gsap";
+            }
+            if (id.includes("motion") || id.includes("framer-motion")) {
+              return "vendor-motion";
+            }
+            if (id.includes("firebase")) {
+              return "vendor-firebase";
+            }
+            return "vendor-others";
+          }
+        },
+      },
+    },
+  },
 });

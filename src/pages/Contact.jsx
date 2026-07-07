@@ -1,8 +1,8 @@
  import React from "react";
-import gmail from "../assets/cards/gmail.png";
-import instagram from "../assets/cards/instagram.png";
-import github from "../assets/cards/github.png";
-import tiktok from "../assets/cards/tiktok.png";
+import gmail from "../assets/cards/gmail.webp";
+import instagram from "../assets/cards/instagram.webp";
+import github from "../assets/cards/github.webp";
+import tiktok from "../assets/cards/tiktok.webp";
 import { motion } from "motion/react";
 
 const socials = [
@@ -87,7 +87,7 @@ const Contact = () => {
                   group-hover:-translate-y-0.5
                 "
                 >
-                  <img src={item.icon} alt={item.name} className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 object-contain" />
+                  <img src={item.icon} alt={`${item.name} Logo`} loading="lazy" decoding="async" className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 object-contain" />
                 </div>
 
                 {/* Text */}

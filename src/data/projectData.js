@@ -1,14 +1,13 @@
-// import placeholder from "../assets/projects/placeholder.jpeg";
-import facemask_detection from '../assets/projects/facemask_detection.png'
-import website_tokobangunan from '../assets/projects/website_tokobangunan.png'
-import website_mandalanawa from '../assets/projects/website_mandalanawa.png'
-import website_portofolio2 from '../assets/projects/website_portofolio2.png'
-import website_wayang from '../assets/projects/website_wayang.png'
-import aplikasi_wargakita from '../assets/projects/aplikasi_wargakita.png'
-import website_ecoguard from '../assets/projects/website_EcoGuardAI.png'
-import aplikasi_ecoguard from '../assets/projects/aplikasi_ecoguard.png';
-import website_career from '../assets/projects/website_career.png';
-import website_ujs from '../assets/projects/website_ujs.png';
+import facemask_detection from '../assets/projects/facemask_detection.webp'
+import website_tokobangunan from '../assets/projects/website_tokobangunan.webp'
+import website_mandalanawa from '../assets/projects/website_mandalanawa.webp'
+import website_portofolio2 from '../assets/projects/website_portofolio2.webp'
+import website_wayang from '../assets/projects/website_wayang.webp'
+import aplikasi_wargakita from '../assets/projects/aplikasi_wargakita.webp'
+import website_ecoguard from '../assets/projects/website_EcoGuardAI.webp'
+import aplikasi_ecoguard from '../assets/projects/aplikasi_ecoguard.webp';
+import website_career from '../assets/projects/website_career.webp';
+import website_ujs from '../assets/projects/website_ujs.webp';
 
 export const projectData = [
   {

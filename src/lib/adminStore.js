@@ -7,6 +7,22 @@ const PROJECT_COLLECTION = "projects";
 const ACHIEVEMENT_COLLECTION = "achievements";
 const STATIC_OVERRIDES_COLLECTION = "static_overrides"; 
 
+// Helper to transparently map legacy image formats to our optimized WebP files
+function webpFallback(item) {
+  if (item && item.image && typeof item.image === "string") {
+    if (
+      (item.image.startsWith("/projects/") ||
+       item.image.startsWith("/gallery/") ||
+       item.image.startsWith("/certificate/") ||
+       item.image.startsWith("/uploads/")) &&
+      !item.image.endsWith(".webp")
+    ) {
+      item.image = item.image.replace(/\.(png|jpe?g|JPG|PNG|JPEG)$/i, ".webp");
+    }
+  }
+  return item;
+}
+
 // ─────────────────────── STATIC OVERRIDES ───────────────────
 
 export async function getStaticOverrides() {
@@ -14,7 +30,7 @@ export async function getStaticOverrides() {
     const snapshot = await getDocs(collection(db, STATIC_OVERRIDES_COLLECTION));
     const overrides = {};
     snapshot.forEach(doc => {
-      overrides[doc.id] = doc.data();
+      overrides[doc.id] = webpFallback(doc.data());
     });
     return overrides;
   } catch (error) {
@@ -39,7 +55,7 @@ export async function getAdminGallery() {
   try {
     const snapshot = await getDocs(collection(db, GALLERY_COLLECTION));
     const items = [];
-    snapshot.forEach(doc => items.push({ ...doc.data(), id: doc.id }));
+    snapshot.forEach(doc => items.push(webpFallback({ ...doc.data(), id: doc.id })));
     return items;
   } catch (error) {
     console.error("Error fetching gallery:", error);
@@ -99,7 +115,7 @@ export async function getAdminProjects() {
   try {
     const snapshot = await getDocs(collection(db, PROJECT_COLLECTION));
     const items = [];
-    snapshot.forEach(doc => items.push({ ...doc.data(), id: doc.id }));
+    snapshot.forEach(doc => items.push(webpFallback({ ...doc.data(), id: doc.id })));
     return items;
   } catch (error) {
     console.error("Error fetching projects:", error);
@@ -159,7 +175,7 @@ export async function getAdminAchievements() {
   try {
     const snapshot = await getDocs(collection(db, ACHIEVEMENT_COLLECTION));
     const items = [];
-    snapshot.forEach(doc => items.push({ ...doc.data(), id: doc.id }));
+    snapshot.forEach(doc => items.push(webpFallback({ ...doc.data(), id: doc.id })));
     return items;
   } catch (error) {
     console.error("Error fetching achievements:", error);

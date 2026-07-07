@@ -9,7 +9,7 @@ import { addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../lib/firebase";
 
 import google from "../assets/cards/google.svg";
-import github from "../assets/cards/github.png";
+import github from "../assets/cards/github.webp";
 import Orb from "../components/ui/Orb";
 import { LogOut } from "lucide-react"; // ✅ IMPORT ICON
 
@@ -124,7 +124,7 @@ const Chat = () => {
               rounded-xl border border-zinc-700 py-3
               bg-zinc-900/60 hover:bg-zinc-800 transition"
                 >
-                  <img src={google} alt="google" className="w-5" />
+                  <img src={google} alt="google" width="20" height="20" decoding="async" className="w-5" />
                   <span className="text-sm font-medium text-zinc-200">Lanjutkan dengan Google</span>
                 </button>
 
@@ -134,7 +134,7 @@ const Chat = () => {
               rounded-xl border border-zinc-700 py-3
               bg-zinc-900/60 hover:bg-zinc-800 transition"
                 >
-                  <img src={github} alt="github" className="w-7" />
+                  <img src={github} alt="github" width="28" height="28" decoding="async" className="w-7" />
                   <span className="text-sm font-medium text-zinc-200">Lanjutkan dengan Github</span>
                 </button>
               </motion.div>
@@ -151,7 +151,10 @@ const Chat = () => {
                     <div className="relative">
                       <img
                         src={user.photoURL}
-                        alt={user.displayName}
+                        alt={`${user.displayName || "User"}'s Profile`}
+                        width="40"
+                        height="40"
+                        decoding="async"
                         className="w-10 h-10 rounded-full border-2 border-accent/30"
                         onError={(e) => {
                           e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || "User")}&background=6366f1&color=fff&bold=true`;
@@ -192,7 +195,7 @@ const Chat = () => {
 
                       return (
                         <div key={msg.id} className={`flex gap-2 ${isMe ? "self-end flex-row-reverse items-end" : "self-start items-end "}`}>
-                          {msg.photo && <img src={msg.photo} alt={msg.name} className="w-7 h-7 rounded-full " />}
+                          {msg.photo && <img src={msg.photo} alt={`${msg.name}'s Profile`} width="28" height="28" decoding="async" className="w-7 h-7 rounded-full " />}
 
                           <div
                             className={`

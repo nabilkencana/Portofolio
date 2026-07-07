@@ -366,8 +366,8 @@ const AdminPanel = ({ onClose, initialTab = "gallery" }) => {
           const ctx = canvas.getContext("2d");
           ctx.drawImage(img, 0, 0, width, height);
 
-          // Convert to compressed jpeg base64
-          const compressedBase64 = canvas.toDataURL("image/jpeg", quality);
+          // Convert to compressed webp base64
+          const compressedBase64 = canvas.toDataURL("image/webp", quality);
 
           // Re-create a File object from the compressed blob
           canvas.toBlob((blob) => {
@@ -375,12 +375,12 @@ const AdminPanel = ({ onClose, initialTab = "gallery" }) => {
               resolve({ base64: e.target.result, file });
               return;
             }
-            const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", {
-              type: "image/jpeg",
+            const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".webp", {
+              type: "image/webp",
               lastModified: Date.now()
             });
             resolve({ base64: compressedBase64, file: compressedFile });
-          }, "image/jpeg", quality);
+          }, "image/webp", quality);
         };
         img.src = e.target.result;
       };

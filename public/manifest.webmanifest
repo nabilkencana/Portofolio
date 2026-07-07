@@ -1,0 +1,18 @@
+{
+  "name": "Mohammad Nabil Anwar Kencana Portfolio",
+  "short_name": "Canadev",
+  "description": "Portofolio resmi Mohammad Nabil Anwar Kencana - Fullstack Web Developer, UI/UX Designer, dan Founder Canadev.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#10b981",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/avatar2.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -315,26 +315,28 @@ const AdminPanel = ({ onClose, initialTab = "gallery" }) => {
 
   // ── Unified image upload ──
   const uploadImage = async (file, folder = "gallery") => {
-    try {
-      const reader = new FileReader();
-      const base64 = await new Promise((resolve, reject) => {
-        reader.onload = (e) => resolve(e.target.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-      const ext = file.name.split(".").pop().toLowerCase();
-      const filename = `${Date.now()}_${Math.random().toString(36).slice(2, 8)}.${ext}`;
-      const res = await fetch("/api/upload-local", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ filename, data: base64, folder }),
-      });
-      if (res.ok) {
-        const { url } = await res.json();
-        return url;
+    if (import.meta.env.DEV) {
+      try {
+        const reader = new FileReader();
+        const base64 = await new Promise((resolve, reject) => {
+          reader.onload = (e) => resolve(e.target.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+        const ext = file.name.split(".").pop().toLowerCase();
+        const filename = `${Date.now()}_${Math.random().toString(36).slice(2, 8)}.${ext}`;
+        const res = await fetch("/api/upload-local", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ filename, data: base64, folder }),
+        });
+        if (res.ok) {
+          const { url } = await res.json();
+          return url;
+        }
+      } catch {
+        // fallback
       }
-    } catch {
-      // fallback
     }
     return uploadImageToCloudinary(file);
   };

@@ -10,7 +10,7 @@ const Preloader = ({ onFinish }) => {
     if (step === "done") {
       const timer = setTimeout(() => {
         setStep("exit");
-      }, 300); // waktu tampil "Let's Go!"
+      }, 150); // waktu tampil "Selamat Datang!"
       return () => clearTimeout(timer);
     }
   }, [step]);
@@ -20,7 +20,7 @@ const Preloader = ({ onFinish }) => {
     if (step === "exit") {
       const timer = setTimeout(() => {
         onFinish();
-      }, 500); // fade-out duration
+      }, 250); // fade-out duration
       return () => clearTimeout(timer);
     }
   }, [step, onFinish]);
@@ -31,15 +31,15 @@ const Preloader = ({ onFinish }) => {
         fixed inset-0 z-[9999]
         flex items-center justify-center
         backdrop-blur-xl bg-black/60
-        transition-opacity duration-500
+        transition-opacity duration-300
         ${step === "exit" ? "opacity-0 pointer-events-none" : "opacity-100"}
       `}
     >
       {/* 0 → 90 (FAST) */}
-      {step === "count1" && <CountUp from={0} to={90} duration={1.4} onEnd={() => setStep("count2")} className="text-6xl font-bold text-white font-[Space_Grotesk]" />}
+      {step === "count1" && <CountUp from={0} to={90} duration={0.35} onEnd={() => setStep("count2")} className="text-6xl font-bold text-white font-[Space_Grotesk]" />}
 
-      {/* 90 → 100 (SLOW & SATISFYING) */}
-      {step === "count2" && <CountUp from={90} to={100} duration={0.9} onEnd={() => setStep("done")} className="text-6xl font-bold text-white font-[Space_Grotesk]" />}
+      {/* 90 → 100 (SATISFYING) */}
+      {step === "count2" && <CountUp from={90} to={100} duration={0.25} onEnd={() => setStep("done")} className="text-6xl font-bold text-white font-[Space_Grotesk]" />}
 
       {/* DONE */}
       {step === "done" && <span className="text-5xl font-bold text-white font-[Space_Grotesk] animate-fade-in">Selamat Datang!</span>}

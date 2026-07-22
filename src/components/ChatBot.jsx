@@ -207,12 +207,14 @@ const ChatBot = () => {
                 <button
                   onClick={clearChat}
                   title="Hapus Percakapan"
+                  aria-label="Hapus percakapan"
                   className="p-2 hover:bg-zinc-700/50 rounded-full transition-colors text-zinc-400 hover:text-red-400"
                 >
                   <Trash2 size={18} />
                 </button>
                 <button
                   onClick={toggleChat}
+                  aria-label="Tutup chatbot"
                   className="p-2 hover:bg-zinc-700/50 rounded-full transition-colors text-zinc-400 hover:text-white"
                 >
                   <X size={20} />
@@ -291,11 +293,13 @@ const ChatBot = () => {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Tanya sesuatu..."
+                aria-label="Pesan untuk AI Assistant"
                 className="flex-1 bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-(--accent) transition-all text-white placeholder:text-zinc-600 shadow-inner"
               />
               <button
                 type="submit"
                 disabled={isLoading || !input.trim()}
+                aria-label="Kirim pesan"
                 className="p-2.5 bg-(--accent) text-black rounded-xl hover:opacity-90 transition-all disabled:opacity-30 disabled:grayscale shadow-lg active:scale-95"
               >
                 <Send size={18} />
@@ -310,6 +314,7 @@ const ChatBot = () => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={toggleChat}
+        aria-label="Buka AI Assistant Chatbot"
         className="w-14 h-14 bg-(--accent) rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)] cursor-pointer transition-all duration-300 relative group"
       >
         <AnimatePresence mode="wait">

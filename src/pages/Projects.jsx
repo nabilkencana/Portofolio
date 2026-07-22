@@ -78,6 +78,7 @@ const Projects = () => {
               {/* Close Button */}
               <button
                 onClick={() => setSelectedProject(null)}
+                aria-label="Tutup detail proyek"
                 className="absolute top-4 right-4 z-10 p-2 bg-black/50 hover:bg-black/80 text-white rounded-full backdrop-blur-md transition-colors"
               >
                 <X size={20} />

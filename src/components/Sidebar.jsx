@@ -47,20 +47,25 @@ const Sidebar = ({ setActivePage, activePage, activeColor, setActiveColor, isOpe
       >
         {/* Profile */}
         <div className="mb-8 text-center">
-          <img
-            src={avatar2}
-            alt="M. Nabil Anwar Kencana Profile"
-            width="56"
-            height="56"
-            decoding="async"
-            onClick={() => setActivePage("about")}
-            className={`hover:cursor-pointer mx-auto w-14 h-14 rounded-full mb-4 ring-2
-              ${activeColor === "emerald" ? "ring-emerald-500"
-                : activeColor === "sky" ? "ring-sky-500"
-                : activeColor === "violet" ? "ring-violet-500"
-                : activeColor === "amber" ? "ring-amber-200"
-                : "ring-red-500"}`}
-          />
+          <button
+            onClick={() => setActivePage("tentang")}
+            aria-label="Navigasi ke halaman Tentang"
+            className="block mx-auto rounded-full focus:outline-none focus:ring-2 focus:ring-accent"
+          >
+            <img
+              src={avatar2}
+              alt="M. Nabil Anwar Kencana Profile"
+              width="56"
+              height="56"
+              decoding="async"
+              className={`hover:cursor-pointer mx-auto w-14 h-14 rounded-full mb-4 ring-2
+                ${activeColor === "emerald" ? "ring-emerald-500"
+                  : activeColor === "sky" ? "ring-sky-500"
+                  : activeColor === "violet" ? "ring-violet-500"
+                  : activeColor === "amber" ? "ring-amber-200"
+                  : "ring-red-500"}`}
+            />
+          </button>
           <h2 className="text-xl font-bold font-[Space_Grotesk]">M. Nabil Anwar K.</h2>
           <p className="text-sm text-zinc-400">Fullstack</p>
         </div>
@@ -98,7 +103,7 @@ const Sidebar = ({ setActivePage, activePage, activeColor, setActiveColor, isOpe
               <button
                 key={name}
                 onClick={() => setActiveColor(name)}
-                aria-label={`theme-${name}`}
+                aria-label={`Pilih warna tema ${name}`}
                 className={`w-5 h-5 rounded-full ${bg} transition-all duration-200
                   ${activeColor === name
                     ? "ring-1 ring-white/80"

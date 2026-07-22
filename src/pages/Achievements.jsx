@@ -109,6 +109,7 @@ const Achievements = () => {
               {/* Close Button */}
               <button
                 onClick={() => setSelectedAchievement(null)}
+                aria-label="Tutup detail pencapaian"
                 className="absolute top-4 right-4 z-10 p-2 bg-black/50 hover:bg-black/80 text-white rounded-full backdrop-blur-md transition-colors"
               >
                 <X size={20} />

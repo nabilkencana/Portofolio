@@ -102,7 +102,7 @@ const About = ({ isReady }) => {
               )}
 
               {/* TYPING */}
-              {showTyping && <TextType text={["Fullstack Developer", "Mobile App Developer", "UI / UX Designer"]} typingSpeed={35} deletingSpeed={25} pauseDuration={1200} cursorCharacter="_" className="text-(--accent) tracking-widest" />}
+              {showTyping && <TextType text={["Fullstack Developer", "Mobile App Developer"]} typingSpeed={35} deletingSpeed={25} pauseDuration={1200} cursorCharacter="_" className="text-(--accent) tracking-widest" />}
 
               <motion.div
                 initial={{ opacity: 0, y: 12 }}

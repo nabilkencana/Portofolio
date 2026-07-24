@@ -338,7 +338,16 @@ const AdminPanel = ({ onClose, initialTab = "gallery" }) => {
         // fallback
       }
     }
-    return uploadImageToCloudinary(file);
+    try {
+      return await uploadImageToCloudinary(file);
+    } catch (err) {
+      console.warn("Cloudinary upload failed or missing preset, falling back to base64 encoding:", err);
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.readAsDataURL(file);
+      });
+    }
   };
 
   // Client-side image compression (no dependencies, uses HTML Canvas)
@@ -447,6 +456,7 @@ const AdminPanel = ({ onClose, initialTab = "gallery" }) => {
       await refreshAll();
       window.dispatchEvent(new Event("adminDataUpdated"));
     } catch (e) {
+      console.error("Error saving gallery item:", e);
       showToast("Gagal menyimpan data", "error");
     } finally {
       setUploading(false);
@@ -511,6 +521,7 @@ const AdminPanel = ({ onClose, initialTab = "gallery" }) => {
       await refreshAll();
       window.dispatchEvent(new Event("adminDataUpdated"));
     } catch (e) {
+      console.error("Error saving project item:", e);
       showToast("Gagal menyimpan data", "error");
     } finally {
       setUploading(false);
@@ -577,6 +588,7 @@ const AdminPanel = ({ onClose, initialTab = "gallery" }) => {
       await refreshAll();
       window.dispatchEvent(new Event("adminDataUpdated"));
     } catch (e) {
+      console.error("Error saving achievement item:", e);
       showToast("Gagal menyimpan data", "error");
     } finally {
       setUploading(false);

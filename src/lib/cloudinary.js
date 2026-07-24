@@ -1,9 +1,9 @@
 export const uploadImageToCloudinary = async (file) => {
-  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || "dsk5gf5oy";
   const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
   if (!cloudName || !uploadPreset) {
-    throw new Error("Cloudinary credentials are not configured properly.");
+    throw new Error(`Cloudinary upload failed: missing ${!uploadPreset ? "VITE_CLOUDINARY_UPLOAD_PRESET" : "VITE_CLOUDINARY_CLOUD_NAME"} environment variable.`);
   }
 
   const formData = new FormData();

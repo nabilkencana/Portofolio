@@ -448,8 +448,8 @@ const MagicBento = ({
             --glow-intensity: 0;
             --glow-radius: 200px;
             --glow-color: ${glowColor};
-            --border-color: #392e4e;
-            --background-dark: #060010;
+            --border-color: rgba(255,255,255,0.10);
+            --background-dark: rgba(255,255,255,0.05);
             --white: hsl(0, 0%, 100%);
             --purple-primary: rgba(132, 0, 255, 1);
             --purple-glow: rgba(132, 0, 255, 0.2);
@@ -500,8 +500,14 @@ const MagicBento = ({
             opacity: 1;
           }
           
+          .card--border-glow {
+            backdrop-filter: blur(14px) saturate(160%);
+            -webkit-backdrop-filter: blur(14px) saturate(160%);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.10), 0 4px 20px rgba(0,0,0,0.20);
+          }
+          
           .card--border-glow:hover {
-            box-shadow: 0 4px 20px rgba(46, 24, 78, 0.4), 0 0 30px rgba(${glowColor}, 0.2);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 8px 28px rgba(0,0,0,0.30), 0 0 28px rgba(${glowColor}, 0.18);
           }
           
           .particle::before {
@@ -560,13 +566,16 @@ const MagicBento = ({
             hover:shadow-[0_8px_25px_rgba(0,0,0,0.15)] ${enableBorderGlow ? "card--border-glow" : ""}`;
 
             const cardStyle = {
-              backgroundColor: card.color || "var(--background-dark)",
-              borderColor: "var(--border-color)",
+              backgroundColor: card.color || "rgba(255,255,255,0.05)",
+              borderColor: "rgba(255,255,255,0.10)",
               color: "var(--white)",
               "--glow-x": "50%",
               "--glow-y": "50%",
               "--glow-intensity": "0",
               "--glow-radius": "200px",
+              backdropFilter: "blur(14px) saturate(160%)",
+              WebkitBackdropFilter: "blur(14px) saturate(160%)",
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.10), 0 4px 20px rgba(0,0,0,0.20)",
             };
 
             if (enableStars) {
@@ -585,7 +594,14 @@ const MagicBento = ({
                   >
                     <div className="flex items-center gap-4 h-full">
                       {/* Logo */}
-                      <div className="w-14 h-14 flex-shrink-0 rounded-xl bg-white/5 flex items-center justify-center">
+                      <div
+                        className="w-14 h-14 flex-shrink-0 rounded-xl flex items-center justify-center"
+                        style={{
+                          background: "rgba(255,255,255,0.08)",
+                          border: "1px solid rgba(255,255,255,0.12)",
+                          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15)",
+                        }}
+                      >
                         <img src={card.icon} alt={card.title} className="w-8 h-8 object-contain" draggable={false} />
                       </div>
 

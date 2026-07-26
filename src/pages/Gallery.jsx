@@ -149,7 +149,19 @@ const Gallery = ({ activeColor }) => {
       </div>
 
       {/* MAIN CONTENT AREA */}
-      <div className="h-[60vh] md:h-[70vh] lg:h-125 xl:h-[80vh] rounded-2xl md:rounded-3xl overflow-hidden relative bg-gradient-to-br from-zinc-900/50 to-zinc-950/50">
+      <div
+        className="h-[60vh] md:h-[70vh] lg:h-125 xl:h-[80vh] rounded-3xl overflow-hidden relative"
+        style={{
+          background: "rgba(18, 18, 24, 0.40)",
+          backdropFilter: "blur(28px) saturate(180%)",
+          WebkitBackdropFilter: "blur(28px) saturate(180%)",
+          border: "1px solid rgba(255, 255, 255, 0.12)",
+          boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 20px 50px rgba(0, 0, 0, 0.4)",
+          isolation: "isolate",
+        }}
+      >
+        {/* Liquid Glass top shimmer highlight */}
+        <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-white/25 pointer-events-none z-30 rounded-t-3xl" />
 
         {/* GALLERY CONTENT */}
         <div className="animate-in fade-in duration-500 h-full">
@@ -161,10 +173,19 @@ const Gallery = ({ activeColor }) => {
           </div>
 
           {/* Floating Indicator */}
-          <div className="absolute bottom-4 right-4 md:bottom-6 md:right-6">
-            <div className="flex items-center gap-2 bg-black/50 backdrop-blur-sm px-3 py-2 rounded-full">
-              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-              <span className="text-xs text-zinc-300">
+          <div className="absolute bottom-4 right-4 md:bottom-6 md:right-6 z-20">
+            <div
+              className="flex items-center gap-2 px-3.5 py-2 rounded-full text-xs text-zinc-200 font-medium"
+              style={{
+                background: "rgba(18, 18, 24, 0.75)",
+                backdropFilter: "blur(16px)",
+                WebkitBackdropFilter: "blur(16px)",
+                border: "1px solid rgba(255, 255, 255, 0.12)",
+                boxShadow: "0 4px 16px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.10)",
+              }}
+            >
+              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+              <span>
                 {isMobile ? (
                   <>
                     <span className="hidden sm:inline">Touch & swipe </span>

@@ -94,20 +94,28 @@ const Chat = () => {
         >
           <div
             className={`
-          w-full 
+          w-full relative overflow-hidden
           ${user ? "max-w-4xl" : "max-w-2xl"}
-          bg-zinc-900/80
-          border border-zinc-800
-          rounded-2xl
-          backdrop-blur
+          rounded-3xl
           p-6 sm:p-8
           mt-8 mb-8
         `}
+            style={{
+              background: "rgba(255, 255, 255, 0.04)",
+              backdropFilter: "blur(24px) saturate(200%)",
+              WebkitBackdropFilter: "blur(24px) saturate(200%)",
+              border: "1px solid rgba(255, 255, 255, 0.15)",
+              boxShadow: "inset 0 1.5px 0 rgba(255, 255, 255, 0.20), 0 20px 50px rgba(0, 0, 0, 0.4)",
+              isolation: "isolate",
+            }}
           >
+            {/* Liquid Glass top shimmer highlight */}
+            <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-white/30 pointer-events-none rounded-t-3xl" />
+
             {/* HEADER */}
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: "easeOut" }}>
               <div className="text-center mb-6">
-                <h1 className="font-[Space_Grotesk] text-3xl font-bold">Ruang Chat</h1>
+                <h1 className="font-[Space_Grotesk] text-3xl font-bold text-zinc-100">Ruang Chat</h1>
                 <p className="text-zinc-400 text-sm mt-1">Terbuka untuk berbagi dan diskusi yang santai.</p>
               </div>
             </motion.div>
@@ -120,32 +128,49 @@ const Chat = () => {
 
                 <button
                   onClick={loginWithGoogle}
-                  className="w-full flex items-center justify-center gap-3
-              rounded-xl border border-zinc-700 py-3
-              bg-zinc-900/60 hover:bg-zinc-800 transition"
+                  className="w-full flex items-center justify-center gap-3 rounded-2xl py-3.5 transition-all cursor-pointer group"
+                  style={{
+                    background: "rgba(255, 255, 255, 0.05)",
+                    border: "1px solid rgba(255, 255, 255, 0.14)",
+                    boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.15)",
+                    backdropFilter: "blur(12px)",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255, 255, 255, 0.10)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)")}
                 >
                   <img src={google} alt="google" width="20" height="20" decoding="async" className="w-5" />
-                  <span className="text-sm font-medium text-zinc-200">Lanjutkan dengan Google</span>
+                  <span className="text-sm font-medium text-zinc-100 group-hover:text-white">Lanjutkan dengan Google</span>
                 </button>
 
                 <button
                   onClick={loginWithGithub}
-                  className="w-full flex items-center justify-center gap-3
-              rounded-xl border border-zinc-700 py-3
-              bg-zinc-900/60 hover:bg-zinc-800 transition"
+                  className="w-full flex items-center justify-center gap-3 rounded-2xl py-3.5 transition-all cursor-pointer group"
+                  style={{
+                    background: "rgba(255, 255, 255, 0.05)",
+                    border: "1px solid rgba(255, 255, 255, 0.14)",
+                    boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.15)",
+                    backdropFilter: "blur(12px)",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255, 255, 255, 0.10)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)")}
                 >
                   <img src={github} alt="github" width="28" height="28" decoding="async" className="w-7" />
-                  <span className="text-sm font-medium text-zinc-200">Lanjutkan dengan Github</span>
+                  <span className="text-sm font-medium text-zinc-100 group-hover:text-white">Lanjutkan dengan Github</span>
                 </button>
               </motion.div>
             ) : (
               /* ================= CHAT ================= */
               <>
-                {/* USER INFO & LOGOUT */}
+                {/* USER INFO & LOGOUT — Liquid Glass Bar */}
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  className="flex items-center justify-between mb-6 p-3 bg-zinc-900/50 rounded-xl border border-zinc-800"
+                  className="flex items-center justify-between mb-5 p-3.5 rounded-2xl transition-all"
+                  style={{
+                    background: "rgba(255, 255, 255, 0.05)",
+                    border: "1px solid rgba(255, 255, 255, 0.10)",
+                    boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.08)",
+                  }}
                 >
                   <div className="flex items-center gap-3">
                     <div className="relative">
@@ -155,16 +180,16 @@ const Chat = () => {
                         width="40"
                         height="40"
                         decoding="async"
-                        className="w-10 h-10 rounded-full border-2 border-accent/30"
+                        className="w-10 h-10 rounded-full border-2 border-(--accent)/40 shadow-sm"
                         onError={(e) => {
                           e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || "User")}&background=6366f1&color=fff&bold=true`;
                         }}
                       />
-                      <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-zinc-900" />
+                      <div className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-zinc-950" />
                     </div>
                     <div>
-                      <p className="font-medium text-zinc-100">{user.displayName}</p>
-                      <p className="text-xs text-zinc-400">{user.email}</p>
+                      <p className="font-semibold text-zinc-100 text-sm">{user.displayName}</p>
+                      <p className="text-xs text-zinc-400 font-mono">{user.email}</p>
                     </div>
                   </div>
 
@@ -172,38 +197,70 @@ const Chat = () => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => signOut(auth)}
-                    className="flex items-center gap-2 text-sm text-zinc-400 hover:text-zinc-300 px-3 py-2 rounded-lg hover:bg-zinc-800 transition-all"
+                    className="flex items-center gap-2 text-xs font-semibold text-zinc-300 hover:text-red-400 px-3.5 py-2 rounded-xl transition-all cursor-pointer"
+                    style={{
+                      background: "rgba(255, 255, 255, 0.06)",
+                      border: "1px solid rgba(255, 255, 255, 0.10)",
+                    }}
                   >
-                    <LogOut size={16} />
+                    <LogOut size={15} />
                     <span className="hidden sm:inline">Logout</span>
                   </motion.button>
                 </motion.div>
 
-                {/* CHAT WINDOW */}
+                {/* CHAT WINDOW — Liquid Glass Box */}
                 <div
-                  className="bg-zinc-950 border border-zinc-800 rounded-2xl p-4
-              h-[60vh] sm:h-[43vh] overflow-y-auto flex flex-col gap-4 mb-4"
+                  className="rounded-2xl p-4 h-[60vh] sm:h-[45vh] overflow-y-auto flex flex-col gap-4 mb-4 scrollbar-thin scrollbar-thumb-zinc-800"
+                  style={{
+                    background: "rgba(0, 0, 0, 0.25)",
+                    border: "1px solid rgba(255, 255, 255, 0.08)",
+                    backdropFilter: "blur(12px)",
+                    boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.05)",
+                  }}
                 >
                   {messages.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center h-full text-zinc-500">
-                      <p className="font-medium">Belum ada pesan 💬</p>
-                      <p className="text-sm mt-1 opacity-80">Mulai Percakapan</p>
+                    <div className="flex flex-col items-center justify-center h-full text-zinc-400">
+                      <p className="font-medium text-base">Belum ada pesan 💬</p>
+                      <p className="text-xs mt-1 text-zinc-500">Jadilah yang pertama memulai percakapan!</p>
                     </div>
                   ) : (
                     messages.map((msg) => {
                       const isMe = msg.uid === user.uid;
 
                       return (
-                        <div key={msg.id} className={`flex gap-2 ${isMe ? "self-end flex-row-reverse items-end" : "self-start items-end "}`}>
-                          {msg.photo && <img src={msg.photo} alt={`${msg.name}'s Profile`} width="28" height="28" decoding="async" className="w-7 h-7 rounded-full " />}
+                        <div key={msg.id} className={`flex gap-2.5 ${isMe ? "self-end flex-row-reverse items-end" : "self-start items-end"}`}>
+                          {msg.photo && (
+                            <img
+                              src={msg.photo}
+                              alt={`${msg.name}'s Profile`}
+                              width="30"
+                              height="30"
+                              decoding="async"
+                              className="w-7 h-7 rounded-full border border-white/15"
+                            />
+                          )}
 
                           <div
-                            className={`
-                          px-4 py-2.5 rounded-2xl max-w-[90%]
-                          ${isMe ? "bg-accent text-black rounded-br-md" : "bg-zinc-800 text-zinc-100 rounded-bl-md"}
-                        `}
+                            className="px-4 py-2.5 rounded-2xl max-w-[85%] text-sm leading-relaxed"
+                            style={
+                              isMe
+                                ? {
+                                    background: "var(--accent)",
+                                    color: "#000",
+                                    fontWeight: 600,
+                                    borderBottomRightRadius: "4px",
+                                    boxShadow: "0 2px 10px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.3)",
+                                  }
+                                : {
+                                    background: "rgba(255, 255, 255, 0.08)",
+                                    color: "rgba(228, 228, 231, 1)",
+                                    border: "1px solid rgba(255, 255, 255, 0.10)",
+                                    borderBottomLeftRadius: "4px",
+                                    boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.08)",
+                                  }
+                            }
                           >
-                            {!isMe && <p className="text-xs opacity-70 mb-1">{msg.name}</p>}
+                            {!isMe && <p className="text-[11px] text-(--accent) font-semibold mb-1 opacity-90">{msg.name}</p>}
                             <p className="whitespace-pre-wrap break-all">{msg.text}</p>
                           </div>
                         </div>
@@ -213,23 +270,39 @@ const Chat = () => {
                   <div ref={messagesEndRef} />
                 </div>
 
-                {/* INPUT */}
+                {/* INPUT BAR */}
                 <div className="flex gap-3">
                   <textarea
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSend();
+                      }
+                    }}
                     placeholder="Ketik Pesan..."
-                    className="flex-1 rounded-xl bg-zinc-950 border border-zinc-800
-                px-4 py-2.5 text-sm resize-none focus:outline-none"
+                    className="flex-1 rounded-2xl px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 resize-none focus:outline-none transition-all"
+                    style={{
+                      background: "rgba(255, 255, 255, 0.06)",
+                      border: "1px solid rgba(255, 255, 255, 0.10)",
+                      boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.07)",
+                    }}
                   />
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                     onClick={handleSend}
                     type="button"
-                    className="cursor-pointer rounded-xl bg-zinc-800 px-5 font-semibold
-                hover:opacity-90 transition hover:-translate-y-1"
+                    className="cursor-pointer rounded-2xl px-6 font-bold text-sm flex items-center justify-center transition-all shrink-0"
+                    style={{
+                      background: "var(--accent)",
+                      color: "#000",
+                      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 14px rgba(0,0,0,0.3)",
+                    }}
                   >
                     Kirim
-                  </button>
+                  </motion.button>
                 </div>
               </>
             )}

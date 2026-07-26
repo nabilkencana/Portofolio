@@ -40,10 +40,15 @@ const Sidebar = ({ setActivePage, activePage, activeColor, setActiveColor, isOpe
       {/* SIDEBAR */}
       <aside
         className={`fixed z-40 top-4 bottom-4 left-4 w-72 rounded-2xl
-          bg-zinc-900/80 backdrop-blur border border-zinc-800 shadow-2xl
-          p-6 flex flex-col transition-all duration-300 ease-out
+          p-6 flex flex-col transition-all duration-300 ease-out relative
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
           lg:static lg:translate-x-0`}
+        style={{
+          background: "rgba(255, 255, 255, 0.02)",
+          borderRight: "1px solid rgba(255, 255, 255, 0.08)",
+          backdropFilter: "blur(16px)",
+          WebkitBackdropFilter: "blur(16px)",
+        }}
       >
         {/* Profile */}
         <div className="mb-8 text-center">
@@ -67,7 +72,7 @@ const Sidebar = ({ setActivePage, activePage, activeColor, setActiveColor, isOpe
             />
           </button>
           <h2 className="text-xl font-bold font-[Space_Grotesk]">M. Nabil Anwar K.</h2>
-          <p className="text-sm text-zinc-400">Fullstack</p>
+          <p className="text-sm text-zinc-400">Junior Software Engineer</p>
         </div>
 
         {/* Navigation */}

@@ -55,93 +55,142 @@ const Achievements = () => {
             key={item.id || index}
             whileHover={{ y: -6, transition: { duration: 0.22, ease: "easeOut" } }}
             onClick={() => setSelectedAchievement(item)}
-            className="cursor-pointer group"
+            className="cursor-pointer group h-full"
           >
             <SpotlightCard
-              spotlightColor="rgba(0, 229, 255, 0.15)"
-              className="rounded-2xl overflow-hidden bg-zinc-900/60 h-full ring-1 ring-transparent group-hover:ring-accent/30 transition-all duration-300 group-hover:shadow-[0_8px_32px_rgba(var(--accent-rgb),0.18)]"
+              spotlightColor="rgba(var(--accent-rgb), 0.2)"
+              className="rounded-3xl overflow-hidden h-full border border-white/10 hover:border-accent/40 transition-all duration-300 group-hover:shadow-[0_12px_36px_rgba(0,0,0,0.4)] relative"
+              style={{
+                background: "rgba(18, 18, 24, 0.45)",
+                backdropFilter: "blur(20px) saturate(180%)",
+                WebkitBackdropFilter: "blur(20px) saturate(180%)",
+                boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 8px 32px rgba(0, 0, 0, 0.35)",
+              }}
             >
-              {/* IMAGE */}
-              <div className="relative w-full overflow-hidden aspect-video">
+              {/* Liquid Glass top shimmer line */}
+              <div className="absolute top-0 left-0 right-0 h-px bg-white/20 z-20 pointer-events-none rounded-t-3xl" />
+
+              {/* IMAGE CONTAINER */}
+              <div className="relative w-full overflow-hidden aspect-video bg-black/30 backdrop-blur-xs border-b border-white/10">
                 <img
                   src={item.image}
                   alt={item.title}
                   loading="lazy"
                   decoding="async"
-                  className="w-full h-full object-cover border-2 transition-transform duration-500 group-hover:scale-105"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
               </div>
 
               {/* CONTENT */}
-              <div className="p-4 space-y-3">
-                <h3 className="font-semibold text-lg text-accent group-hover:translate-x-1 transition-transform duration-200">{item.title}</h3>
-                <div className="flex flex-wrap gap-2">
-                  {(Array.isArray(item.tech) ? item.tech : []).map((tech, i) => (
-                    <span key={i} className="text-xs px-2 py-1 rounded-md bg-zinc-800/80 text-zinc-300">{tech}</span>
-                  ))}
+              <div className="p-5 space-y-3 flex flex-col justify-between flex-1">
+                <div className="space-y-2">
+                  <h3 className="font-semibold text-lg text-accent group-hover:translate-x-1 transition-transform duration-200 line-clamp-1">{item.title}</h3>
+                  <div className="flex flex-wrap gap-1.5">
+                    {(Array.isArray(item.tech) ? item.tech : []).map((tech, i) => (
+                      <span
+                        key={i}
+                        className="text-xs px-2.5 py-1 rounded-md text-zinc-300 font-medium"
+                        style={{
+                          background: "rgba(255, 255, 255, 0.06)",
+                          border: "1px solid rgba(255, 255, 255, 0.10)",
+                          boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.07)",
+                        }}
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-                <p className="text-sm text-zinc-400 leading-relaxed line-clamp-3">{item.description}</p>
+                <p className="text-sm text-zinc-300 leading-relaxed line-clamp-3 font-normal">{item.description}</p>
               </div>
             </SpotlightCard>
           </motion.div>
         ))}
       </div>
 
-      {/* Modal Popup */}
+      {/* Modal Popup — Liquid Glass */}
       <AnimatePresence>
         {selectedAchievement && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-sm"
+            className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 bg-black/45 backdrop-blur-md"
             onClick={() => setSelectedAchievement(null)}
           >
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              initial={{ opacity: 0, scale: 0.94, y: 24 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              className="relative w-full max-w-3xl bg-zinc-950 border border-zinc-800 rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl max-h-full flex flex-col"
+              exit={{ opacity: 0, scale: 0.94, y: 24 }}
+              transition={{ type: "spring", stiffness: 350, damping: 25 }}
+              className="relative w-full max-w-3xl rounded-3xl overflow-hidden shadow-[0_25px_60px_-15px_rgba(0,0,0,0.85)] max-h-[90vh] flex flex-col font-sans"
+              style={{
+                background: "rgba(18, 18, 24, 0.45)",
+                backdropFilter: "blur(36px) saturate(200%)",
+                WebkitBackdropFilter: "blur(36px) saturate(200%)",
+                border: "1px solid rgba(255, 255, 255, 0.15)",
+                boxShadow: "inset 0 1.5px 0 rgba(255, 255, 255, 0.20), 0 25px 60px rgba(0,0,0,0.7)",
+                isolation: "isolate",
+              }}
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Close Button */}
+              {/* Top shimmer line */}
+              <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-white/30 z-20 pointer-events-none rounded-t-3xl" />
+
+              {/* Close Button — Liquid Glass Tile */}
               <button
                 onClick={() => setSelectedAchievement(null)}
                 aria-label="Tutup detail pencapaian"
-                className="absolute top-4 right-4 z-10 p-2 bg-black/50 hover:bg-black/80 text-white rounded-full backdrop-blur-md transition-colors"
+                className="absolute top-4 right-4 z-30 p-2.5 rounded-2xl text-zinc-300 hover:text-white transition-all cursor-pointer group"
+                style={{
+                  background: "rgba(255, 255, 255, 0.10)",
+                  border: "1px solid rgba(255, 255, 255, 0.18)",
+                  backdropFilter: "blur(16px)",
+                  boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 4px 12px rgba(0,0,0,0.3)",
+                }}
               >
-                <X size={20} />
+                <X size={18} className="group-hover:rotate-90 transition-transform duration-300" />
               </button>
 
-              {/* Image */}
-              <div className="w-full h-[30vh] sm:h-[45vh] bg-zinc-900 shrink-0 relative flex items-center justify-center p-4">
+              {/* Image Area — Ultra-translucent Frosted Glass container */}
+              <div
+                className="w-full h-[30vh] sm:h-[42vh] shrink-0 relative flex items-center justify-center p-4 sm:p-8 border-b border-white/10 overflow-hidden"
+                style={{ background: "rgba(0, 0, 0, 0.20)" }}
+              >
                 <img
                   src={selectedAchievement.image}
                   alt={selectedAchievement.title}
                   decoding="async"
-                  className="max-w-full max-h-full object-contain rounded-lg drop-shadow-lg"
+                  className="max-w-full max-h-full object-contain rounded-xl shadow-2xl relative z-10 border border-white/15"
                 />
               </div>
 
-              {/* Content */}
-              <div className="p-6 sm:p-8 space-y-4 overflow-y-auto">
-                <h2 className="text-2xl sm:text-3xl font-bold text-accent font-[Space_Grotesk]">
+              {/* Content Area */}
+              <div className="p-6 sm:p-8 space-y-4 overflow-y-auto flex-1 scrollbar-thin scrollbar-thumb-zinc-800">
+                <h2 className="text-2xl sm:text-3xl font-bold text-accent font-[Space_Grotesk] tracking-tight">
                   {selectedAchievement.title}
                 </h2>
-                
+
                 <div className="flex flex-wrap gap-2">
                   {selectedAchievement.tech.map((tech, i) => (
-                    <span key={i} className="text-xs sm:text-sm px-3 py-1.5 rounded-lg bg-zinc-800/80 border border-zinc-700/50 text-zinc-300 font-medium">
+                    <span
+                      key={i}
+                      className="text-xs sm:text-sm px-3 py-1.5 rounded-lg text-zinc-300 font-medium"
+                      style={{
+                        background: "rgba(255, 255, 255, 0.08)",
+                        border: "1px solid rgba(255, 255, 255, 0.12)",
+                        boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.08)",
+                      }}
+                    >
                       {tech}
                     </span>
                   ))}
                 </div>
 
-                <div className="h-px w-full bg-zinc-800/50 my-4" />
+                <div className="h-px w-full bg-white/10 my-4" />
 
-                <p className="text-zinc-300 leading-relaxed text-sm sm:text-base whitespace-pre-wrap">
+                <p className="text-zinc-200 leading-relaxed text-sm sm:text-base whitespace-pre-wrap font-normal">
                   {selectedAchievement.description}
                 </p>
               </div>

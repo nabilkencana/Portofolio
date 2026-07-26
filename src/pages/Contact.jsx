@@ -47,66 +47,55 @@ const Contact = () => {
         {/* GRID */}
         <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }} className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           {socials.map((item, index) => (
-            <a
+            <motion.a
               key={index}
               href={item.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="
-              group relative overflow-hidden
-              rounded-2xl border border-zinc-800
-              bg-zinc-900/70 p-6
-              backdrop-blur
-              transition-all duration-300
-              hover:border-accent
-              hover:bg-zinc-900
-              "
+              whileHover={{ y: -4 }}
+              className="group relative overflow-hidden rounded-3xl p-6 transition-all duration-300 cursor-pointer border border-white/10 hover:border-(--accent)/40 hover:shadow-xl"
+              style={{
+                background: "rgba(18, 18, 24, 0.45)",
+                backdropFilter: "blur(20px) saturate(180%)",
+                WebkitBackdropFilter: "blur(20px) saturate(180%)",
+                boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 8px 32px rgba(0, 0, 0, 0.35)",
+              }}
             >
-              {/* Accent glow */}
+              {/* Liquid Glass top shimmer highlight */}
+              <div className="absolute top-0 left-0 right-0 h-px bg-white/20 pointer-events-none z-20 rounded-t-3xl" />
+
+              {/* Accent glow on hover */}
               <div
-                className="
-                absolute inset-0 opacity-0
-                group-hover:opacity-100
-                transition
-                bg-linear-to-br
-                from-(--accent)/10
-                to-transparent
-                "
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl pointer-events-none"
+                style={{
+                  background: "radial-gradient(circle at 50% 0%, rgba(var(--accent-rgb), 0.25) 0%, transparent 75%)",
+                }}
               />
 
-              <div className="relative z-10 flex items-start gap-4">
-                {/* Icon */}
+              <div className="relative z-10 flex items-center gap-4">
+                {/* Icon — Glass Tile */}
                 <div
-                  className="
-                  w-10 h-10 rounded-xl
-                  flex items-center justify-center
-                  shrink-0
-                  transition-transform duration-300 ease-out
-                  group-hover:scale-110
-                  group-hover:rotate-6
-                  group-hover:-translate-y-0.5
-                "
+                  className="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 transition-transform duration-300 ease-out group-hover:scale-110 group-hover:rotate-3"
+                  style={{
+                    background: "rgba(255, 255, 255, 0.07)",
+                    border: "1px solid rgba(255, 255, 255, 0.12)",
+                    boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.15)",
+                    backdropFilter: "blur(12px)",
+                  }}
                 >
-                  <img src={item.icon} alt={`${item.name} Logo`} loading="lazy" decoding="async" className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 object-contain" />
+                  <img src={item.icon} alt={`${item.name} Logo`} loading="lazy" decoding="async" className="w-6 h-6 object-contain" />
                 </div>
 
                 {/* Text */}
-                <div className="flex-1">
-                  <p className="font-medium">{item.name}</p>
-                  <p className="mt-1 text-sm text-zinc-400">{item.value}</p>
+                <div className="flex-1 overflow-hidden">
+                  <p className="font-semibold text-zinc-100 text-base group-hover:text-white transition-colors">{item.name}</p>
+                  <p className="mt-0.5 text-xs sm:text-sm text-zinc-300 font-mono truncate">{item.value}</p>
                 </div>
 
                 {/* Arrow */}
-                <i
-                  className="
-                  ri-arrow-right-up-line
-                  text-zinc-500
-                  group-hover:text-accent
-                    transition
-                  "
-                />
+                <i className="ri-arrow-right-up-line text-lg text-zinc-400 group-hover:text-(--accent) group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
               </div>
-            </a>
+            </motion.a>
           ))}
         </motion.div>
       </div>

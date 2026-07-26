@@ -77,7 +77,7 @@ const About = ({ isReady }) => {
               <BlurText text="Hi 👋, I'm Nabil Kencana" className="font-[Space_Grotesk] text-4xl lg:text-5xl font-bold leading-tight" animateBy="words" delay={100} direction="top" />
 
               {/* TYPING */}
-              <TextType text={["Fullstack Developer", "Mobile App Developer"]} typingSpeed={35} deletingSpeed={25} pauseDuration={1200} cursorCharacter="_" className="text-(--accent) tracking-widest" />
+              <TextType text={["Junior Fullstack Developer", "Junior Mobile App Developer"]} typingSpeed={35} deletingSpeed={25} pauseDuration={1200} cursorCharacter="_" className="text-(--accent) tracking-widest" />
 
               <motion.div
                 initial={{ opacity: 0, y: 12 }}
@@ -155,34 +155,61 @@ const About = ({ isReady }) => {
 
         <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" variants={gridContainer} initial="hidden" whileInView="visible" viewport={{ once: true }}>
           {/* NAME */}
-          <motion.a href="https://www.linkedin.com/in/nabilkencana/" variants={cardItem} whileHover={{ y: -2 }} target="_blank" rel="noopener noreferrer">
-            <div className="flex items-center gap-4 p-5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-(--accent) transition">
+          <motion.a href="https://www.linkedin.com/in/nabilkencana/" variants={cardItem} whileHover={{ y: -3 }} target="_blank" rel="noopener noreferrer">
+            <div
+              className="flex items-center gap-4 p-5 rounded-2xl transition-all"
+              style={{
+                background: "rgba(255,255,255,0.05)",
+                border: "1px solid rgba(255,255,255,0.10)",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.10), 0 4px 20px rgba(0,0,0,0.2)",
+                backdropFilter: "blur(12px)",
+                WebkitBackdropFilter: "blur(12px)",
+              }}
+            >
               <img src={logo_me} alt="Profile Icon" width="48" height="48" decoding="async" className="w-12 h-12 object-contain" />
               <div>
                 <p className="text-sm text-zinc-400">Nama</p>
-                <p className="font-medium">Nabil Kencana</p>
+                <p className="font-medium text-zinc-100">Nabil Kencana</p>
               </div>
             </div>
           </motion.a>
 
           {/* EDUCATION */}
-          <motion.a href="https://www.smktelkom-mlg.sch.id/" variants={cardItem} whileHover={{ y: -2 }} target="_blank" rel="noopener noreferrer">
-            <div className="flex items-center gap-4 p-5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-(--accent) transition">
+          <motion.a href="https://www.smktelkom-mlg.sch.id/" variants={cardItem} whileHover={{ y: -3 }} target="_blank" rel="noopener noreferrer">
+            <div
+              className="flex items-center gap-4 p-5 rounded-2xl transition-all"
+              style={{
+                background: "rgba(255,255,255,0.05)",
+                border: "1px solid rgba(255,255,255,0.10)",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.10), 0 4px 20px rgba(0,0,0,0.2)",
+                backdropFilter: "blur(12px)",
+                WebkitBackdropFilter: "blur(12px)",
+              }}
+            >
               <img src={logo_telkom} alt="SMK Telkom Malang Logo" width="48" height="48" decoding="async" className="w-12 h-12 object-contain" />
               <div>
                 <p className="text-sm text-zinc-400">Pendidikan</p>
-                <p className="font-medium">SMK Telkom Malang</p>
+                <p className="font-medium text-zinc-100">SMK Telkom Malang</p>
               </div>
             </div>
           </motion.a>
 
           {/* LOCATION */}
-          <motion.a href="https://maps.google.com/?q=Malang" target="_blank" rel="noopener noreferrer" variants={cardItem} whileHover={{ y: -2 }} >
-            <div className="flex items-center gap-4 p-5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-(--accent) transition">
+          <motion.a href="https://maps.google.com/?q=Malang" target="_blank" rel="noopener noreferrer" variants={cardItem} whileHover={{ y: -3 }}>
+            <div
+              className="flex items-center gap-4 p-5 rounded-2xl transition-all"
+              style={{
+                background: "rgba(255,255,255,0.05)",
+                border: "1px solid rgba(255,255,255,0.10)",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.10), 0 4px 20px rgba(0,0,0,0.2)",
+                backdropFilter: "blur(12px)",
+                WebkitBackdropFilter: "blur(12px)",
+              }}
+            >
               <img src={google_maps} alt="Malang Map Icon" width="40" height="40" decoding="async" className="w-10 h-10 object-contain" />
               <div>
                 <p className="text-sm text-zinc-400">Lokasi</p>
-                <p className="font-medium">Malang</p>
+                <p className="font-medium text-zinc-100">Malang</p>
               </div>
             </div>
           </motion.a>
@@ -211,30 +238,78 @@ const About = ({ isReady }) => {
         >
           {[
             {
-              title: "Frontend Developer (Belajar Mandiri)",
-              desc: "Mempelajari dan membangun tampilan web yang responsif menggunakan React, Tailwind CSS, dan JavaScript modern.",
+              role: "Fullstack & Multi-Platform",
+              title: "Ekosistem Aplikasi Terintegrasi",
+              desc: "Merancang & membangun ekosistem aplikasi terintegrasi yang mencakup Web Frontend (React/TS), Backend API (NestJS), Mobile App (Flutter), dan Admin Dashboard.",
+              tags: ["React", "NestJS", "Flutter", "TypeScript"],
             },
             {
-              title: "Proyek Web Pribadi",
-              desc: "Mengembangkan website portfolio, landing page, dan komponen interaktif untuk meningkatkan skill pengembangan web.",
+              role: "Backend Engineering",
+              title: "RESTful API & Service (Golang & NestJS)",
+              desc: "Mengembangkan backend service berkinerja tinggi menggunakan Go (Golang) dan NestJS, mencakup manajemen database, sistem autentikasi, dan deployment cloud.",
+              tags: ["Golang", "NestJS", "PostgreSQL", "Vercel"],
             },
             {
-              title: "Latihan UI & Layout",
-              desc: "Merancang layout yang rapi, sistem tipografi, dan grid responsif menggunakan Tailwind CSS dengan referensi desain dari Figma.",
+              role: "Frontend Development",
+              title: "Aplikasi Web Interaktif & Platform Digital",
+              desc: "Membangun antarmuka web modern & responsif menggunakan React, Next.js, dan Tailwind CSS dengan arsitektur komponen yang bersih dan performansi optimal.",
+              tags: ["React", "Next.js", "TypeScript", "Tailwind CSS"],
             },
             {
-              title: "Sistem CRUD & Autentikasi NestJs",
-              desc: "Membangun aplikasi web dengan fitur CRUD, sistem login, serta role-based access control.",
+              role: "Mobile Development",
+              title: "Aplikasi Mobile Lintas Platform",
+              desc: "Mengembangkan aplikasi mobile Android/iOS menggunakan Flutter dengan manajemen status yang efisien serta integrasi Supabase & SQLite.",
+              tags: ["Flutter", "Dart", "Supabase", "SQLite"],
+            },
+            {
+              role: "AI & Smart Systems",
+              title: "Solusi Digital Berbasis AI & Computer Vision",
+              desc: "Mengintegrasikan fitur cerdas berbasis AI ke dalam solusi web dan mobile, mencakup sistem analisis data serta pendeteksian berbasis Computer Vision.",
+              tags: ["Python", "AI Integration", "React", "Flutter"],
             },
           ].map((item, i) => (
             <motion.div
               key={i}
               variants={cardItem}
-              whileHover={{ y: -2 }}
-              className="p-5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-(--accent) transition"
+              whileHover={{ y: -3 }}
+              className="p-5 rounded-2xl transition-all"
+              style={{
+                background: "rgba(255,255,255,0.05)",
+                border: "1px solid rgba(255,255,255,0.10)",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.10), 0 4px 24px rgba(0,0,0,0.2)",
+                backdropFilter: "blur(12px)",
+                WebkitBackdropFilter: "blur(12px)",
+              }}
             >
-              <h4 className="font-semibold">{item.title}</h4>
-              <p className="text-sm text-zinc-400 mt-1">{item.desc}</p>
+              <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                <h4 className="font-semibold text-base text-zinc-100">{item.title}</h4>
+                <span
+                  className="text-xs font-medium px-2.5 py-0.5 rounded-full text-(--accent)"
+                  style={{
+                    background: "rgba(255,255,255,0.07)",
+                    border: "1px solid rgba(255,255,255,0.12)",
+                    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08)",
+                  }}
+                >
+                  {item.role}
+                </span>
+              </div>
+              <p className="text-sm text-zinc-400 mt-1 leading-relaxed">{item.desc}</p>
+              <div className="flex flex-wrap gap-1.5 mt-3">
+                {item.tags.map((tag, tIdx) => (
+                  <span
+                    key={tIdx}
+                    className="text-[11px] font-mono px-2 py-0.5 rounded-md text-zinc-300"
+                    style={{
+                      background: "rgba(255,255,255,0.06)",
+                      border: "1px solid rgba(255,255,255,0.10)",
+                      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07)",
+                    }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </motion.div>
           ))}
         </motion.div>

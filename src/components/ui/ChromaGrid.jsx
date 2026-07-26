@@ -135,69 +135,88 @@ const ChromaGrid = ({ items, className = "", radius = 300, damping = 0.45, fadeO
         "--y": "50%",
       }}
     >
-      {data.map((c, i) => (
-        <article
-          key={i}
-          onMouseMove={handleCardMove}
-          onClick={(e) => handleCardClick(c, e)}
-          className="group relative flex flex-col w-[300px] rounded-lg overflow-hidden border-2 border-transparent transition-all duration-300 cursor-pointer hover:scale-105 hover:shadow-2xl active:scale-95"
-          style={{
-            "--card-border": c.borderColor || "transparent",
-            background: c.gradient,
-            "--spotlight-color": "rgba(255,255,255,0.3)",
-          }}
-        >
-          <div
-            className="absolute inset-0 pointer-events-none transition-opacity duration-500 z-20 opacity-0 group-hover:opacity-100"
+      {data.map((c, i) => {
+        const accentColor = c.borderColor || "#10B981";
+        return (
+          <article
+            key={i}
+            onMouseMove={handleCardMove}
+            onClick={(e) => handleCardClick(c, e)}
+            className="group relative flex flex-col w-[300px] h-[365px] rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer hover:scale-[1.03] active:scale-95 border border-white/10 hover:border-[var(--card-accent)] hover:shadow-xl"
             style={{
-              background: "radial-gradient(circle at var(--mouse-x) var(--mouse-y), var(--spotlight-color), transparent 70%)",
+              "--card-accent": accentColor,
+              "--card-accent-glow": `${accentColor}55`,
+              background: "rgba(18, 18, 24, 0.45)",
+              backdropFilter: "blur(20px) saturate(180%)",
+              WebkitBackdropFilter: "blur(20px) saturate(180%)",
+              boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 8px 32px rgba(0, 0, 0, 0.35)",
+              isolation: "isolate",
             }}
-          />
-          <div className="relative z-10 flex-1 p-3 box-border">
-            <img src={c.image} alt={c.title || "Gallery Item Image"} loading="lazy" decoding="async" className="w-[80%] h-[80%]  md:w-full md:h-full object-cover mx-auto transition-transform duration-300 group-hover:scale-105" />
-          </div>
-          <footer className="relative z-10 p-3 text-white font-sans grid grid-cols-1 gap-x-3 gap-y-1">
-            <h3 className="m-0 text-[1.05rem] font-semibold">{c.title}</h3>
-            {c.handle && <span className="text-[0.95rem] opacity-80 text-right">{c.handle}</span>}
-            <p className="m-0 text-[0.85rem] opacity-85">{c.subtitle}</p>
-            {c.location && <span className="text-[0.85rem] opacity-85 text-right">{c.location}</span>}
-            {c.url && (
-              <div className="flex items-center gap-2 mt-2 text-[0.8rem] opacity-70 group-hover:opacity-100 transition-opacity">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                  <polyline points="15 3 21 3 21 9"></polyline>
-                  <line x1="10" y1="14" x2="21" y2="3"></line>
-                </svg>
-                <span>Klik untuk membuka</span>
+          >
+            {/* Liquid Glass top shimmer line */}
+            <div className="absolute top-0 left-0 right-0 h-px bg-white/20 pointer-events-none z-20 rounded-t-2xl" />
+
+            {/* Hover colored ambient glow layer */}
+            <div
+              className="absolute inset-0 pointer-events-none transition-opacity duration-500 z-0 opacity-0 group-hover:opacity-100 rounded-2xl"
+              style={{
+                background: `radial-gradient(circle at 50% 0%, ${accentColor}30 0%, rgba(18,18,24,0) 75%)`,
+              }}
+            />
+
+            {/* Interactive mouse spotlight glow in project signature color */}
+            <div
+              className="absolute inset-0 pointer-events-none transition-opacity duration-500 z-20 opacity-0 group-hover:opacity-100 rounded-2xl"
+              style={{
+                background: `radial-gradient(circle 170px at var(--mouse-x) var(--mouse-y), ${accentColor}55 0%, ${accentColor}15 45%, transparent 70%)`,
+              }}
+            />
+
+            {/* Image Container — fixed 170px height for 100% uniformity */}
+            <div className="relative z-10 w-full h-[175px] shrink-0 p-3 box-border bg-black/30 backdrop-blur-xs flex items-center justify-center overflow-hidden">
+              <img
+                src={c.image}
+                alt={c.title || "Gallery Item Image"}
+                loading="lazy"
+                decoding="async"
+                className="w-full h-full object-cover rounded-xl transition-transform duration-500 group-hover:scale-105 shadow-md"
+              />
+            </div>
+
+            {/* Footer Content — fills remaining height uniformly */}
+            <footer
+              className="relative z-10 flex-1 p-4 text-white font-sans flex flex-col justify-between shrink-0 transition-colors duration-300"
+              style={{
+                background: "rgba(255, 255, 255, 0.03)",
+                borderTop: "1px solid rgba(255, 255, 255, 0.08)",
+              }}
+            >
+              <div>
+                <div className="flex items-start justify-between gap-2">
+                  <h3 className="m-0 text-[1rem] font-semibold text-zinc-100 group-hover:text-white transition-colors line-clamp-1">
+                    {c.title}
+                  </h3>
+                  {c.handle && <span className="text-[0.85rem] opacity-80 font-mono shrink-0">{c.handle}</span>}
+                </div>
+                <p className="m-0 text-[0.8rem] text-zinc-300 font-medium line-clamp-2 mt-1.5 leading-relaxed">
+                  {c.subtitle}
+                </p>
               </div>
-            )}
-          </footer>
-        </article>
-      ))}
-      <div
-        className="absolute inset-0 pointer-events-none z-30"
-        style={{
-          backdropFilter: "grayscale(1) brightness(0.78)",
-          WebkitBackdropFilter: "grayscale(1) brightness(0.78)",
-          background: "rgba(0,0,0,0.001)",
-          maskImage: "radial-gradient(circle var(--r) at var(--x) var(--y),transparent 0%,transparent 15%,rgba(0,0,0,0.10) 30%,rgba(0,0,0,0.22)45%,rgba(0,0,0,0.35)60%,rgba(0,0,0,0.50)75%,rgba(0,0,0,0.68)88%,white 100%)",
-          WebkitMaskImage: "radial-gradient(circle var(--r) at var(--x) var(--y),transparent 0%,transparent 15%,rgba(0,0,0,0.10) 30%,rgba(0,0,0,0.22)45%,rgba(0,0,0,0.35)60%,rgba(0,0,0,0.50)75%,rgba(0,0,0,0.68)88%,white 100%)",
-        }}
-      />
-      <div
-        ref={fadeRef}
-        className="absolute inset-0 pointer-events-none transition-opacity duration-[250ms] z-40"
-        style={{
-          backdropFilter: "grayscale(1) brightness(0.78)",
-          WebkitBackdropFilter: "grayscale(1) brightness(0.78)",
-          background: "rgba(0,0,0,0.001)",
-          maskImage:
-            "radial-gradient(circle var(--r) at var(--x) var(--y),white 0%,white 15%,rgba(255,255,255,0.90)30%,rgba(255,255,255,0.78)45%,rgba(255,255,255,0.65)60%,rgba(255,255,255,0.50)75%,rgba(255,255,255,0.32)88%,transparent 100%)",
-          WebkitMaskImage:
-            "radial-gradient(circle var(--r) at var(--x) var(--y),white 0%,white 15%,rgba(255,255,255,0.90)30%,rgba(255,255,255,0.78)45%,rgba(255,255,255,0.65)60%,rgba(255,255,255,0.50)75%,rgba(255,255,255,0.32)88%,transparent 100%)",
-          opacity: 1,
-        }}
-      />
+
+              {c.url && (
+                <div className="flex items-center gap-2 text-[0.78rem] text-zinc-400 group-hover:text-white transition-colors font-medium mt-auto pt-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                  </svg>
+                  <span>Klik untuk membuka</span>
+                </div>
+              )}
+            </footer>
+          </article>
+        );
+      })}
     </div>
   );
 };

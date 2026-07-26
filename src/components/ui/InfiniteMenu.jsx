@@ -590,15 +590,18 @@ class InfiniteGridMenu {
     this.#animate(this.#deltaTime);
     this.#render();
 
-    requestAnimationFrame((t) => this.run(t));
+    this.rafId = requestAnimationFrame((t) => this.run(t));
   }
 
   destroy() {
     this.destroyed = true;
+    if (this.rafId) {
+      cancelAnimationFrame(this.rafId);
+    }
   }
 
   #init(onInit) {
-    this.gl = this.canvas.getContext("webgl2", { antialias: true, alpha: false });
+    this.gl = this.canvas.getContext("webgl2", { antialias: true, alpha: true, powerPreference: "high-performance" });
     const gl = this.gl;
     if (!gl) {
       throw new Error("No WebGL 2 context!");
@@ -910,19 +913,24 @@ export default function InfiniteMenu({ items = [], scale = 1.0 }) {
       {activeItem && (
         <div
           className={`
-        pointer-events-none
-        absolute
-        left-6
-        bottom-6
-        max-w-[70%]
-        transition-all
-        ease-out
-        ${isMoving ? "opacity-0 translate-y-2 duration-150" : "opacity-100 translate-y-0 duration-300"}
-      `}
+            pointer-events-none absolute left-6 bottom-6 max-w-[80%] sm:max-w-[65%] z-20 p-4 rounded-2xl transition-all ease-out
+            ${isMoving ? "opacity-0 translate-y-3 duration-150" : "opacity-100 translate-y-0 duration-300"}
+          `}
+          style={{
+            background: "rgba(18, 18, 24, 0.65)",
+            backdropFilter: "blur(20px) saturate(180%)",
+            WebkitBackdropFilter: "blur(20px) saturate(180%)",
+            border: "1px solid rgba(255, 255, 255, 0.12)",
+            boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 12px 36px rgba(0, 0, 0, 0.4)",
+          }}
         >
-          <h2 className="text-(--accent) font-bold text-2xl leading-tight line-clamp-2">{activeItem.title}</h2>
+          <h2 className="text-(--accent) font-bold text-xl sm:text-2xl leading-tight line-clamp-1 font-[Space_Grotesk] drop-shadow-md">
+            {activeItem.title}
+          </h2>
 
-          <p className="mt-1 text-white/70 text-sm line-clamp-1">{activeItem.description}</p>
+          <p className="mt-1 text-zinc-200 text-xs sm:text-sm line-clamp-2 leading-relaxed font-normal">
+            {activeItem.description}
+          </p>
         </div>
       )}
     </div>

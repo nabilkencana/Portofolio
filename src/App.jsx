@@ -99,7 +99,19 @@ const App = () => {
       <Aurora style={{ border: "2px solid black" }} />
 
       <div className="relative z-10 flex items-center justify-center p-6 h-screen">
-        <div className={`w-full max-w-7xl h-[85vh] bg-zinc-900 rounded-2xl shadow-2xl flex text-zinc-100 ${activeColor}`}>
+        <div
+          className={`w-full max-w-7xl h-[85vh] rounded-3xl flex text-zinc-100 relative overflow-hidden ${activeColor}`}
+          style={{
+            background: "rgba(18, 18, 24, 0.40)",
+            backdropFilter: "blur(32px) saturate(190%)",
+            WebkitBackdropFilter: "blur(32px) saturate(190%)",
+            border: "1px solid rgba(255, 255, 255, 0.12)",
+            boxShadow: "inset 0 1.5px 0 rgba(255, 255, 255, 0.18), 0 30px 70px rgba(0, 0, 0, 0.6)",
+            isolation: "isolate",
+          }}
+        >
+          {/* Top Liquid Glass Shimmer Line */}
+          <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-white/25 pointer-events-none z-30 rounded-t-3xl" />
           <Sidebar
             setActivePage={setActivePage}
             activePage={activePage}

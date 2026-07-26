@@ -128,7 +128,7 @@ const ChromaGrid = ({ items, className = "", radius = 300, damping = 0.45, fadeO
       ref={rootRef}
       onPointerMove={handleMove}
       onPointerLeave={handleLeave}
-      className={`relative w-[250px] md:w-full h-full flex flex-wrap justify-center items-start gap-3 mx-auto ${className}`}
+      className={`relative w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 ${className}`}
       style={{
         "--r": `${radius}px`,
         "--x": "50%",
@@ -142,7 +142,7 @@ const ChromaGrid = ({ items, className = "", radius = 300, damping = 0.45, fadeO
             key={i}
             onMouseMove={handleCardMove}
             onClick={(e) => handleCardClick(c, e)}
-            className="group relative flex flex-col w-[300px] h-[365px] rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer hover:scale-[1.03] active:scale-95 border border-white/10 hover:border-[var(--card-accent)] hover:shadow-xl"
+            className="group relative flex flex-col w-full rounded-3xl overflow-hidden transition-all duration-300 cursor-pointer hover:scale-[1.02] active:scale-95 border border-white/10 hover:border-[var(--card-accent)] hover:shadow-xl"
             style={{
               "--card-accent": accentColor,
               "--card-accent-glow": `${accentColor}55`,
@@ -172,15 +172,16 @@ const ChromaGrid = ({ items, className = "", radius = 300, damping = 0.45, fadeO
               }}
             />
 
-            {/* Image Container — fixed 170px height for 100% uniformity */}
-            <div className="relative z-10 w-full h-[175px] shrink-0 p-3 box-border bg-black/30 backdrop-blur-xs flex items-center justify-center overflow-hidden">
+            {/* Image Container — aspect-video for uniform responsive sizing */}
+            <div className="relative z-10 w-full aspect-video shrink-0 bg-black/30 backdrop-blur-xs overflow-hidden border-b border-white/10">
               <img
                 src={c.image}
-                alt={c.title || "Gallery Item Image"}
+                alt={c.title || "Project Image"}
                 loading="lazy"
                 decoding="async"
-                className="w-full h-full object-cover rounded-xl transition-transform duration-500 group-hover:scale-105 shadow-md"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
             </div>
 
             {/* Footer Content — fills remaining height uniformly */}

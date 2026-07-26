@@ -172,8 +172,8 @@ const Gallery = ({ activeColor }) => {
             />
           </div>
 
-          {/* Floating Indicator */}
-          <div className="absolute bottom-4 right-4 md:bottom-6 md:right-6 z-20">
+          {/* Floating Indicator — positioned above bottom edge on mobile to avoid collision */}
+          <div className="absolute bottom-16 sm:bottom-4 right-4 md:right-6 z-20">
             <div
               className="flex items-center gap-2 px-3.5 py-2 rounded-full text-xs text-zinc-200 font-medium"
               style={{

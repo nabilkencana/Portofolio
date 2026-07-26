@@ -52,7 +52,7 @@ const Projects = () => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
-        className="relative w-full isolate pb-8"
+        className="relative w-full isolate px-6 pb-8"
       >
         <ChromaGrid items={allProjects} radius={320} damping={0.5} fadeOut={0.7} onItemClick={(item) => setSelectedProject(item)} />
       </motion.div>

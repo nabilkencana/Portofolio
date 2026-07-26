@@ -17,13 +17,13 @@ const hoverMap = {
 };
 
 const navItems = [
-  { id: "tentang",    label: "Tentang",    icon: "ri-user-3-line" },
-  { id: "galeri",     label: "Galeri",     icon: "ri-image-line" },
-  { id: "keahlian",   label: "Keahlian",   icon: "ri-code-line" },
-  { id: "proyek",     label: "Proyek",     icon: "ri-folder-line" },
+  { id: "tentang", label: "Tentang", icon: "ri-user-3-line" },
+  { id: "galeri", label: "Galeri", icon: "ri-image-line" },
+  { id: "keahlian", label: "Keahlian", icon: "ri-code-line" },
+  { id: "proyek", label: "Proyek", icon: "ri-folder-line" },
   { id: "pencapaian", label: "Pencapaian", icon: "ri-award-line" },
-  { id: "kontak",     label: "Kontak",     icon: "ri-mail-line" },
-  { id: "chat",       label: "Chat",       icon: "ri-chat-3-line" },
+  { id: "kontak", label: "Kontak", icon: "ri-mail-line" },
+  { id: "chat", label: "Chat", icon: "ri-chat-3-line" },
 ];
 
 const Sidebar = ({ setActivePage, activePage, activeColor, setActiveColor, isOpen, setIsOpen }) => {
@@ -32,87 +32,117 @@ const Sidebar = ({ setActivePage, activePage, activeColor, setActiveColor, isOpe
       {/* Overlay - MOBILE ONLY */}
       <div
         onClick={() => setIsOpen(false)}
-        className={`fixed inset-0 z-30 lg:hidden bg-black/50
+        className={`fixed inset-0 z-40 lg:hidden bg-black/60 backdrop-blur-xs
           ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}
           transition-all duration-300`}
       />
 
       {/* SIDEBAR */}
       <aside
-        className={`fixed z-40 top-4 bottom-4 left-4 w-72 rounded-2xl
-          p-6 flex flex-col transition-all duration-300 ease-out relative
+        className={`fixed z-50 top-0 bottom-0 left-0 w-72 rounded-r-3xl
+          p-6 flex flex-col transition-all duration-300 ease-out overflow-hidden
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
-          lg:static lg:translate-x-0`}
+          lg:static lg:translate-x-0 lg:rounded-2xl lg:z-40 lg:w-72 lg:shrink-0 lg:h-full lg:overflow-hidden`}
         style={{
-          background: "rgba(255, 255, 255, 0.02)",
-          borderRight: "1px solid rgba(255, 255, 255, 0.08)",
-          backdropFilter: "blur(16px)",
-          WebkitBackdropFilter: "blur(16px)",
+          background: "rgba(18, 18, 24, 0.92)",
+          borderRight: "1px solid rgba(255, 255, 255, 0.10)",
+          backdropFilter: "blur(28px) saturate(180%)",
+          WebkitBackdropFilter: "blur(28px) saturate(180%)",
+          boxShadow: "inset 1px 0 0 rgba(255, 255, 255, 0.10)",
         }}
       >
+        {/* Liquid Glass Top Shimmer Highlight */}
+        <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-white/20 pointer-events-none z-30 rounded-t-2xl" />
+
         {/* Profile */}
-        <div className="mb-8 text-center">
+        <div className="mb-8 text-center relative z-10">
           <button
             onClick={() => setActivePage("tentang")}
             aria-label="Navigasi ke halaman Tentang"
-            className="block mx-auto rounded-full focus:outline-none focus:ring-2 focus:ring-accent"
+            className="block mx-auto mb-3 rounded-full focus:outline-none focus:ring-2 focus:ring-accent group cursor-pointer"
           >
-            <img
-              src={avatar2}
-              alt="M. Nabil Anwar Kencana Profile"
-              width="56"
-              height="56"
-              decoding="async"
-              className={`hover:cursor-pointer mx-auto w-14 h-14 rounded-full mb-4 ring-2
-                ${activeColor === "emerald" ? "ring-emerald-500"
-                  : activeColor === "sky" ? "ring-sky-500"
-                  : activeColor === "violet" ? "ring-violet-500"
-                  : activeColor === "amber" ? "ring-amber-200"
-                  : "ring-red-500"}`}
-            />
+            <div className="relative inline-flex items-center justify-center p-1 rounded-full border border-white/20 bg-white/5 backdrop-blur-md transition-all duration-300 group-hover:scale-105 group-hover:border-white/40">
+              <img
+                src={avatar2}
+                alt="M. Nabil Anwar Kencana Profile"
+                width="64"
+                height="64"
+                decoding="async"
+                className="w-16 h-16 rounded-full object-cover shadow-inner"
+              />
+              <div
+                className="absolute inset-0 rounded-full pointer-events-none transition-all duration-300 opacity-70 group-hover:opacity-100"
+                style={{
+                  boxShadow: `0 0 20px ${activeColor === "emerald" ? "rgba(16, 185, 129, 0.55)"
+                    : activeColor === "sky" ? "rgba(2, 132, 199, 0.55)"
+                      : activeColor === "violet" ? "rgba(139, 92, 246, 0.55)"
+                        : activeColor === "amber" ? "rgba(253, 224, 71, 0.55)"
+                          : "rgba(239, 68, 68, 0.55)"
+                    }`,
+                }}
+              />
+            </div>
           </button>
-          <h2 className="text-xl font-bold font-[Space_Grotesk]">M. Nabil Anwar K.</h2>
-          <p className="text-sm text-zinc-400">Junior Software Engineer</p>
+          <h2 className="text-xl font-bold font-[Space_Grotesk] text-zinc-100 tracking-tight">M. Nabil Anwar K.</h2>
+          <p className="text-xs text-zinc-400 font-mono mt-1 tracking-wide">Junior Software Engineer</p>
         </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 space-y-1">
-          {navItems.map(({ id, label, icon }) => (
-            <button
-              key={id}
-              onClick={() => { setActivePage(id); setIsOpen(false); }}
-              className={`group w-full flex items-center gap-3 px-3 py-2 rounded-lg
-                text-sm font-medium transition-all duration-200 cursor-pointer
-                ${activePage === id ? colorMap[activeColor] : `text-zinc-400 ${hoverMap[activeColor]}`}`}
-            >
-              <i className={`${icon} text-base opacity-80
-                group-hover:opacity-100 group-hover:-rotate-3 group-hover:scale-110 transition`} />
-              <span className="tracking-wide">{label}</span>
-            </button>
-          ))}
+        {/* Navigation — flex-1 min-h-0 agar tidak stretch ke konten */}
+        <nav className="flex-1 min-h-0 overflow-y-auto space-y-1.5 relative z-10 pr-0.5">
+          {navItems.map(({ id, label, icon }) => {
+            const isActive = activePage === id;
+            return (
+              <button
+                key={id}
+                onClick={() => { setActivePage(id); setIsOpen(false); }}
+                className={`group w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl
+                  text-sm font-medium transition-all duration-200 cursor-pointer border
+                  ${isActive
+                    ? "text-white border-white/20 shadow-lg"
+                    : "text-zinc-400 hover:text-white border-transparent hover:border-white/10 hover:bg-white/5"}`}
+                style={
+                  isActive
+                    ? {
+                      background: "rgba(255, 255, 255, 0.10)",
+                      backdropFilter: "blur(12px)",
+                      WebkitBackdropFilter: "blur(12px)",
+                      boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.20), 0 4px 16px rgba(0, 0, 0, 0.3)",
+                    }
+                    : {}
+                }
+              >
+                <i className={`${icon} text-base transition-transform duration-200
+                  ${isActive ? "text-(--accent) scale-110" : "opacity-70 group-hover:opacity-100 group-hover:scale-110"}`} />
+                <span className={`tracking-wide ${isActive ? "font-semibold text-zinc-100" : ""}`}>{label}</span>
+              </button>
+            );
+          })}
         </nav>
 
-        {/* Theme Switcher */}
-        <div className="pt-4 border-t border-zinc-800">
-          <p className="text-[10px] text-zinc-500 text-center mb-3 tracking-[0.25em]">
-            TEMA <span className="ml-2 capitalize text-accent">{activeColor}</span>
+        {/* Theme Switcher — ALWAYS PINNED AT BOTTOM */}
+        <div className="pt-3 mt-auto border-t border-white/10 relative z-20 shrink-0">
+          <p className="text-[10px] text-zinc-400 text-center mb-3 tracking-[0.25em] font-mono">
+            TEMA <span className="ml-1.5 capitalize text-(--accent) font-semibold">{activeColor}</span>
           </p>
           <div className="flex justify-center gap-3">
             {[
-              { name: "emerald", class: "bg-emerald-500" },
-              { name: "sky",     class: "bg-sky-500" },
-              { name: "violet",  class: "bg-violet-500" },
-              { name: "amber",   class: "bg-amber-200" },
-              { name: "red",     class: "bg-red-500" },
-            ].map(({ name, class: bg }) => (
+              { name: "emerald", class: "bg-emerald-500", glow: "rgba(16, 185, 129, 0.6)" },
+              { name: "sky", class: "bg-sky-500", glow: "rgba(2, 132, 199, 0.6)" },
+              { name: "violet", class: "bg-violet-500", glow: "rgba(139, 92, 246, 0.6)" },
+              { name: "amber", class: "bg-amber-300", glow: "rgba(253, 224, 71, 0.6)" },
+              { name: "red", class: "bg-red-500", glow: "rgba(239, 68, 68, 0.6)" },
+            ].map(({ name, class: bg, glow }) => (
               <button
                 key={name}
                 onClick={() => setActiveColor(name)}
                 aria-label={`Pilih warna tema ${name}`}
-                className={`w-5 h-5 rounded-full ${bg} transition-all duration-200
+                className={`w-5 h-5 rounded-full ${bg} transition-all duration-300 cursor-pointer
                   ${activeColor === name
-                    ? "ring-1 ring-white/80"
-                    : "opacity-60 hover:opacity-100 hover:ring-1 hover:ring-white/30"}`}
+                    ? "scale-115 ring-2 ring-white"
+                    : "opacity-60 hover:opacity-100 hover:scale-105"}`}
+                style={{
+                  boxShadow: activeColor === name ? `0 0 12px ${glow}` : "none",
+                }}
               />
             ))}
           </div>

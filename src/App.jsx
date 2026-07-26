@@ -38,10 +38,10 @@ const App = () => {
 
   const themeMap = {
     emerald: { accent: "#10b981", accentRgb: "16, 185, 129" },
-    sky:     { accent: "#0ea5e9", accentRgb: "14, 165, 233" },
-    violet:  { accent: "#8b5cf6", accentRgb: "139, 92, 246" },
-    amber:   { accent: "#FEE685", accentRgb: "245, 158, 11" },
-    red:     { accent: "#ef4444", accentRgb: "239, 68, 68" },
+    sky: { accent: "#0ea5e9", accentRgb: "14, 165, 233" },
+    violet: { accent: "#8b5cf6", accentRgb: "139, 92, 246" },
+    amber: { accent: "#FEE685", accentRgb: "245, 158, 11" },
+    red: { accent: "#ef4444", accentRgb: "239, 68, 68" },
   };
 
   useEffect(() => {
@@ -65,13 +65,13 @@ const App = () => {
 
   const renderPage = () => {
     switch (activePage) {
-      case "proyek":     return <Projects />;
-      case "galeri":     return <Gallery activeColor={activeColor} />;
-      case "keahlian":   return <Skills />;
-      case "kontak":     return <Contact />;
+      case "proyek": return <Projects />;
+      case "galeri": return <Gallery activeColor={activeColor} />;
+      case "keahlian": return <Skills />;
+      case "kontak": return <Contact />;
       case "pencapaian": return <Achievements />;
-      case "chat":       return <Chat />;
-      default:           return <About isReady={isReady} />;
+      case "chat": return <Chat />;
+      default: return <About isReady={isReady} />;
     }
   };
 
@@ -98,9 +98,9 @@ const App = () => {
     <div className="select-none relative min-h-screen bg-zinc-950 overflow-hidden">
       <Aurora style={{ border: "2px solid black" }} />
 
-      <div className="relative z-10 flex items-center justify-center p-6 h-screen">
+      <div className="relative z-10 flex items-center justify-center p-2.5 sm:p-4 lg:p-6 h-dvh lg:h-screen">
         <div
-          className={`w-full max-w-7xl h-[85vh] rounded-3xl flex text-zinc-100 relative overflow-hidden ${activeColor}`}
+          className={`w-full max-w-7xl h-full lg:h-[85vh] rounded-2xl sm:rounded-3xl flex text-zinc-100 relative overflow-hidden ${activeColor}`}
           style={{
             background: "rgba(18, 18, 24, 0.40)",
             backdropFilter: "blur(32px) saturate(190%)",
@@ -111,7 +111,7 @@ const App = () => {
           }}
         >
           {/* Top Liquid Glass Shimmer Line */}
-          <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-white/25 pointer-events-none z-30 rounded-t-3xl" />
+          <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-white/25 pointer-events-none z-30 rounded-t-2xl sm:rounded-t-3xl" />
           <Sidebar
             setActivePage={setActivePage}
             activePage={activePage}
@@ -120,9 +120,9 @@ const App = () => {
             isOpen={isSidebarOpen}
             setIsOpen={setIsSidebarOpen}
           />
-          <div className="flex-1 flex flex-col">
+          <div className="flex-1 min-w-0 w-full flex flex-col">
             <Topbar activePage={activePage} setIsSidebarOpen={setIsSidebarOpen} />
-            <main className="flex-1 overflow-y-auto">
+            <main className="flex-1 overflow-y-auto overflow-x-hidden">
               <Suspense fallback={<div className="h-full w-full bg-zinc-950 flex items-center justify-center text-zinc-500 font-medium">Memuat Halaman...</div>}>
                 {renderPage()}
               </Suspense>

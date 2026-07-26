@@ -913,7 +913,7 @@ export default function InfiniteMenu({ items = [], scale = 1.0 }) {
       {activeItem && (
         <div
           className={`
-            pointer-events-none absolute left-6 bottom-6 max-w-[80%] sm:max-w-[65%] z-20 p-4 rounded-2xl transition-all ease-out
+            pointer-events-none absolute left-6 bottom-6 max-w-[60%] sm:max-w-[60%] z-20 p-4 rounded-2xl transition-all ease-out
             ${isMoving ? "opacity-0 translate-y-3 duration-150" : "opacity-100 translate-y-0 duration-300"}
           `}
           style={{

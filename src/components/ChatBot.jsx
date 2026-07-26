@@ -243,7 +243,7 @@ const ChatBot = () => {
                   </h3>
                   <span className="text-[11px] text-zinc-400 font-mono flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                    Online • Powered by Gemini AI
+                    Powered by Gemini AI
                   </span>
                 </div>
               </div>

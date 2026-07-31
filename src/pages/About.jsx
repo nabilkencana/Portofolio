@@ -7,6 +7,7 @@ import SplitText from "../components/ui/SplitText";
 import { useState, useEffect, lazy, Suspense } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { useLanguage } from "../context/LanguageContext";
+import AnimatedList from "../components/ui/AnimatedList";
 
 const Lanyard = lazy(() => import("../components/ui/Lanyard"));
 
@@ -231,24 +232,32 @@ const About = ({ isReady }) => {
           {t("about.experience")}
         </motion.h3>
 
-        <div className="flex flex-col gap-4">
-          {/* Always visible initial 3 items */}
-          {experiences.slice(0, 3).map((item, i) => (
-            <motion.div
-              key={item.title || i}
-              whileHover={{ y: -2, x: 2 }}
-              className="w-full p-4 sm:p-6 rounded-2xl transition-all flex flex-col justify-between"
+        <AnimatedList
+          items={showAllExp ? experiences : experiences.slice(0, 3)}
+          showGradients={showAllExp}
+          displayScrollbar={false}
+          enableArrowNavigation={true}
+          maxHeight={showAllExp ? "1200px" : "none"}
+          renderItem={(item, index, isSelected) => (
+            <div
+              className={`w-full p-4 sm:p-6 rounded-2xl transition-all duration-300 flex flex-col justify-between border ${
+                isSelected
+                  ? "border-(--accent)/50 shadow-[0_8px_32px_rgba(0,0,0,0.4)] bg-white/[0.08]"
+                  : "border-white/10 hover:border-white/20 bg-white/5"
+              }`}
               style={{
-                background: "rgba(255,255,255,0.05)",
-                border: "1px solid rgba(255,255,255,0.10)",
-                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.10), 0 4px 24px rgba(0,0,0,0.2)",
+                boxShadow: isSelected
+                  ? "inset 0 1px 0 rgba(255,255,255,0.20), 0 8px 32px rgba(0,0,0,0.4)"
+                  : "inset 0 1px 0 rgba(255,255,255,0.10), 0 4px 24px rgba(0,0,0,0.2)",
                 backdropFilter: "blur(12px)",
                 WebkitBackdropFilter: "blur(12px)",
               }}
             >
               <div>
                 <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-                  <h4 className="font-semibold text-base sm:text-lg text-zinc-100">{item.title}</h4>
+                  <h4 className={`font-semibold text-base sm:text-lg transition-colors ${isSelected ? "text-white" : "text-zinc-100"}`}>
+                    {item.title}
+                  </h4>
                   <span
                     className="text-[11px] sm:text-xs font-medium px-3 py-1 rounded-full text-(--accent) shrink-0"
                     style={{
@@ -277,75 +286,9 @@ const About = ({ isReady }) => {
                   </span>
                 ))}
               </div>
-            </motion.div>
-          ))}
-
-          {/* Ultra-smooth Accordion for remaining items */}
-          <AnimatePresence initial={false}>
-            {showAllExp && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-                className="overflow-hidden flex flex-col gap-4"
-              >
-                <div className="flex flex-col gap-4 pt-4">
-                  {experiences.slice(3).map((item, i) => (
-                    <motion.div
-                      key={item.title || i + 3}
-                      initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
-                      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                      exit={{ opacity: 0, y: -10, filter: "blur(6px)" }}
-                      transition={{ duration: 0.45, delay: i * 0.07, ease: [0.16, 1, 0.3, 1] }}
-                      whileHover={{ y: -2, x: 2 }}
-                      className="w-full p-4 sm:p-6 rounded-2xl transition-all flex flex-col justify-between"
-                      style={{
-                        background: "rgba(255,255,255,0.05)",
-                        border: "1px solid rgba(255,255,255,0.10)",
-                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.10), 0 4px 24px rgba(0,0,0,0.2)",
-                        backdropFilter: "blur(12px)",
-                        WebkitBackdropFilter: "blur(12px)",
-                      }}
-                    >
-                      <div>
-                        <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-                          <h4 className="font-semibold text-base sm:text-lg text-zinc-100">{item.title}</h4>
-                          <span
-                            className="text-[11px] sm:text-xs font-medium px-3 py-1 rounded-full text-(--accent) shrink-0"
-                            style={{
-                              background: "rgba(255,255,255,0.07)",
-                              border: "1px solid rgba(255,255,255,0.12)",
-                              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08)",
-                            }}
-                          >
-                            {item.role}
-                          </span>
-                        </div>
-                        <p className="text-xs sm:text-sm text-zinc-400 mt-1 leading-relaxed">{item.desc}</p>
-                      </div>
-
-                      <div className="flex flex-wrap gap-1.5 mt-4 pt-3 border-t border-white/5">
-                        {item.tags.map((tag, tIdx) => (
-                          <span
-                            key={tIdx}
-                            className="text-[11px] sm:text-xs px-2.5 py-0.5 rounded-md text-zinc-300 font-mono"
-                            style={{
-                              background: "rgba(255,255,255,0.04)",
-                              border: "1px solid rgba(255,255,255,0.08)",
-                            }}
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+            </div>
+          )}
+        />
 
         {/* Toggle Show More / Show Less Button */}
         <div className="mt-6 text-center">

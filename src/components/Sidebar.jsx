@@ -1,4 +1,6 @@
 import avatar2 from "../assets/avatar2.webp";
+import { useLanguage } from "../context/LanguageContext";
+import LanguageToggle from "./LanguageToggle";
 
 const colorMap = {
   emerald: "bg-emerald-500 !text-black",
@@ -17,16 +19,18 @@ const hoverMap = {
 };
 
 const navItems = [
-  { id: "tentang", label: "Tentang", icon: "ri-user-3-line" },
-  { id: "galeri", label: "Galeri", icon: "ri-image-line" },
-  { id: "keahlian", label: "Keahlian", icon: "ri-code-line" },
-  { id: "proyek", label: "Proyek", icon: "ri-folder-line" },
-  { id: "pencapaian", label: "Pencapaian", icon: "ri-award-line" },
-  { id: "kontak", label: "Kontak", icon: "ri-mail-line" },
-  { id: "chat", label: "Chat", icon: "ri-chat-3-line" },
+  { id: "tentang", icon: "ri-user-3-line" },
+  { id: "galeri", icon: "ri-image-line" },
+  { id: "keahlian", icon: "ri-code-line" },
+  { id: "proyek", icon: "ri-folder-line" },
+  { id: "pencapaian", icon: "ri-award-line" },
+  { id: "kontak", icon: "ri-mail-line" },
+  { id: "chat", icon: "ri-chat-3-line" },
 ];
 
 const Sidebar = ({ setActivePage, activePage, activeColor, setActiveColor, isOpen, setIsOpen }) => {
+  const { t } = useLanguage();
+
   return (
     <>
       {/* Overlay - MOBILE ONLY */}
@@ -55,10 +59,10 @@ const Sidebar = ({ setActivePage, activePage, activeColor, setActiveColor, isOpe
         <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-white/20 pointer-events-none z-30 rounded-t-2xl" />
 
         {/* Profile */}
-        <div className="mb-8 text-center relative z-10">
+        <div className="mb-6 text-center relative z-10">
           <button
             onClick={() => setActivePage("tentang")}
-            aria-label="Navigasi ke halaman Tentang"
+            aria-label={t("sidebarAvatarAria")}
             className="block mx-auto mb-3 rounded-full focus:outline-none focus:ring-2 focus:ring-accent group cursor-pointer"
           >
             <div className="relative inline-flex items-center justify-center p-1 rounded-full border border-white/20 bg-white/5 backdrop-blur-md transition-all duration-300 group-hover:scale-105 group-hover:border-white/40">
@@ -89,8 +93,9 @@ const Sidebar = ({ setActivePage, activePage, activeColor, setActiveColor, isOpe
 
         {/* Navigation — flex-1 min-h-0 agar tidak stretch ke konten */}
         <nav className="flex-1 min-h-0 overflow-y-auto space-y-1.5 relative z-10 pr-0.5">
-          {navItems.map(({ id, label, icon }) => {
+          {navItems.map(({ id, icon }) => {
             const isActive = activePage === id;
+            const label = t(`nav.${id}`);
             return (
               <button
                 key={id}
@@ -122,7 +127,7 @@ const Sidebar = ({ setActivePage, activePage, activeColor, setActiveColor, isOpe
         {/* Theme Switcher — ALWAYS PINNED AT BOTTOM */}
         <div className="pt-3 mt-auto border-t border-white/10 relative z-20 shrink-0">
           <p className="text-[10px] text-zinc-400 text-center mb-3 tracking-[0.25em] font-mono">
-            TEMA <span className="ml-1.5 capitalize text-(--accent) font-semibold">{activeColor}</span>
+            {t("theme")} <span className="ml-1.5 capitalize text-(--accent) font-semibold">{activeColor}</span>
           </p>
           <div className="flex justify-center gap-3">
             {[
@@ -135,7 +140,7 @@ const Sidebar = ({ setActivePage, activePage, activeColor, setActiveColor, isOpe
               <button
                 key={name}
                 onClick={() => setActiveColor(name)}
-                aria-label={`Pilih warna tema ${name}`}
+                aria-label={`${t("themeAria")} ${name}`}
                 className={`w-5 h-5 rounded-full ${bg} transition-all duration-300 cursor-pointer
                   ${activeColor === name
                     ? "scale-115 ring-2 ring-white"

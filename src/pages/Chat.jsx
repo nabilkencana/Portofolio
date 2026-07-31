@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import { useEffect, useState, useRef } from "react";
-import { onAuthStateChanged, signOut } from "firebase/auth"; // ✅ TAMBAHKAN
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../lib/firebase";
 import { loginWithGoogle, loginWithGithub } from "../lib/auth";
 import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
@@ -11,9 +11,11 @@ import { db } from "../lib/firebase";
 import google from "../assets/cards/google.svg";
 import github from "../assets/cards/github.webp";
 import Orb from "../components/ui/Orb";
-import { LogOut } from "lucide-react"; // ✅ IMPORT ICON
+import { LogOut } from "lucide-react";
+import { useLanguage } from "../context/LanguageContext";
 
 const Chat = () => {
+  const { t } = useLanguage();
   const [user, setUser] = useState(null);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
@@ -115,8 +117,8 @@ const Chat = () => {
             {/* HEADER */}
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: "easeOut" }}>
               <div className="text-center mb-6">
-                <h1 className="font-[Space_Grotesk] text-3xl font-bold text-zinc-100">Ruang Chat</h1>
-                <p className="text-zinc-400 text-sm mt-1">Terbuka untuk berbagi dan diskusi yang santai.</p>
+                <h1 className="font-[Space_Grotesk] text-3xl font-bold text-zinc-100">{t("chatPage.title")}</h1>
+                <p className="text-zinc-400 text-sm mt-1">{t("chatPage.subtitle")}</p>
               </div>
             </motion.div>
 
@@ -124,7 +126,7 @@ const Chat = () => {
             {!user ? (
               /* ================= LOGIN ================= */
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }} className="flex flex-col items-center gap-5 py-10">
-                <p className="text-sm text-zinc-400">Silahkan login dulu untuk mengirim pesan</p>
+                <p className="text-sm text-zinc-400">{t("chatPage.loginPrompt")}</p>
 
                 <button
                   onClick={loginWithGoogle}
@@ -139,7 +141,7 @@ const Chat = () => {
                   onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)")}
                 >
                   <img src={google} alt="google" width="20" height="20" decoding="async" className="w-5" />
-                  <span className="text-sm font-medium text-zinc-100 group-hover:text-white">Lanjutkan dengan Google</span>
+                  <span className="text-sm font-medium text-zinc-100 group-hover:text-white">{t("chatPage.loginGoogle")}</span>
                 </button>
 
                 <button
@@ -155,7 +157,7 @@ const Chat = () => {
                   onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)")}
                 >
                   <img src={github} alt="github" width="28" height="28" decoding="async" className="w-7" />
-                  <span className="text-sm font-medium text-zinc-100 group-hover:text-white">Lanjutkan dengan Github</span>
+                  <span className="text-sm font-medium text-zinc-100 group-hover:text-white">{t("chatPage.loginGithub")}</span>
                 </button>
               </motion.div>
             ) : (
@@ -204,7 +206,7 @@ const Chat = () => {
                     }}
                   >
                     <LogOut size={15} />
-                    <span className="hidden sm:inline">Logout</span>
+                    <span className="hidden sm:inline">{t("chatPage.logout")}</span>
                   </motion.button>
                 </motion.div>
 
@@ -220,8 +222,8 @@ const Chat = () => {
                 >
                   {messages.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full text-zinc-400">
-                      <p className="font-medium text-base">Belum ada pesan 💬</p>
-                      <p className="text-xs mt-1 text-zinc-500">Jadilah yang pertama memulai percakapan!</p>
+                      <p className="font-medium text-base">{t("chatPage.noMessages")}</p>
+                      <p className="text-xs mt-1 text-zinc-500">{t("chatPage.beFirst")}</p>
                     </div>
                   ) : (
                     messages.map((msg) => {
@@ -281,7 +283,7 @@ const Chat = () => {
                         handleSend();
                       }
                     }}
-                    placeholder="Ketik Pesan..."
+                    placeholder={t("chatPage.placeholder")}
                     className="flex-1 rounded-2xl px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 resize-none focus:outline-none transition-all"
                     style={{
                       background: "rgba(255, 255, 255, 0.06)",
@@ -301,7 +303,7 @@ const Chat = () => {
                       boxShadow: "inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 14px rgba(0,0,0,0.3)",
                     }}
                   >
-                    Kirim
+                    {t("chatPage.send")}
                   </motion.button>
                 </div>
               </>

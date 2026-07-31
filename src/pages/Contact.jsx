@@ -1,9 +1,10 @@
- import React from "react";
+import React from "react";
 import gmail from "../assets/cards/gmail.webp";
 import instagram from "../assets/cards/instagram.webp";
 import github from "../assets/cards/github.webp";
 import tiktok from "../assets/cards/tiktok.webp";
 import { motion } from "motion/react";
+import { useLanguage } from "../context/LanguageContext";
 
 const socials = [
   {
@@ -33,14 +34,16 @@ const socials = [
 ];
 
 const Contact = () => {
+  const { t } = useLanguage();
+
   return (
     <section className="relative px-4 py-20 h-full flex items-center justify-center">
       <div className="mx-auto w-full max-w-4xl">
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, ease: "easeOut" }}>
           <div className="mb-12 text-center">
-            <h1 className="font-[Space_Grotesk] text-4xl font-bold">Hubungi Saya</h1>
-            <p className="mt-3 text-zinc-400">Silakan hubungi saya melalui platform berikut</p>
+            <h1 className="font-[Space_Grotesk] text-4xl font-bold">{t("contact.title")}</h1>
+            <p className="mt-3 text-zinc-400">{t("contact.subtitle")}</p>
           </div>
         </motion.div>
 

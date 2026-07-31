@@ -4,8 +4,10 @@ import InfiniteMenu from "../components/ui/InfiniteMenu";
 import { getMergedGallery } from "../lib/adminStore";
 import { isAdminLoggedIn } from "../lib/adminAuth";
 import { Loader2, AlertCircle, Plus } from "lucide-react";
+import { useLanguage } from "../context/LanguageContext";
 
 const Gallery = ({ activeColor }) => {
+  const { t } = useLanguage();
   // Show static data immediately — Firestore merge happens silently in background
   const [loading, setLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -80,17 +82,17 @@ const Gallery = ({ activeColor }) => {
       <section className="space-y-8 md:space-y-12 p-4 md:p-6 lg:p-8">
         <div className="px-2 md:px-0">
           <h1 className="font-[Space_Grotesk] text-3xl md:text-4xl lg:text-5xl font-bold">
-            Galeri Saya
+            {t("gallery.title")}
           </h1>
           <p className="text-zinc-400 max-w-xl mt-2 md:mt-3 text-sm md:text-base">
-            Momen dari perjalanan saya — ngoding, acara, hobi, dan kehidupan sehari-hari
+            {t("gallery.subtitle")}
           </p>
         </div>
 
         <div className="h-[60vh] md:h-[70vh] lg:h-125 rounded-2xl md:rounded-3xl flex items-center justify-center bg-gradient-to-br from-zinc-900/50 to-zinc-950/50">
           <div className="text-center space-y-4">
             <Loader2 className="w-10 h-10 text-accent animate-spin mx-auto" />
-            <p className="text-zinc-400 text-sm">Menghubungkan ke galeri...</p>
+            <p className="text-zinc-400 text-sm">{t("gallery.connecting")}</p>
           </div>
         </div>
       </section>
@@ -103,19 +105,19 @@ const Gallery = ({ activeColor }) => {
       <section className="space-y-8 md:space-y-12 p-4 md:p-6 lg:p-8">
         <div className="px-2 md:px-0">
           <h1 className="font-[Space_Grotesk] text-3xl md:text-4xl lg:text-5xl font-bold">
-            Galeri Saya
+            {t("gallery.title")}
           </h1>
           <p className="text-zinc-400 max-w-xl mt-2 md:mt-3 text-sm md:text-base">
-            Momen dari perjalanan saya — ngoding, acara, hobi, dan kehidupan sehari-hari
+            {t("gallery.subtitle")}
           </p>
         </div>
 
         <div className="h-[60vh] md:h-[70vh] lg:h-125 rounded-2xl md:rounded-3xl flex items-center justify-center bg-gradient-to-br from-zinc-900/50 to-zinc-950/50">
           <div className="text-center space-y-4 p-8">
             <AlertCircle className="w-12 h-12 text-yellow-500 mx-auto" />
-            <h3 className="text-xl font-semibold text-white">Galeri Kosong</h3>
+            <h3 className="text-xl font-semibold text-white">{t("gallery.emptyTitle")}</h3>
             <p className="text-zinc-400">
-              Tidak ada foto yang tersedia untuk ditampilkan.
+              {t("gallery.emptyDesc")}
             </p>
           </div>
         </div>
@@ -129,10 +131,10 @@ const Gallery = ({ activeColor }) => {
       <div className="px-2 md:px-0 flex items-start justify-between gap-4">
         <div>
           <h1 className="font-[Space_Grotesk] text-3xl md:text-4xl lg:text-5xl font-bold">
-            Galeri Saya
+            {t("gallery.title")}
           </h1>
           <p className="text-zinc-400 max-w-xl mt-2 md:mt-3 text-sm md:text-base">
-            Momen dari perjalanan saya — ngoding, acara, hobi, dan kehidupan sehari-hari
+            {t("gallery.subtitle")}
           </p>
         </div>
         {adminMode && (
@@ -143,7 +145,7 @@ const Gallery = ({ activeColor }) => {
               text-accent transition-all duration-200 mt-1"
           >
             <Plus size={16} />
-            Tambah Foto
+            {t("gallery.addBtn")}
           </button>
         )}
       </div>
@@ -186,15 +188,7 @@ const Gallery = ({ activeColor }) => {
             >
               <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
               <span>
-                {isMobile ? (
-                  <>
-                    <span className="hidden sm:inline">Touch & swipe </span>
-                    <span className="sm:hidden">Swipe </span>
-                    untuk navigasi
-                  </>
-                ) : (
-                  "Drag untuk navigasi"
-                )}
+                {isMobile ? t("gallery.swipeNav") : t("gallery.dragNav")}
               </span>
             </div>
           </div>

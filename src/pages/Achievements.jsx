@@ -5,8 +5,10 @@ import { getMergedAchievements } from "../lib/adminStore";
 import { isAdminLoggedIn } from "../lib/adminAuth";
 import { motion, AnimatePresence } from "motion/react";
 import { X, Plus } from "lucide-react";
+import { useLanguage } from "../context/LanguageContext";
 
 const Achievements = () => {
+  const { t, language } = useLanguage();
   // Show static data immediately — Firestore merge happens silently in background
   const [allAchievements, setAllAchievements] = useState(achievementsData);
   const [selectedAchievement, setSelectedAchievement] = useState(null);
@@ -22,7 +24,22 @@ const Achievements = () => {
     window.addEventListener("adminDataUpdated", merge);
     return () => window.removeEventListener("adminDataUpdated", merge);
   }, []);
-  
+
+  const translatedItems = t("achievements.items") || achievementsData;
+
+  const displayAchievements = allAchievements.map((item) => {
+    const matched = translatedItems.find((tItem) => tItem.id === item.id);
+    if (matched) {
+      return {
+        ...item,
+        title: matched.title || item.title,
+        description: matched.description || item.description,
+        tech: matched.tech || item.tech,
+      };
+    }
+    return item;
+  });
+
   return (
     <section className="space-y-3 relative">
       {/* Header */}
@@ -30,8 +47,8 @@ const Achievements = () => {
         <div className="p-6 max-w-2xl">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <h1 className="font-[Space_Grotesk] text-4xl font-bold">Pencapaian</h1>
-              <p className="text-zinc-400 mt-3 leading-relaxed">Beberapa sertifikasi dan pencapaian pembelajaran yang mencerminkan perkembangan saya dalam teknologi dan pemecahan masalah.</p>
+              <h1 className="font-[Space_Grotesk] text-4xl font-bold">{t("achievements.title")}</h1>
+              <p className="text-zinc-400 mt-3 leading-relaxed">{t("achievements.subtitle")}</p>
             </div>
             {adminMode && (
               <button
@@ -41,7 +58,7 @@ const Achievements = () => {
                   text-accent transition-all duration-200 mt-1"
               >
                 <Plus size={16} />
-                Tambah
+                {t("achievements.addBtn")}
               </button>
             )}
           </div>
@@ -50,7 +67,7 @@ const Achievements = () => {
 
       {/* Grid — no entrance animation, data is already in useState */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-6 pb-6">
-        {allAchievements.map((item, index) => (
+        {displayAchievements.map((item, index) => (
           <motion.div
             key={item.id || index}
             whileHover={{ y: -6, transition: { duration: 0.22, ease: "easeOut" } }}
@@ -141,7 +158,7 @@ const Achievements = () => {
               {/* Close Button — Liquid Glass Tile */}
               <button
                 onClick={() => setSelectedAchievement(null)}
-                aria-label="Tutup detail pencapaian"
+                aria-label={t("achievements.closeAria")}
                 className="absolute top-4 right-4 z-30 p-2.5 rounded-2xl text-zinc-300 hover:text-white transition-all cursor-pointer group"
                 style={{
                   background: "rgba(255, 255, 255, 0.10)",

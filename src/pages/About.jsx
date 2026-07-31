@@ -5,11 +5,10 @@ import google_maps from "../assets/cards/google_maps.webp";
 import BlurText from "../components/ui/BlurText";
 import SplitText from "../components/ui/SplitText";
 import { useState, useEffect, lazy, Suspense } from "react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
+import { useLanguage } from "../context/LanguageContext";
 
 const Lanyard = lazy(() => import("../components/ui/Lanyard"));
-
-// import myFoto from "../assets/my_foto.jpeg";
 
 const socialLinks = [
   {
@@ -31,11 +30,14 @@ const socialLinks = [
 ];
 
 const About = ({ isReady }) => {
+  const { t } = useLanguage();
   const [showTyping, setShowTyping] = useState(true);
   const [showDescription, setShowDescription] = useState(true);
   const [showSocial, setShowSocial] = useState(true);
   const [showLanyard, setShowLanyard] = useState(true);
   const [showAllExp, setShowAllExp] = useState(false);
+
+  const experiences = t("about.experiences") || [];
 
   const sectionTitle = {
     hidden: { opacity: 0, y: 16 },
@@ -75,10 +77,10 @@ const About = ({ isReady }) => {
             {/* TEXT */}
             <div className="space-y-3 pt-2 lg:pt-16">
               {/* HEADLINE */}
-              <BlurText text="Hi 👋, I'm Nabil Kencana" className="font-[Space_Grotesk] text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight" animateBy="words" delay={100} direction="top" />
+              <BlurText text={t("about.greeting")} className="font-[Space_Grotesk] text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight" animateBy="words" delay={100} direction="top" />
 
               {/* TYPING */}
-              <TextType text={["Junior Fullstack Developer", "Junior Mobile App Developer"]} typingSpeed={35} deletingSpeed={25} pauseDuration={1200} cursorCharacter="_" className="text-(--accent) tracking-widest text-sm sm:text-base font-semibold" />
+              <TextType text={t("about.roles")} typingSpeed={35} deletingSpeed={25} pauseDuration={1200} cursorCharacter="_" className="text-(--accent) tracking-widest text-sm sm:text-base font-semibold" />
 
               <motion.div
                 initial={{ opacity: 0, y: 12 }}
@@ -86,7 +88,7 @@ const About = ({ isReady }) => {
                 transition={{ duration: 0.6, ease: "easeOut" }}
               >
                 <SplitText
-                  text="Saya adalah siswa SMK Telkom Malang yang sedang aktif mengembangkan kemampuan di bidang web development, dengan fokus pada pembuatan aplikasi yang modern, bersih, dan mudah digunakan menggunakan React, Tailwind CSS, serta dasar-dasar backend."
+                  text={t("about.bio")}
                   className="text-zinc-300 text-sm sm:text-base leading-relaxed max-w-xl text-start"
                   animateBy="words"
                 />
@@ -95,7 +97,7 @@ const About = ({ isReady }) => {
               {/* SOCIAL */}
               <div className="flex items-center gap-4 pt-2 overflow-hidden">
                 <motion.div className="flex items-center gap-4 pt-2 overflow-hidden" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: "easeOut" }}>
-                  <SplitText text="Follow me" className="text-zinc-400 text-sm" animateBy="chars" />
+                  <SplitText text={t("about.follow")} className="text-zinc-400 text-sm" animateBy="chars" />
 
                   <motion.div
                     className="flex items-center gap-3"
@@ -137,7 +139,7 @@ const About = ({ isReady }) => {
             <div className="h-[480px] sm:h-[520px] lg:h-[500px] w-full relative my-2 lg:my-0">
               {showLanyard && (
                 <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, ease: "easeOut" }} className="w-full h-full">
-                  <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-zinc-500 font-medium">Memuat Interactive Card...</div>}>
+                  <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-zinc-500 font-medium">{t("about.lanyardLoading")}</div>}>
                     <Lanyard position={[0, 0, 13]} fov={22} />
                   </Suspense>
                 </motion.div>
@@ -150,7 +152,7 @@ const About = ({ isReady }) => {
       <div className="p-6 mt-8 md:mt-24 lg:mt-0">
         <motion.h3 className="flex items-center gap-3 text-xl font-semibold mb-6" variants={sectionTitle} initial="hidden" whileInView="visible" viewport={{ once: true }}>
           <i className="ri-information-line text-(--accent) text-2xl" />
-          Biodata
+          {t("about.biodata")}
         </motion.h3>
 
         <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" variants={gridContainer} initial="hidden" whileInView="visible" viewport={{ once: true }}>
@@ -168,7 +170,7 @@ const About = ({ isReady }) => {
             >
               <img src={logo_me} alt="Profile Icon" width="48" height="48" decoding="async" className="w-12 h-12 object-contain" />
               <div>
-                <p className="text-sm text-zinc-400">Nama</p>
+                <p className="text-sm text-zinc-400">{t("about.nameLabel")}</p>
                 <p className="font-medium text-zinc-100">Nabil Kencana</p>
               </div>
             </div>
@@ -188,7 +190,7 @@ const About = ({ isReady }) => {
             >
               <img src={logo_telkom} alt="SMK Telkom Malang Logo" width="48" height="48" decoding="async" className="w-12 h-12 object-contain" />
               <div>
-                <p className="text-sm text-zinc-400">Pendidikan</p>
+                <p className="text-sm text-zinc-400">{t("about.educationLabel")}</p>
                 <p className="font-medium text-zinc-100">SMK Telkom Malang</p>
               </div>
             </div>
@@ -208,7 +210,7 @@ const About = ({ isReady }) => {
             >
               <img src={google_maps} alt="Malang Map Icon" width="40" height="40" decoding="async" className="w-10 h-10 object-contain" />
               <div>
-                <p className="text-sm text-zinc-400">Lokasi</p>
+                <p className="text-sm text-zinc-400">{t("about.locationLabel")}</p>
                 <p className="font-medium text-zinc-100">Malang</p>
               </div>
             </div>
@@ -226,65 +228,65 @@ const About = ({ isReady }) => {
           viewport={{ once: true }}
         >
           <i className="ri-organization-chart text-(--accent) text-2xl" />
-          Pengalaman
+          {t("about.experience")}
         </motion.h3>
 
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 gap-4"
-          variants={gridContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
-          {experiences
-            .slice(0, showAllExp ? experiences.length : 3)
-            .map((item, i) => (
-              <motion.div
-                key={i}
-                variants={cardItem}
-                whileHover={{ y: -3 }}
-                className="p-4 sm:p-5 rounded-2xl transition-all flex flex-col justify-between"
-                style={{
-                  background: "rgba(255,255,255,0.05)",
-                  border: "1px solid rgba(255,255,255,0.10)",
-                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.10), 0 4px 24px rgba(0,0,0,0.2)",
-                  backdropFilter: "blur(12px)",
-                  WebkitBackdropFilter: "blur(12px)",
-                }}
-              >
-                <div>
-                  <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-                    <h4 className="font-semibold text-sm sm:text-base text-zinc-100">{item.title}</h4>
-                    <span
-                      className="text-[11px] font-medium px-2.5 py-0.5 rounded-full text-(--accent) shrink-0"
-                      style={{
-                        background: "rgba(255,255,255,0.07)",
-                        border: "1px solid rgba(255,255,255,0.12)",
-                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08)",
-                      }}
-                    >
-                      {item.role}
-                    </span>
+        <motion.div className="flex flex-col gap-4">
+          <AnimatePresence mode="sync">
+            {experiences
+              .slice(0, showAllExp ? experiences.length : 3)
+              .map((item, i) => (
+                <motion.div
+                  key={item.title || i}
+                  layout
+                  initial={{ opacity: 0, y: 16, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -10, scale: 0.98 }}
+                  transition={{ duration: 0.35, ease: "easeOut", delay: i >= 3 ? (i - 3) * 0.08 : 0 }}
+                  whileHover={{ y: -2, x: 2 }}
+                  className="w-full p-4 sm:p-6 rounded-2xl transition-all flex flex-col justify-between"
+                  style={{
+                    background: "rgba(255,255,255,0.05)",
+                    border: "1px solid rgba(255,255,255,0.10)",
+                    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.10), 0 4px 24px rgba(0,0,0,0.2)",
+                    backdropFilter: "blur(12px)",
+                    WebkitBackdropFilter: "blur(12px)",
+                  }}
+                >
+                  <div>
+                    <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                      <h4 className="font-semibold text-base sm:text-lg text-zinc-100">{item.title}</h4>
+                      <span
+                        className="text-[11px] sm:text-xs font-medium px-3 py-1 rounded-full text-(--accent) shrink-0"
+                        style={{
+                          background: "rgba(255,255,255,0.07)",
+                          border: "1px solid rgba(255,255,255,0.12)",
+                          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08)",
+                        }}
+                      >
+                        {item.role}
+                      </span>
+                    </div>
+                    <p className="text-xs sm:text-sm text-zinc-400 mt-1 leading-relaxed">{item.desc}</p>
                   </div>
-                  <p className="text-xs sm:text-sm text-zinc-400 mt-1 leading-relaxed">{item.desc}</p>
-                </div>
 
-                <div className="flex flex-wrap gap-1.5 mt-3 pt-2 border-t border-white/5">
-                  {item.tags.map((tag, tIdx) => (
-                    <span
-                      key={tIdx}
-                      className="text-[11px] px-2 py-0.5 rounded-md text-zinc-300 font-mono"
-                      style={{
-                        background: "rgba(255,255,255,0.04)",
-                        border: "1px solid rgba(255,255,255,0.08)",
-                      }}
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
+                  <div className="flex flex-wrap gap-1.5 mt-4 pt-3 border-t border-white/5">
+                    {item.tags.map((tag, tIdx) => (
+                      <span
+                        key={tIdx}
+                        className="text-[11px] sm:text-xs px-2.5 py-0.5 rounded-md text-zinc-300 font-mono"
+                        style={{
+                          background: "rgba(255,255,255,0.04)",
+                          border: "1px solid rgba(255,255,255,0.08)",
+                        }}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </motion.div>
+              ))}
+          </AnimatePresence>
         </motion.div>
 
         {/* Toggle Show More on Mobile */}
@@ -293,7 +295,7 @@ const About = ({ isReady }) => {
             onClick={() => setShowAllExp(!showAllExp)}
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-semibold text-zinc-200 border border-white/15 bg-white/5 backdrop-blur-md hover:bg-white/10 transition-all cursor-pointer shadow-md"
           >
-            <span>{showAllExp ? "Tampilkan Lebih Sedikit" : `Lihat Semua Pengalaman (${experiences.length})`}</span>
+            <span>{showAllExp ? t("about.showLess") : `${t("about.showAll")} (${experiences.length})`}</span>
             <i className={`ri-arrow-${showAllExp ? "up" : "down"}-s-line text-sm`} />
           </button>
         </div>
@@ -301,38 +303,5 @@ const About = ({ isReady }) => {
     </section>
   );
 };
-
-const experiences = [
-  {
-    role: "Fullstack & Multi-Platform",
-    title: "Ekosistem Aplikasi Terintegrasi",
-    desc: "Merancang & membangun ekosistem aplikasi terintegrasi yang mencakup Web Frontend (React/TS), Backend API (NestJS), Mobile App (Flutter), dan Admin Dashboard.",
-    tags: ["React", "NestJS", "Flutter", "TypeScript"],
-  },
-  {
-    role: "Backend Engineering",
-    title: "RESTful API & Service (Golang & NestJS)",
-    desc: "Mengembangkan backend service berkinerja tinggi menggunakan Go (Golang) dan NestJS, mencakup manajemen database, sistem autentikasi, dan deployment cloud.",
-    tags: ["Golang", "NestJS", "PostgreSQL", "Vercel"],
-  },
-  {
-    role: "Frontend Development",
-    title: "Aplikasi Web Interaktif & Platform Digital",
-    desc: "Membangun antarmuka web modern & responsif menggunakan React, Next.js, dan Tailwind CSS dengan arsitektur komponen yang bersih dan performansi optimal.",
-    tags: ["React", "Next.js", "TypeScript", "Tailwind CSS"],
-  },
-  {
-    role: "Mobile Development",
-    title: "Aplikasi Mobile Lintas Platform",
-    desc: "Mengembangkan aplikasi mobile Android/iOS menggunakan Flutter dengan manajemen status yang efisien serta integrasi Supabase & SQLite.",
-    tags: ["Flutter", "Dart", "Supabase", "SQLite"],
-  },
-  {
-    role: "AI & Smart Systems",
-    title: "Solusi Digital Berbasis AI & Computer Vision",
-    desc: "Mengintegrasikan fitur cerdas berbasis AI ke dalam solusi web dan mobile, mencakup sistem analisis data serta pendeteksian berbasis Computer Vision.",
-    tags: ["Python", "AI Integration", "React", "Flutter"],
-  },
-];
 
 export default About;

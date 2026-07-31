@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { MessageSquare, X, Send, Bot, Loader2, Trash2, Sparkles } from 'lucide-react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { botContext, fetchDynamicBotContext } from '../data/botContext';
+import { useLanguage } from '../context/LanguageContext';
 
 const renderMessageContent = (text) => {
   if (typeof text !== 'string') return text;
@@ -77,18 +78,19 @@ const renderMessageContent = (text) => {
 };
 
 const ChatBot = () => {
+  const { t, language } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState(() => {
     const saved = localStorage.getItem('chat_history');
     return saved ? JSON.parse(saved) : [
-      { role: 'assistant', content: 'Halo! Saya AI Nabil. Ada yang bisa saya bantu tentang portofolio Nabil?' }
+      { role: 'assistant', content: t('bot.greeting') }
     ];
   });
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
-  const suggestedQuestions = [
+  const suggestedQuestions = t('bot.suggested') || [
     "Siapa Nabil?",
     "Apa saja proyeknya?",
     "Apa keahliannya?",
@@ -107,7 +109,7 @@ const ChatBot = () => {
   const toggleChat = () => setIsOpen(!isOpen);
 
   const clearChat = () => {
-    const initialMessage = [{ role: 'assistant', content: 'Halo! Saya AI Nabil. Ada yang bisa saya bantu tentang portofolio Nabil?' }];
+    const initialMessage = [{ role: 'assistant', content: t('bot.greeting') }];
     setMessages(initialMessage);
     localStorage.setItem('chat_history', JSON.stringify(initialMessage));
   };
@@ -130,11 +132,12 @@ const ChatBot = () => {
       }
 
       const dynamicContext = await fetchDynamicBotContext('nabilkencana');
+      const langPrompt = language === 'en' ? '\n\nIMPORTANT: Respond in English.' : '\n\nIMPORTANT: Respond in Indonesian.';
 
       const genAI = new GoogleGenerativeAI(apiKey);
       const model = genAI.getGenerativeModel({
         model: "gemini-2.5-flash",
-        systemInstruction: dynamicContext,
+        systemInstruction: dynamicContext + langPrompt,
       });
 
       // Filter history to alternate user/model and start with user
@@ -159,18 +162,28 @@ const ChatBot = () => {
       const lowerInput = messageText.toLowerCase();
       let fallbackResponse = "";
 
-      if (lowerInput.includes('siapa') || lowerInput.includes('nabil')) {
-        fallbackResponse = "Nabil Kencana adalah seorang Fullstack Developer, Mobile App Developer, dan UI/UX Designer yang bersekolah di SMK Telkom Malang.";
+      if (lowerInput.includes('siapa') || lowerInput.includes('nabil') || lowerInput.includes('who')) {
+        fallbackResponse = language === 'en'
+          ? "Nabil Kencana is a Fullstack Developer, Mobile App Developer, and UI/UX Designer studying at SMK Telkom Malang."
+          : "Nabil Kencana adalah seorang Fullstack Developer, Mobile App Developer, dan UI/UX Designer yang bersekolah di SMK Telkom Malang.";
       } else if (lowerInput.includes('proyek') || lowerInput.includes('project') || lowerInput.includes('repo') || lowerInput.includes('github')) {
-        fallbackResponse = "Nabil aktif mengembangkan berbagai proyek web, mobile, backend API (Golang & NestJS), serta sistem berbasis AI. Kamu bisa cek repositori terbaru dan detailnya di halaman Proyek atau GitHub Nabil (github.com/nabilkencana)!";
+        fallbackResponse = language === 'en'
+          ? "Nabil actively builds web applications, mobile apps, backend APIs (Golang & NestJS), and AI systems. You can check his latest projects on the Projects page or GitHub (github.com/nabilkencana)!"
+          : "Nabil aktif mengembangkan berbagai proyek web, mobile, backend API (Golang & NestJS), serta sistem berbasis AI. Kamu bisa cek repositori terbaru dan detailnya di halaman Proyek atau GitHub Nabil (github.com/nabilkencana)!";
       } else if (lowerInput.includes('skill') || lowerInput.includes('kemampuan') || lowerInput.includes('tech')) {
-        fallbackResponse = "Nabil ahli dalam ReactJS, Tailwind CSS, Flutter, NestJS, dan beberapa teknologi modern lainnya.";
-      } else if (lowerInput.includes('kontak') || lowerInput.includes('hubungi')) {
-        fallbackResponse = "Kamu bisa menghubungi Nabil melalui halaman Kontak atau sosial medianya seperti LinkedIn dan Instagram.";
+        fallbackResponse = language === 'en'
+          ? "Nabil is proficient in ReactJS, Tailwind CSS, Flutter, NestJS, Golang, and other modern technologies."
+          : "Nabil ahli dalam ReactJS, Tailwind CSS, Flutter, NestJS, dan beberapa teknologi modern lainnya.";
+      } else if (lowerInput.includes('kontak') || lowerInput.includes('contact') || lowerInput.includes('hubungi')) {
+        fallbackResponse = language === 'en'
+          ? "You can contact Nabil via the Contact page or his social media such as LinkedIn and Instagram."
+          : "Kamu bisa menghubungi Nabil melalui halaman Kontak atau sosial medianya seperti LinkedIn dan Instagram.";
       } else if (error.message === 'API_KEY_MISSING') {
-        fallbackResponse = "Saya AI Nabil. Ada yang bisa saya bantu tentang portofolio atau pengalaman Nabil? (Catatan: API Key belum dikonfigurasi, menggunakan mode demo)";
+        fallbackResponse = t('bot.greeting') + " (Demo mode)";
       } else {
-        fallbackResponse = "Maaf, saya sedang mengalami kendala teknis. Silakan coba lagi nanti atau hubungi Nabil langsung.";
+        fallbackResponse = language === 'en'
+          ? "Sorry, I'm experiencing technical difficulties. Please try again later or contact Nabil directly."
+          : "Maaf, saya sedang mengalami kendala teknis. Silakan coba lagi nanti atau hubungi Nabil langsung.";
       }
 
       setTimeout(() => {
@@ -238,20 +251,20 @@ const ChatBot = () => {
                 </div>
                 <div>
                   <h3 className="font-bold text-sm text-zinc-100 flex items-center gap-1.5">
-                    Nabil AI Assistant
+                    {t('bot.headerTitle')}
                     <Sparkles size={13} className="text-(--accent) animate-pulse" />
                   </h3>
                   <span className="text-[11px] text-zinc-400 font-mono flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                    Powered by Gemini AI
+                    {t('bot.poweredBy')}
                   </span>
                 </div>
               </div>
               <div className="flex items-center gap-1">
                 <button
                   onClick={clearChat}
-                  title="Hapus Percakapan"
-                  aria-label="Hapus percakapan"
+                  title={t('bot.clearTooltip')}
+                  aria-label={t('bot.clearAria')}
                   className="p-2 rounded-xl transition-all text-zinc-400 hover:text-red-400 cursor-pointer"
                   style={{ background: "transparent" }}
                   onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.06)"}
@@ -261,7 +274,7 @@ const ChatBot = () => {
                 </button>
                 <button
                   onClick={toggleChat}
-                  aria-label="Tutup chatbot"
+                  aria-label={t('bot.closeAria')}
                   className="p-2 rounded-xl transition-all text-zinc-400 hover:text-white cursor-pointer"
                   style={{ background: "transparent" }}
                   onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.06)"}
@@ -320,7 +333,7 @@ const ChatBot = () => {
                     }}
                   >
                     <div className="flex items-center gap-2 text-xs text-zinc-400">
-                      <span>Nabil AI sedang berpikir</span>
+                      <span>{t('bot.thinking')}</span>
                       <div className="flex gap-1">
                         <motion.div
                           animate={{ y: [0, -4, 0] }}
@@ -397,8 +410,8 @@ const ChatBot = () => {
                   type="text"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="Tanya tentang skill, repo, atau proyek..."
-                  aria-label="Pesan untuk AI Assistant"
+                  placeholder={t('bot.placeholder')}
+                  aria-label={t('bot.sendAria')}
                   className="w-full bg-transparent border-none text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none py-1"
                 />
               </div>
@@ -407,7 +420,7 @@ const ChatBot = () => {
                 whileTap={{ scale: 0.93 }}
                 type="submit"
                 disabled={isLoading || !input.trim()}
-                aria-label="Kirim pesan"
+                aria-label={t('bot.sendAria')}
                 className="w-10 h-10 rounded-xl flex items-center justify-center transition-all disabled:opacity-30 disabled:grayscale cursor-pointer disabled:cursor-not-allowed shrink-0"
                 style={{
                   background: "var(--accent)",
@@ -443,7 +456,7 @@ const ChatBot = () => {
               }}
             >
               <Sparkles size={14} className="text-(--accent) animate-pulse" />
-              <span>Tanya AI Nabil</span>
+              <span>{t('bot.triggerTooltip')}</span>
             </motion.div>
           )}
         </AnimatePresence>
@@ -452,7 +465,7 @@ const ChatBot = () => {
           whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.92 }}
           onClick={toggleChat}
-          aria-label="Buka AI Assistant Chatbot"
+          aria-label={t('bot.triggerAria')}
           className="relative w-14 h-14 rounded-2xl flex items-center justify-center cursor-pointer transition-all duration-300 group overflow-visible"
           style={{
             background: "rgba(18, 18, 22, 0.78)",

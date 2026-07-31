@@ -5,8 +5,10 @@ import { useState, useEffect } from "react";
 import { getMergedProjects } from "../lib/adminStore";
 import { isAdminLoggedIn } from "../lib/adminAuth";
 import { X, ExternalLink, Plus } from "lucide-react";
+import { useLanguage } from "../context/LanguageContext";
 
 const Projects = () => {
+  const { t } = useLanguage();
   // Show static data immediately — Firestore merge happens silently in background
   const [allProjects, setAllProjects] = useState(projectData);
   const [selectedProject, setSelectedProject] = useState(null);
@@ -29,8 +31,8 @@ const Projects = () => {
       <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, ease: "easeOut" }}>
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="font-[Space_Grotesk] text-4xl font-bold mt-1">Proyek Saya</h1>
-            <p className="text-zinc-400 max-w-xl mt-3">Beberapa proyek yang telah saya bangun menggunakan teknologi web modern.</p>
+            <h1 className="font-[Space_Grotesk] text-4xl font-bold mt-1">{t("projects.title")}</h1>
+            <p className="text-zinc-400 max-w-xl mt-3">{t("projects.subtitle")}</p>
           </div>
           {adminMode && (
             <button
@@ -40,7 +42,7 @@ const Projects = () => {
                 text-accent transition-all duration-200 mt-1"
             >
               <Plus size={16} />
-              Tambah Proyek
+              {t("projects.addBtn")}
             </button>
           )}
         </div>
@@ -89,7 +91,7 @@ const Projects = () => {
               {/* Close Button — Liquid Glass Tile */}
               <button
                 onClick={() => setSelectedProject(null)}
-                aria-label="Tutup detail proyek"
+                aria-label={t("projects.closeAria")}
                 className="absolute top-4 right-4 z-30 p-2.5 rounded-2xl text-zinc-300 hover:text-white transition-all cursor-pointer group"
                 style={{
                   background: "rgba(255, 255, 255, 0.10)",
@@ -150,7 +152,7 @@ const Projects = () => {
                         boxShadow: `inset 0 1px 0 rgba(255,255,255,0.35), 0 8px 24px ${selectedProject.borderColor || "#10b981"}45`,
                       }}
                     >
-                      Buka Proyek <ExternalLink size={16} />
+                      {t("projects.openBtn")} <ExternalLink size={16} />
                     </a>
                   </div>
                 )}

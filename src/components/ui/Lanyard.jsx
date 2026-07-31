@@ -78,7 +78,17 @@ function Band({ maxSpeed = 50, minSpeed = 0, isMobile = false }) {
       dir.copy(vec).sub(state.camera.position).normalize();
       vec.add(dir.multiplyScalar(state.camera.position.length()));
       [card, j1, j2, j3, fixed].forEach((ref) => ref.current?.wakeUp());
-      card.current?.setNextKinematicTranslation({ x: vec.x - dragged.x, y: vec.y - dragged.y, z: vec.z - dragged.z });
+
+      const maxX = isMobile ? 2.5 : 3.8;
+      const maxY = isMobile ? 3.2 : 4.5;
+      const targetX = Math.max(-maxX, Math.min(maxX, vec.x - dragged.x));
+      const targetY = Math.max(-3.2, Math.min(maxY, vec.y - dragged.y));
+
+      card.current?.setNextKinematicTranslation({
+        x: targetX,
+        y: targetY,
+        z: vec.z - dragged.z,
+      });
     }
     if (fixed.current) {
       [j1, j2].forEach((ref) => {

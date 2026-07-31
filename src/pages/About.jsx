@@ -69,7 +69,7 @@ const About = ({ isReady }) => {
   };
 
   return (
-    <section className="relative overflow-hidden">
+    <section className="relative">
       <div className="relative inset-0 z-10 mb-6">
         <div className="max-w-7xl mx-auto px-6">
           {/* ================= HERO ================= */}
@@ -231,73 +231,148 @@ const About = ({ isReady }) => {
           {t("about.experience")}
         </motion.h3>
 
-        <motion.div className="flex flex-col gap-4">
-          <AnimatePresence mode="sync">
-            {experiences
-              .slice(0, showAllExp ? experiences.length : 3)
-              .map((item, i) => (
-                <motion.div
-                  key={item.title || i}
-                  layout
-                  initial={{ opacity: 0, y: 16, scale: 0.98 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -10, scale: 0.98 }}
-                  transition={{ duration: 0.35, ease: "easeOut", delay: i >= 3 ? (i - 3) * 0.08 : 0 }}
-                  whileHover={{ y: -2, x: 2 }}
-                  className="w-full p-4 sm:p-6 rounded-2xl transition-all flex flex-col justify-between"
-                  style={{
-                    background: "rgba(255,255,255,0.05)",
-                    border: "1px solid rgba(255,255,255,0.10)",
-                    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.10), 0 4px 24px rgba(0,0,0,0.2)",
-                    backdropFilter: "blur(12px)",
-                    WebkitBackdropFilter: "blur(12px)",
-                  }}
-                >
-                  <div>
-                    <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-                      <h4 className="font-semibold text-base sm:text-lg text-zinc-100">{item.title}</h4>
-                      <span
-                        className="text-[11px] sm:text-xs font-medium px-3 py-1 rounded-full text-(--accent) shrink-0"
-                        style={{
-                          background: "rgba(255,255,255,0.07)",
-                          border: "1px solid rgba(255,255,255,0.12)",
-                          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08)",
-                        }}
-                      >
-                        {item.role}
-                      </span>
-                    </div>
-                    <p className="text-xs sm:text-sm text-zinc-400 mt-1 leading-relaxed">{item.desc}</p>
-                  </div>
+        <div className="flex flex-col gap-4">
+          {/* Always visible initial 3 items */}
+          {experiences.slice(0, 3).map((item, i) => (
+            <motion.div
+              key={item.title || i}
+              whileHover={{ y: -2, x: 2 }}
+              className="w-full p-4 sm:p-6 rounded-2xl transition-all flex flex-col justify-between"
+              style={{
+                background: "rgba(255,255,255,0.05)",
+                border: "1px solid rgba(255,255,255,0.10)",
+                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.10), 0 4px 24px rgba(0,0,0,0.2)",
+                backdropFilter: "blur(12px)",
+                WebkitBackdropFilter: "blur(12px)",
+              }}
+            >
+              <div>
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                  <h4 className="font-semibold text-base sm:text-lg text-zinc-100">{item.title}</h4>
+                  <span
+                    className="text-[11px] sm:text-xs font-medium px-3 py-1 rounded-full text-(--accent) shrink-0"
+                    style={{
+                      background: "rgba(255,255,255,0.07)",
+                      border: "1px solid rgba(255,255,255,0.12)",
+                      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08)",
+                    }}
+                  >
+                    {item.role}
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm text-zinc-400 mt-1 leading-relaxed">{item.desc}</p>
+              </div>
 
-                  <div className="flex flex-wrap gap-1.5 mt-4 pt-3 border-t border-white/5">
-                    {item.tags.map((tag, tIdx) => (
-                      <span
-                        key={tIdx}
-                        className="text-[11px] sm:text-xs px-2.5 py-0.5 rounded-md text-zinc-300 font-mono"
-                        style={{
-                          background: "rgba(255,255,255,0.04)",
-                          border: "1px solid rgba(255,255,255,0.08)",
-                        }}
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </motion.div>
-              ))}
+              <div className="flex flex-wrap gap-1.5 mt-4 pt-3 border-t border-white/5">
+                {item.tags.map((tag, tIdx) => (
+                  <span
+                    key={tIdx}
+                    className="text-[11px] sm:text-xs px-2.5 py-0.5 rounded-md text-zinc-300 font-mono"
+                    style={{
+                      background: "rgba(255,255,255,0.04)",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                    }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </motion.div>
+          ))}
+
+          {/* Ultra-smooth Accordion for remaining items */}
+          <AnimatePresence initial={false}>
+            {showAllExp && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                className="overflow-hidden flex flex-col gap-4"
+              >
+                <div className="flex flex-col gap-4 pt-4">
+                  {experiences.slice(3).map((item, i) => (
+                    <motion.div
+                      key={item.title || i + 3}
+                      initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
+                      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                      exit={{ opacity: 0, y: -10, filter: "blur(6px)" }}
+                      transition={{ duration: 0.45, delay: i * 0.07, ease: [0.16, 1, 0.3, 1] }}
+                      whileHover={{ y: -2, x: 2 }}
+                      className="w-full p-4 sm:p-6 rounded-2xl transition-all flex flex-col justify-between"
+                      style={{
+                        background: "rgba(255,255,255,0.05)",
+                        border: "1px solid rgba(255,255,255,0.10)",
+                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.10), 0 4px 24px rgba(0,0,0,0.2)",
+                        backdropFilter: "blur(12px)",
+                        WebkitBackdropFilter: "blur(12px)",
+                      }}
+                    >
+                      <div>
+                        <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                          <h4 className="font-semibold text-base sm:text-lg text-zinc-100">{item.title}</h4>
+                          <span
+                            className="text-[11px] sm:text-xs font-medium px-3 py-1 rounded-full text-(--accent) shrink-0"
+                            style={{
+                              background: "rgba(255,255,255,0.07)",
+                              border: "1px solid rgba(255,255,255,0.12)",
+                              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08)",
+                            }}
+                          >
+                            {item.role}
+                          </span>
+                        </div>
+                        <p className="text-xs sm:text-sm text-zinc-400 mt-1 leading-relaxed">{item.desc}</p>
+                      </div>
+
+                      <div className="flex flex-wrap gap-1.5 mt-4 pt-3 border-t border-white/5">
+                        {item.tags.map((tag, tIdx) => (
+                          <span
+                            key={tIdx}
+                            className="text-[11px] sm:text-xs px-2.5 py-0.5 rounded-md text-zinc-300 font-mono"
+                            style={{
+                              background: "rgba(255,255,255,0.04)",
+                              border: "1px solid rgba(255,255,255,0.08)",
+                            }}
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
           </AnimatePresence>
-        </motion.div>
+        </div>
 
-        {/* Toggle Show More on Mobile */}
-        <div className="mt-5 text-center">
-          <button
+        {/* Toggle Show More / Show Less Button */}
+        <div className="mt-6 text-center">
+          <motion.button
+            layout
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => setShowAllExp(!showAllExp)}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-semibold text-zinc-200 border border-white/15 bg-white/5 backdrop-blur-md hover:bg-white/10 transition-all cursor-pointer shadow-md"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-xs font-semibold text-zinc-200 border border-white/15 bg-white/5 backdrop-blur-md hover:bg-white/10 hover:border-white/30 transition-all cursor-pointer shadow-lg"
           >
-            <span>{showAllExp ? t("about.showLess") : `${t("about.showAll")} (${experiences.length})`}</span>
-            <i className={`ri-arrow-${showAllExp ? "up" : "down"}-s-line text-sm`} />
-          </button>
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={showAllExp ? "less" : "more"}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.2 }}
+              >
+                {showAllExp ? t("about.showLess") : `${t("about.showAll")} (${experiences.length})`}
+              </motion.span>
+            </AnimatePresence>
+            <motion.i
+              animate={{ rotate: showAllExp ? 180 : 0 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="ri-arrow-down-s-line text-base text-(--accent)"
+            />
+          </motion.button>
         </div>
       </div>
     </section>

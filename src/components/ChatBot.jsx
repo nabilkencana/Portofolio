@@ -5,6 +5,72 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { botContext, fetchDynamicBotContext } from '../data/botContext';
 import { useLanguage } from '../context/LanguageContext';
 
+const parseInlineFormatting = (text) => {
+  if (!text) return [];
+
+  // Match Markdown Links [text](url), Bold **text**, or Raw URLs https://...
+  const combinedRegex = /(\[(.*?)\]\((https?:\/\/[^\s\)]+)\))|(\*\*(.*?)\*\*)|(https?:\/\/[^\s\)]+)/g;
+
+  const elements = [];
+  let lastIndex = 0;
+  let match;
+
+  while ((match = combinedRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      elements.push(text.substring(lastIndex, match.index));
+    }
+
+    if (match[1]) {
+      // Markdown link: [text](url)
+      const linkText = match[2];
+      const linkUrl = match[3];
+      elements.push(
+        <a
+          key={match.index}
+          href={linkUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 text-(--accent) hover:text-white underline font-semibold transition-colors break-all"
+        >
+          <span>{linkText}</span>
+          <i className="ri-external-link-line text-xs shrink-0" />
+        </a>
+      );
+    } else if (match[4]) {
+      // Bold text: **text**
+      const boldText = match[5];
+      elements.push(
+        <strong key={match.index} className="font-bold text-(--accent)">
+          {boldText}
+        </strong>
+      );
+    } else if (match[6]) {
+      // Raw URL
+      const rawUrl = match[6];
+      elements.push(
+        <a
+          key={match.index}
+          href={rawUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 text-(--accent) hover:text-white underline font-semibold transition-colors break-all"
+        >
+          <span>{rawUrl.replace(/^https?:\/\/(www\.)?/, "")}</span>
+          <i className="ri-external-link-line text-xs shrink-0" />
+        </a>
+      );
+    }
+
+    lastIndex = combinedRegex.lastIndex;
+  }
+
+  if (lastIndex < text.length) {
+    elements.push(text.substring(lastIndex));
+  }
+
+  return elements;
+};
+
 const renderMessageContent = (text) => {
   if (typeof text !== 'string') return text;
 
@@ -13,64 +79,42 @@ const renderMessageContent = (text) => {
   return lines.map((line, i) => {
     let cleanLine = line;
 
-    // Handle bullet points (* or -)
-    const isBullet = /^\s*[\*\-]\s+(.*)/.test(line);
-    // Handle numbered lists (1. 2. etc.)
+    // Bullet points (* or - or •)
+    const isBullet = /^\s*[\*\-\•]\s+(.*)/.test(line);
+    // Numbered lists (1. 2. etc.)
     const isNumbered = /^\s*(\d+)\.\s+(.*)/.test(line);
 
     if (isBullet) {
-      const match = line.match(/^\s*[\*\-]\s+(.*)/);
+      const match = line.match(/^\s*[\*\-\•]\s+(.*)/);
       cleanLine = match[1];
     } else if (isNumbered) {
       const match = line.match(/^\s*(\d+)\.\s+(.*)/);
       cleanLine = match[2];
     }
 
-    // Parse bold tags: **text**
-    const parts = [];
-    let currentIdx = 0;
-    const regex = /\*\*(.*?)\*\*/g;
-    let match;
+    const parts = parseInlineFormatting(cleanLine);
 
-    while ((match = regex.exec(cleanLine)) !== null) {
-      if (match.index > currentIdx) {
-        parts.push(cleanLine.substring(currentIdx, match.index));
-      }
-      parts.push(
-        <strong key={match.index} className="font-bold text-(--accent)">
-          {match[1]}
-        </strong>
-      );
-      currentIdx = regex.lastIndex;
-    }
-
-    if (currentIdx < cleanLine.length) {
-      parts.push(cleanLine.substring(currentIdx));
-    }
-
-    // Render list items
     if (isBullet) {
       return (
-        <li key={i} className="ml-4 list-disc mb-1 pl-0.5 text-zinc-200">
+        <li key={i} className="ml-4 list-disc mb-1.5 pl-1 text-zinc-200 leading-relaxed">
           {parts}
         </li>
       );
     }
     if (isNumbered) {
       return (
-        <li key={i} className="ml-4 list-decimal mb-1 pl-0.5 text-zinc-200">
+        <li key={i} className="ml-4 list-decimal mb-1.5 pl-1 text-zinc-200 leading-relaxed">
           {parts}
         </li>
       );
     }
 
-    // Empty lines
     if (cleanLine.trim() === '') {
       return <div key={i} className="h-2" />;
     }
 
     return (
-      <p key={i} className="mb-1.5 last:mb-0 text-zinc-100">
+      <p key={i} className="mb-2 last:mb-0 text-zinc-100 leading-relaxed">
         {parts}
       </p>
     );

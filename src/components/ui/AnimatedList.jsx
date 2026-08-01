@@ -1,20 +1,21 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import { motion, useInView } from "motion/react";
 
-const AnimatedItem = ({ children, delay = 0, index, containerRef, onMouseEnter, onClick, isSelected }) => {
-  const ref = useRef(null);
-  const inView = useInView(ref, { root: containerRef, amount: 0.1, once: true });
-
+const AnimatedItem = ({ children, index, staggerDelay = 0.1, onMouseEnter, onClick, isSelected }) => {
   return (
     <motion.div
-      ref={ref}
       data-index={index}
       onMouseEnter={onMouseEnter}
       onClick={onClick}
-      initial={{ opacity: 0, scale: 0.96, y: 12 }}
-      animate={inView ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.96, y: 12 }}
-      transition={{ duration: 0.35, delay: delay * 0.04, ease: [0.16, 1, 0.3, 1] }}
-      whileHover={{ y: -2 }}
+      initial={{ opacity: 0, scale: 0.82, y: 32, filter: "blur(8px)" }}
+      whileInView={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
+      viewport={{ amount: 0.15, once: true }}
+      transition={{
+        duration: 0.65,
+        delay: (index % 5) * staggerDelay,
+        ease: [0.16, 1, 0.3, 1],
+      }}
+      whileHover={{ scale: 1.015, y: -3, transition: { duration: 0.25, ease: "easeOut" } }}
       className="mb-4 cursor-pointer"
     >
       {children}
@@ -33,6 +34,7 @@ const AnimatedList = ({
   displayScrollbar = true,
   initialSelectedIndex = -1,
   maxHeight = "460px",
+  staggerDelay = 0.12,
 }) => {
   const listRef = useRef(null);
   const [selectedIndex, setSelectedIndex] = useState(initialSelectedIndex);
@@ -113,11 +115,10 @@ const AnimatedList = ({
     <div className={`relative w-full ${className}`}>
       <div
         ref={listRef}
-        className={`overflow-y-auto pr-1 sm:pr-2 py-1 ${
-          displayScrollbar
+        className={`overflow-y-auto pr-1 sm:pr-2 py-1 ${displayScrollbar
             ? "[&::-webkit-scrollbar]:w-[6px] [&::-webkit-scrollbar-track]:bg-white/5 [&::-webkit-scrollbar-thumb]:bg-white/20 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-(--accent)/60"
             : "scrollbar-hide"
-        }`}
+          }`}
         onScroll={handleScroll}
         style={{
           maxHeight: maxHeight,
@@ -128,7 +129,7 @@ const AnimatedList = ({
         {items.map((item, index) => (
           <AnimatedItem
             key={item?.title || item?.id || index}
-            delay={0.1}
+            staggerDelay={staggerDelay}
             index={index}
             containerRef={listRef}
             isSelected={selectedIndex === index}
@@ -139,11 +140,10 @@ const AnimatedList = ({
               renderItem(item, index, selectedIndex === index)
             ) : (
               <div
-                className={`p-5 rounded-2xl transition-colors duration-200 ${
-                  selectedIndex === index
+                className={`p-5 rounded-2xl transition-colors duration-200 ${selectedIndex === index
                     ? "bg-white/10 border-white/25 shadow-lg"
                     : "bg-white/5 border-white/10 hover:bg-white/8"
-                } border ${itemClassName}`}
+                  } border ${itemClassName}`}
                 style={{
                   backdropFilter: "blur(12px)",
                   WebkitBackdropFilter: "blur(12px)",

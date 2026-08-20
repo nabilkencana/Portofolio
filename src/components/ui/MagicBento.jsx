@@ -602,7 +602,7 @@ const MagicBento = ({
                           boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15)",
                         }}
                       >
-                        <img src={card.icon} alt={card.title} className="w-8 h-8 object-contain" draggable={false} />
+                        <img src={card.icon} alt={card.title} className={`${card.iconClassName || "w-8 h-8"} object-contain`} draggable={false} />
                       </div>
 
                       {/* Text */}

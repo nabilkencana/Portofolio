@@ -13,9 +13,9 @@ Background:
 Tech Stack:
 - Frontend: ReactJS, Next.js, Tailwind CSS, HTML, CSS, JavaScript, TypeScript.
 - Mobile: Flutter, Dart.
-- Backend: NestJS, Go (Golang), Node.js, TypeScript, Laravel.
+- Backend: Laravel, PHP, NestJS, Go (Golang), Node.js, TypeScript.
 - Database: PostgreSQL, MySQL, Supabase, SQLite, Firebase.
-- Tools & Cloud: Vite, Git, GitHub, Vercel, Figma.
+- Tools & Cloud: Composer, Vite, Git, GitHub, Vercel, Figma.
 
 Achievements & Competition Awards:
 - Golden Ticket INOTEK UNISKA: Awarded for excellence in "Aplikasi" and "Ide Bisnis" categories at UNISKA.

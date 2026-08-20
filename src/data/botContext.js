@@ -23,6 +23,7 @@ Achievements & Competition Awards:
 - Juara 3 Web Development Nasional: Achieved 3rd place in National Web Development competition organized by IITC Purwokerto.
 
 Certifications & Courses (Featured on LinkedIn & Dicoding/Scrimba/GDG):
+- Sertifikat Kompetensi Full Stack Developer (SMK Telkom Malang & Mitra Industri): Predikat 'Sangat Kompeten' dalam Uji Unit Kompetensi (UUK) proyek Pengembangan Aplikasi Web menggunakan Next.js & NestJS.
 - Dicoding: Belajar Penggunaan Generative AI (Class on leveraging AI tools for productivity).
 - Dicoding & DBS Foundation: Introduction to Financial Literacy (Coding Camp powered by DBS Foundation 2026).
 - Dicoding: AI Praktis untuk Produktivitas (Practical AI for students and professionals).

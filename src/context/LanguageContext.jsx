@@ -110,6 +110,12 @@ export const translations = {
           tech: ["Programing", "Web Development"],
         },
         {
+          id: "ach_6",
+          title: "Sertifikat Kompetensi Full Stack",
+          description: "Sertifikat Uji Unit Kompetensi (UUK) Rekayasa Perangkat Lunak proyek Aplikasi Web Next.js & NestJS dengan predikat Sangat Kompeten.",
+          tech: ["Next.js", "NestJS", "Full Stack"],
+        },
+        {
           id: "ach_4",
           title: "Sertifikasi AMD",
           description: "Sertifikat sebagai peserta Talkshow AMD.",
@@ -264,6 +270,12 @@ export const translations = {
           title: "3rd Winner Web Development",
           description: "3rd Place National Level Web Development held by IITC Purwokerto.",
           tech: ["Programming", "Web Development"],
+        },
+        {
+          id: "ach_6",
+          title: "Full Stack Competency Certificate",
+          description: "Competency Unit Test (UUK) Certificate for Software Engineering Web App Project (Next.js & NestJS) with 'Highly Competent' distinction.",
+          tech: ["Next.js", "NestJS", "Full Stack"],
         },
         {
           id: "ach_4",

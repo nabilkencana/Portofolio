@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { MessageSquare, X, Send, Bot, Loader2, Trash2, Sparkles } from 'lucide-react';
-import { GoogleGenerativeAI } from '@google/generative-ai';
-import { botContext, fetchDynamicBotContext } from '../data/botContext';
 import { useLanguage } from '../context/LanguageContext';
 
 const parseInlineFormatting = (text) => {
@@ -169,36 +167,40 @@ const ChatBot = () => {
     setIsLoading(true);
 
     try {
-      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-
-      if (!apiKey) {
-        throw new Error('API_KEY_MISSING');
-      }
-
-      const dynamicContext = await fetchDynamicBotContext('nabilkencana');
-      const langPrompt = language === 'en' ? '\n\nIMPORTANT: Respond in English.' : '\n\nIMPORTANT: Respond in Indonesian.';
-
-      const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({
-        model: "gemini-2.5-flash",
-        systemInstruction: dynamicContext + langPrompt,
-      });
-
-      // Filter history to alternate user/model and start with user
+      // Format history (excluding initial greeting) for the backend API
       const history = messages
-        .filter((msg, index) => index > 0) // Exclude the initial greeting
+        .filter((_, index) => index > 0)
         .map(msg => ({
-          role: msg.role === 'assistant' ? 'model' : 'user',
-          parts: [{ text: msg.content }],
+          role: msg.role === 'assistant' ? 'assistant' : 'user',
+          content: msg.content,
         }));
 
-      const chat = model.startChat({ history });
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: messageText,
+          history,
+          language,
+        }),
+      });
 
-      const result = await chat.sendMessage(messageText);
-      const response = await result.response;
-      const text = response.text();
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        if (res.status === 429) {
+          throw new Error('RATE_LIMITED');
+        }
+        throw new Error(errData.error || `HTTP_${res.status}`);
+      }
 
-      setMessages(prev => [...prev, { role: 'assistant', content: text }]);
+      const data = await res.json();
+      if (!data.reply) {
+        throw new Error('EMPTY_REPLY');
+      }
+
+      setMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
     } catch (error) {
       console.error("ChatBot Error:", error);
 
@@ -206,7 +208,11 @@ const ChatBot = () => {
       const lowerInput = messageText.toLowerCase();
       let fallbackResponse = "";
 
-      if (lowerInput.includes('siapa') || lowerInput.includes('nabil') || lowerInput.includes('who')) {
+      if (error.message === 'RATE_LIMITED') {
+        fallbackResponse = language === 'en'
+          ? "You're sending messages too fast. Please wait a moment before sending another message."
+          : "Kamu mengirim pesan terlalu cepat. Mohon tunggu sebentar sebelum mengirim pesan lagi.";
+      } else if (lowerInput.includes('siapa') || lowerInput.includes('nabil') || lowerInput.includes('who')) {
         fallbackResponse = language === 'en'
           ? "Nabil Kencana is a Fullstack Developer, Mobile App Developer, and UI/UX Designer studying at SMK Telkom Malang."
           : "Nabil Kencana adalah seorang Fullstack Developer, Mobile App Developer, dan UI/UX Designer yang bersekolah di SMK Telkom Malang.";
@@ -222,8 +228,6 @@ const ChatBot = () => {
         fallbackResponse = language === 'en'
           ? "You can contact Nabil via the Contact page or his social media such as LinkedIn and Instagram."
           : "Kamu bisa menghubungi Nabil melalui halaman Kontak atau sosial medianya seperti LinkedIn dan Instagram.";
-      } else if (error.message === 'API_KEY_MISSING') {
-        fallbackResponse = t('bot.greeting') + " (Demo mode)";
       } else {
         fallbackResponse = language === 'en'
           ? "Sorry, I'm experiencing technical difficulties. Please try again later or contact Nabil directly."
@@ -232,7 +236,7 @@ const ChatBot = () => {
 
       setTimeout(() => {
         setMessages(prev => [...prev, { role: 'assistant', content: fallbackResponse }]);
-      }, 500);
+      }, 400);
     } finally {
       setIsLoading(false);
     }

@@ -1,19 +1,12 @@
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { writeFileSync, mkdirSync } from "fs";
 import { join } from "path";
+import chatHandler from "./api/chat.js";
 
 // ── Local Upload Plugin ─────────────────────────────────────────────
 // Handles POST /api/upload-local during Vite dev server.
-// Saves image directly into src/assets/<folder>/ and public/<folder>/
-// so it is both persisted in the repo and immediately servable as a URL.
-//
-// Request body JSON:
-//   { filename: string, data: base64DataUrl, folder: "gallery"|"projects"|"certificate" }
-//
-// Response JSON:
-//   { url: "/<folder>/<filename>" }
 function localUploadPlugin() {
   return {
     name: "local-upload-plugin",
@@ -57,26 +50,77 @@ function localUploadPlugin() {
   };
 }
 
-export default defineConfig({
-  plugins: [react(), tailwindcss(), localUploadPlugin()],
-  build: {
-    target: "esnext",
-    minify: "esbuild",
-    cssMinify: true,
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes("node_modules")) {
-            // Keep React, React-DOM, and React Three Fiber together to avoid scope/hooks resolution issues
-            if (id.includes("three")) {
-              return "vendor-three";
-            }
-            if (id.includes("firebase")) {
-              return "vendor-firebase";
-            }
+// ── Local Chat API Plugin ──────────────────────────────────────────
+// Emulates Vercel Serverless Function /api/chat during local development
+function localChatApiPlugin() {
+  return {
+    name: "local-chat-api-plugin",
+    configureServer(server) {
+      server.middlewares.use(async (req, res, next) => {
+        if (req.method !== "POST" || req.url !== "/api/chat") {
+          return next();
+        }
+
+        let body = "";
+        req.on("data", (chunk) => { body += chunk.toString(); });
+        req.on("end", async () => {
+          try {
+            const parsedBody = body ? JSON.parse(body) : {};
+            const fakeReq = {
+              method: "POST",
+              headers: req.headers,
+              socket: req.socket,
+              body: parsedBody,
+            };
+
+            const fakeRes = {
+              statusCode: 200,
+              status(code) {
+                this.statusCode = code;
+                return this;
+              },
+              json(data) {
+                res.writeHead(this.statusCode || 200, { "Content-Type": "application/json" });
+                res.end(JSON.stringify(data));
+              },
+            };
+
+            await chatHandler(fakeReq, fakeRes);
+          } catch (err) {
+            console.error("[local-chat-api] Error:", err);
+            res.writeHead(500, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ error: "Internal Server Error" }));
           }
+        });
+      });
+    },
+  };
+}
+
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), "");
+  process.env = { ...process.env, ...env };
+
+  return {
+    plugins: [react(), tailwindcss(), localUploadPlugin(), localChatApiPlugin()],
+    build: {
+      target: "esnext",
+      minify: "esbuild",
+      cssMinify: true,
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes("node_modules")) {
+              if (id.includes("three")) {
+                return "vendor-three";
+              }
+              if (id.includes("firebase")) {
+                return "vendor-firebase";
+              }
+            }
+          },
         },
       },
     },
-  },
+  };
 });

@@ -8,6 +8,7 @@ import website_ecoguard from '../assets/projects/website_EcoGuardAI.webp'
 import aplikasi_ecoguard from '../assets/projects/aplikasi_ecoguard.webp';
 import website_career from '../assets/projects/website_career.webp';
 import website_ujs from '../assets/projects/website_ujs.webp';
+import website_mokleters from '../assets/projects/website_mokleters.webp';
 
 export const projectData = [
   {
@@ -99,5 +100,14 @@ export const projectData = [
     borderColor: "#305492",
     gradient: "linear-gradient(160deg,#305492 0%,#000 70%)",
     url: "https://www.ujstravelmalangjuanda.com/", // Ganti dengan URL proyek Anda
+  },
+  {
+    id: "proj_11",
+    image: website_mokleters,
+    title: "Website Mokleters",
+    subtitle: "ReactJS • TypeScript • Vite • Web Audio API",
+    borderColor: "#E53935",
+    gradient: "linear-gradient(160deg,#E53935 0%,#000 70%)",
+    url: "https://mokleters.com",
   },
 ];

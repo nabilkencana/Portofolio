@@ -9,6 +9,7 @@ import aplikasi_ecoguard from '../assets/projects/aplikasi_ecoguard.webp';
 import website_career from '../assets/projects/website_career.webp';
 import website_ujs from '../assets/projects/website_ujs.webp';
 import website_mokleters from '../assets/projects/website_mokleters.webp';
+import website_suaramoklet from '../assets/projects/website_suaramoklet.webp';
 
 export const projectData = [
   {
@@ -109,5 +110,14 @@ export const projectData = [
     borderColor: "#E53935",
     gradient: "linear-gradient(160deg,#E53935 0%,#000 70%)",
     url: "https://mokleters.com",
+  },
+  {
+    id: "proj_12",
+    image: website_suaramoklet,
+    title: "Platform SuaraMoklet",
+    subtitle: "NextJS • NestJS • Prisma • MariaDB",
+    borderColor: "#DC2626",
+    gradient: "linear-gradient(160deg,#DC2626 0%,#000 70%)",
+    url: "https://github.com/nabilkencana",
   },
 ];

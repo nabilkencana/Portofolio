@@ -118,6 +118,6 @@ export const projectData = [
     subtitle: "NextJS • NestJS • Prisma • MariaDB",
     borderColor: "#DC2626",
     gradient: "linear-gradient(160deg,#DC2626 0%,#000 70%)",
-    url: "https://github.com/nabilkencana",
+    url: "https://github.com/nabilkencana/SuaraMoklet-Frontend",
   },
 ];

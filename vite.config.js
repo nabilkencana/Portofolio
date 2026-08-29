@@ -3,7 +3,6 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { writeFileSync, mkdirSync } from "fs";
 import { join } from "path";
-import chatHandler from "./api/chat.js";
 
 // ── Local Upload Plugin ─────────────────────────────────────────────
 // Handles POST /api/upload-local during Vite dev server.
@@ -65,6 +64,10 @@ function localChatApiPlugin() {
         req.on("data", (chunk) => { body += chunk.toString(); });
         req.on("end", async () => {
           try {
+            // Lazy-load so api/chat.js (and its module-level setInterval)
+            // is never evaluated during `vite build` — that timer kept the
+            // Node process alive after the build finished, hanging Vercel.
+            const { default: chatHandler } = await import("./api/chat.js");
             const parsedBody = body ? JSON.parse(body) : {};
             const fakeReq = {
               method: "POST",
